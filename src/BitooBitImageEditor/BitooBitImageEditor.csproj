@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon>BBLogo.ico</ApplicationIcon>
+    <Authors>BitooBit</Authors>
+    <Company>BitooBitBitooBit</Company>
+    <Description>Simple image editor for Xamarin Forms</Description>
+    <PackageIcon>Icon180.png</PackageIcon>
+    <PackageIconUrl />
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/BitooBit/BitooBitImageEditor.git</RepositoryUrl>
+    <Copyright>BitooBit</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\arrow_back.png" />
+    <None Remove="Resources\clear.png" />
+    <None Remove="Resources\crop_free.png" />
+    <None Remove="Resources\crop_full.png" />
+    <None Remove="Resources\crop_rotate.png" />
+    <None Remove="Resources\crop_square.png" />
+    <None Remove="Resources\done.png" />
+    <None Remove="Resources\format_shapes.png" />
+    <None Remove="Resources\gesture.png" />
+    <None Remove="Resources\rotate_right.png" />
+    <None Remove="Resources\save.png" />
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="C:\Users\Дмитрий\Desktop\bitoobit\ios\AppIcon.appiconset\Icon180.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\arrow_back.png" />
+    <EmbeddedResource Include="Resources\clear.png" />
+    <EmbeddedResource Include="Resources\crop_free.png" />
+    <EmbeddedResource Include="Resources\crop_full.png" />
+    <EmbeddedResource Include="Resources\crop_rotate.png" />
+    <EmbeddedResource Include="Resources\crop_square.png" />
+    <EmbeddedResource Include="Resources\done.png" />
+    <EmbeddedResource Include="Resources\format_shapes.png" />
+    <EmbeddedResource Include="Resources\gesture.png" />
+    <EmbeddedResource Include="Resources\rotate_right.png" />
+    <EmbeddedResource Include="Resources\save.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fody" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
+    <PackageReference Include="SkiaSharp" Version="1.68.1" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="1.68.1" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
+    <PackageReference Include="Xamarin.Forms" Version="4.4.0.991265" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="EditorPage\ImageEditorPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
