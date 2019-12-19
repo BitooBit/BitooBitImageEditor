@@ -34,5 +34,9 @@
     <string>SampleImageEditor</string>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>BitooBitImageEditor accesses your photo library</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>BitooBitImageEditor adds images to your photo library</string>
 </dict>
 </plist>

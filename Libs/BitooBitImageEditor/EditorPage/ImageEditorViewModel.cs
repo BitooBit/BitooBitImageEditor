@@ -123,7 +123,7 @@ namespace BitooBitImageEditor.EditorPage
             if(value == "Save")
                 bitmap = EditedBitmap;
 
-            EditorImage.Instance.SetImage(bitmap);
+            ImageEditor.Instance.SetImage(bitmap);
         });
 
         public ICommand ApplyChangesCommand => new Command<string>((value) =>

@@ -63,7 +63,7 @@
 
 
     <ContentPage.Content>
-        <ScrollView >
+        <!--<ScrollView >-->
         <Grid VerticalOptions="FillAndExpand" BackgroundColor="#eeeeee">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -170,6 +170,6 @@
                 
             </Grid>
         </Grid>
-        </ScrollView>
+        <!--</ScrollView>-->
     </ContentPage.Content>
 </ContentPage>

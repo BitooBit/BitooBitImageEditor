@@ -31,7 +31,7 @@ namespace BitooBitImageEditor.EditorPage
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            EditorImage.Instance.SetImage();
+            ImageEditor.Instance.SetImage();
         }
 
     }
