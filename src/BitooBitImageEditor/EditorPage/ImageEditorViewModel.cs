@@ -1,5 +1,6 @@
 ﻿using BitooBitImageEditor.Croping;
 using BitooBitImageEditor.Text;
+using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System.Collections.ObjectModel;
@@ -25,9 +26,9 @@ namespace BitooBitImageEditor.EditorPage
             ,new MenuItem("crop_square", ImageEditType.CropRotate, ActionEditType.CropSquare)
         };
 
-        
+
         public ImageCropperCanvasView imageCropperCanvas;
-        public PaintCanvasView paintCanvasView;
+        //public PaintCanvasView paintCanvasView;
         public SKCanvasView mainCanvas;
         public SKBitmap originalBitmap;
         private SKBitmap editedBitmap;
@@ -40,7 +41,7 @@ namespace BitooBitImageEditor.EditorPage
             set
             {
                 editedBitmap = value;
-                if(textCanvasView != null)
+                if (textCanvasView != null)
                     textCanvasView.SetBitmap(value);
             }
         }
@@ -55,12 +56,16 @@ namespace BitooBitImageEditor.EditorPage
             mainCanvas = new SKCanvasView();
             mainCanvas.PaintSurface += MainCanvas_PaintSurface;
             mainCanvas.Margin = 8;
-            paintCanvasView = new PaintCanvasView(EditedBitmap);
+            //paintCanvasView = new PaintCanvasView(EditedBitmap);
             textCanvasView = new TextCanvasView(EditedBitmap);
             textCanvasView.Margin = 8;
+
+
+            
+
         }
 
-        
+
 
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
         public Color CurrentColor { private set; get; }
@@ -73,7 +78,7 @@ namespace BitooBitImageEditor.EditorPage
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool PaintVisible => CurrentEditType == ImageEditType.Paint;
 
-        public bool MainVisible => CurrentEditType == ImageEditType.Paint || CurrentEditType == ImageEditType.SelectType || CurrentEditType == ImageEditType.Text;
+        public bool MainVisible => CurrentEditType == ImageEditType.Paint || CurrentEditType == ImageEditType.SelectType;
 
         private string text = "";
         public string Text
@@ -120,7 +125,7 @@ namespace BitooBitImageEditor.EditorPage
         public ICommand EditFinishCommand => new Command<string>((value) =>
         {
             SKBitmap bitmap = originalBitmap;
-            if(value == "Save")
+            if (value == "Save")
                 bitmap = EditedBitmap;
 
             ImageEditor.Instance.SetImage(bitmap);
@@ -130,11 +135,11 @@ namespace BitooBitImageEditor.EditorPage
         {
             if (value == "Cancel")
             {
-                if(CurrentEditType == ImageEditType.Paint)
+                if (CurrentEditType == ImageEditType.Paint)
                 {
-                    paintCanvasView.completedPaths.Clear();
-                    paintCanvasView.inProgressPaths.Clear();
-                    paintCanvasView.InvalidateSurface();
+                    //paintCanvasView.completedPaths.Clear();
+                    //paintCanvasView.inProgressPaths.Clear();
+                    //paintCanvasView.InvalidateSurface();
                 }
                 if (CurrentEditType == ImageEditType.Text)
                 {
@@ -142,7 +147,7 @@ namespace BitooBitImageEditor.EditorPage
                 }
             }
             else
-            {                             
+            {
                 if (CurrentEditType == ImageEditType.CropRotate)
                 {
                     EditedBitmap = imageCropperCanvas.CroppedBitmap;
@@ -161,7 +166,7 @@ namespace BitooBitImageEditor.EditorPage
         public ICommand SelectColorCommand => new Command<Color>((value) =>
         {
             CurrentColor = value;
-            paintCanvasView.CurrentColor = value.ToSKColor();
+            //paintCanvasView.CurrentColor = value.ToSKColor();
             textCanvasView.CurrentColor = value.ToSKColor();
         });
 
@@ -193,13 +198,20 @@ namespace BitooBitImageEditor.EditorPage
         });
 
         private void MainCanvas_PaintSurface(object sender, SKPaintSurfaceEventArgs args)
-        {           
+        {
             args.Surface.Canvas.Clear();
             var rect = SkiaHelper.CalculateRectangle(args.Info, EditedBitmap);
             args.Surface.Canvas.DrawBitmap(EditedBitmap, rect.rect);
         }
 
 
-
+        internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
+        {
+            if(CurrentEditType == ImageEditType.Text)
+                textCanvasView?.OnTouchEffectTouchAction(sender, args);
+            
+            if (CurrentEditType == ImageEditType.CropRotate)
+                imageCropperCanvas?.OnTouchEffectTouchAction(sender, args);
+        }
     }
 }

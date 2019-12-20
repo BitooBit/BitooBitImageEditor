@@ -16,7 +16,7 @@ namespace BitooBitImageEditor.Croping
         SKMatrix inverseBitmapMatrix;
 
         // Touch tracking  
-        TouchEffect touchEffect = new TouchEffect();
+
         struct TouchPoint
         {
             public int CornerIndex { set; get; }
@@ -29,8 +29,9 @@ namespace BitooBitImageEditor.Croping
         SKPoint bitmapLocationfirst = new SKPoint();
         SKPoint bitmapLocationlast = new SKPoint();
 
-        
-        
+        internal bool IsActive { get; set; }
+
+
 
         internal ImageCropperCanvasView(SKBitmap bitmap, float? aspectRatio = null)
         {
@@ -39,7 +40,7 @@ namespace BitooBitImageEditor.Croping
             SKRect bitmapRect = new SKRect(0, 0, bitmap.Width, bitmap.Height);
             croppingRect = new CroppingRectangle(bitmapRect, aspectRatio);
 
-            touchEffect.TouchAction += OnTouchEffectTouchAction;
+            ;
         }
 
         internal SKBitmap CroppedBitmap
@@ -64,8 +65,6 @@ namespace BitooBitImageEditor.Croping
         {
             base.OnParentSet();
 
-            // Attach TouchEffect to parent view
-            Parent.Effects.Add(touchEffect);
         }
 
         internal void SetAspectRatio(float? aspectRatio = null, bool isFullRect = false)
@@ -154,8 +153,9 @@ namespace BitooBitImageEditor.Croping
             bitmapScaleMatrix.TryInvert(out inverseBitmapMatrix);
         }
 
-        void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
+        internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
+
             SKPoint pixelLocation = SkiaHelper.ConvertToPixel(this, args.Location);
             SKPoint bitmapLocation = inverseBitmapMatrix.MapPoint(pixelLocation);
 
@@ -222,9 +222,9 @@ namespace BitooBitImageEditor.Croping
                     }
                     break;
             }
+
+
         }
-
-
 
     }
 }

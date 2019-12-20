@@ -73,45 +73,53 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="canvasCropViewHost" Grid.Row="0" BackgroundColor="#eeeeee" VerticalOptions="FillAndExpand" IsVisible="{Binding CropVisible}">
+            <Grid x:Name="canvasTop" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-            </Grid>
 
-            
+                <Grid x:Name="canvasCropViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding CropVisible}" IsEnabled="{Binding CropVisible}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
 
-            <Grid x:Name="canvasMainViewHost" Grid.Row="0" BackgroundColor="#eeeeee" VerticalOptions="FillAndExpand" IsVisible="{Binding MainVisible}">
+
+
+                <Grid x:Name="canvasMainViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding MainVisible}" IsEnabled="{Binding MainVisible}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+
+                <!--<Grid x:Name="canvasPaintViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding PaintVisible}" IsEnabled="{Binding PaintVisible}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+            </Grid>-->
+
+
+                <Grid x:Name="canvasTextViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding TextVisible}" IsEnabled="{Binding TextVisible}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
             </Grid>
-
-            <Grid x:Name="canvasPaintViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding PaintVisible}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-            </Grid>
-
-
-            <Grid x:Name="canvasTextViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding TextVisible}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-            </Grid>
-
 
             <Grid Grid.Row="1" VerticalOptions="End">
                 <Grid.RowDefinitions>
