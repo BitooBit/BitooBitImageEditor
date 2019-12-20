@@ -27,7 +27,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>ru.bitoobit.imageeditor</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>2.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -39,6 +39,6 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>BitooBitImageEditor adds images to your photo library</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0.</string>
+	<string>1.0.0</string>
 </dict>
 </plist>

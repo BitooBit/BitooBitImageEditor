@@ -6,7 +6,7 @@
     <Authors>BitooBit</Authors>
     <Company>BitooBitBitooBit</Company>
     <Description>Simple image editor for Xamarin Forms</Description>
-    <PackageIcon>Icon180.png</PackageIcon>
+    <PackageIcon>Icon40.png</PackageIcon>
     <PackageIconUrl />
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <RepositoryUrl>https://github.com/BitooBit/BitooBitImageEditor.git</RepositoryUrl>
@@ -31,7 +31,7 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="C:\Users\Дмитрий\Desktop\bitoobit\ios\AppIcon.appiconset\Icon180.png">
+    <None Include="Icon40.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

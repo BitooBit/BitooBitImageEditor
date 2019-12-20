@@ -20,7 +20,6 @@ namespace BitooBitImageEditor.Text
         SKRect scaledCropRect = new SKRect();
         SKCanvas canvas;
         // Touch tracking  
-        TouchEffect touchEffect = new TouchEffect();
 
 
         Dictionary<long, SKPoint> touchPoints = new Dictionary<long, SKPoint>();
@@ -33,10 +32,10 @@ namespace BitooBitImageEditor.Text
         {
             this.bitmap = bitmap;
             textRect = new TextRectangle(new SKRect(0, 0, bitmap.Width, bitmap.Height));
-            touchEffect.TouchAction += OnTouchEffectTouchAction;
+            
         }
 
-
+        internal bool IsActive { get; set; }
 
         internal SKColor CurrentColor
         {
@@ -71,8 +70,12 @@ namespace BitooBitImageEditor.Text
             base.OnParentSet();
 
             // Attach TouchEffect to parent view
-            Parent.Effects.Add(touchEffect);
+
+
         }
+
+
+
 
 
         internal SKBitmap BitmapWidthText
@@ -155,8 +158,9 @@ namespace BitooBitImageEditor.Text
             bitmapScaleMatrix.TryInvert(out inverseBitmapMatrix);
         }
 
-        void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
+        internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
+
             SKPoint pixelLocation = SkiaHelper.ConvertToPixel(this, args.Location);
             SKPoint bitmapLocation = inverseBitmapMatrix.MapPoint(pixelLocation);
 
@@ -209,6 +213,7 @@ namespace BitooBitImageEditor.Text
                         touchPointsInside.Remove(args.Id);
                     }
                     break;
+
             }
         }
 
