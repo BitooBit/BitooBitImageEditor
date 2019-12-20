@@ -124,7 +124,7 @@ namespace BitooBitImageEditor.EditorPage
 
         public ICommand EditFinishCommand => new Command<string>((value) =>
         {
-            SKBitmap bitmap = originalBitmap;
+            SKBitmap bitmap = null;
             if (value == "Save")
                 bitmap = EditedBitmap;
 
