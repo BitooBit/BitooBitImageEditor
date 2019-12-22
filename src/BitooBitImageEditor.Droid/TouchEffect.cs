@@ -13,7 +13,7 @@ using BitooBitImageEditor.TouchTracking;
 
 namespace BitooBitImageEditor.Droid.TouchTracking
 {
-    public class TouchEffect : PlatformEffect
+    internal class TouchEffect : PlatformEffect
     {
         Android.Views.View view;
         Element formsElement;

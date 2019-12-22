@@ -3,9 +3,9 @@ using System;
 
 namespace BitooBitImageEditor.Helper
 {
-    public static class SKCanvasExtension
+    internal static class SKCanvasExtension
     {
-        public static void DrawMultilineText(this SKCanvas canvas, string text, SKColor color, ref SKRect rect)
+        internal static void DrawMultilineText(this SKCanvas canvas, string text, SKColor color, ref SKRect rect)
         {
             if (!string.IsNullOrWhiteSpace(text))
             {

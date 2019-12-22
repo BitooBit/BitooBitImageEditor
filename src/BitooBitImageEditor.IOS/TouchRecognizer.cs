@@ -9,7 +9,7 @@ using BitooBitImageEditor.TouchTracking;
 
 namespace BitooBitImageEditor.IOS.TouchTracking
 {
-    class TouchRecognizer : UIGestureRecognizer
+    internal class TouchRecognizer : UIGestureRecognizer
     {
         Element element;        // Forms element for firing events
         UIView view;            // iOS UIView 

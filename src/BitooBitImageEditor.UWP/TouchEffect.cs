@@ -12,7 +12,7 @@ using Xamarin.Forms.Platform.UWP;
 
 namespace BitooBitImageEditor.UWP.TouchTracking
 {
-    public class TouchEffect : PlatformEffect
+    internal class TouchEffect : PlatformEffect
     {
         FrameworkElement frameworkElement;
         BitooBitImageEditor.TouchTracking.TouchEffect effect;

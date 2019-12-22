@@ -9,7 +9,7 @@ using UIKit;
 [assembly: ExportEffect(typeof(BitooBitImageEditor.IOS.TouchTracking.TouchEffect), "TouchEffect")]
 namespace BitooBitImageEditor.IOS.TouchTracking
 {
-    public class TouchEffect : PlatformEffect
+    internal class TouchEffect : PlatformEffect
     {
         UIView view;
         TouchRecognizer touchRecognizer;

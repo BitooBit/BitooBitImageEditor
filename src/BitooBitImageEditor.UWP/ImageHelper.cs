@@ -11,7 +11,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(ImageHelper))]
 namespace BitooBitImageEditor.UWP
 {
-    class ImageHelper : IImageHelper
+    internal class ImageHelper : IImageHelper
     {
         public async Task<Stream> GetImageAsync()
         {
@@ -79,7 +79,7 @@ namespace BitooBitImageEditor.UWP
                 IBuffer buffer = WindowsRuntimeBuffer.Create(data, 0, data.Length, data.Length);
                 await FileIO.WriteBufferAsync(storageFile, buffer);
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }

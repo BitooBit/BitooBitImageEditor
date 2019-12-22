@@ -20,6 +20,7 @@ namespace SampleImageEditor
 
         private async void GetEditedImage_Clicked(object sender, EventArgs e)
         {
+
             byte[] data = await ImageEditor.Instance.GetEditedImage();
             this.data = data;
             if (data != null)
@@ -34,7 +35,7 @@ namespace SampleImageEditor
             string message;
             if (data != null)
             {
-                if (await ImageEditor.Instance.SaveImage(data, $"img{DateTime.Now.ToString()}.png"))
+                if (await ImageEditor.Instance.SaveImage(data, $"img{DateTime.Now.ToString("dd.MM.yyyy HH-mm-ss")}.png"))
                     message = "Successfully!!!";
                 else
                     message = "Unsuccessfully!!!";
