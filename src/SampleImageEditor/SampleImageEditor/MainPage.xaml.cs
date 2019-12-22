@@ -34,7 +34,7 @@ namespace SampleImageEditor
             string message;
             if (data != null)
             {
-                if (await ImageEditor.Instance.ImageHelper.SaveImageAsync(data, $"img{DateTime.Now.ToString()}.png"))
+                if (await ImageEditor.Instance.SaveImage(data, $"img{DateTime.Now.ToString()}.png"))
                     message = "Successfully!!!";
                 else
                     message = "Unsuccessfully!!!";

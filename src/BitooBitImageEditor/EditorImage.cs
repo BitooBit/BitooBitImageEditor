@@ -17,9 +17,8 @@ namespace BitooBitImageEditor
                 throw new Exception("BitooBitImageEditor must be initialized on the platform");
         }
         public static ImageEditor Instance { get => lazy.Value; }
+        internal IImageHelper ImageHelper => DependencyService.Get<IImageHelper>();
 
-       
-       
 
         private const string defaultFolderName = "BitooBitImages";
         private string folderName;
@@ -30,14 +29,14 @@ namespace BitooBitImageEditor
         private bool imageSetLock;
 
 
-        public IImageHelper ImageHelper => DependencyService.Get<IImageHelper>();
-
         public string FolderName
         {
             get => string.IsNullOrWhiteSpace(folderName) ? defaultFolderName : defaultFolderName;
             set => folderName = value;
         }
 
+
+        public async Task<bool> SaveImage(byte[] data, string filename) => await ImageHelper.SaveImageAsync(data, filename);
 
         public async Task<byte[]> GetEditedImage(SKBitmap bitmap = null)
         {
