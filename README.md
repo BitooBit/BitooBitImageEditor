@@ -2,6 +2,7 @@
 Simple image editor for xamarin  
 
 [Nuget 1.0.0.1](https://www.nuget.org/packages/BitooBitImageEditor/)
+
 [Documentation of Getting Started](https://github.com/BitooBit/BitooBitImageEditor/wiki/Getting-Started)
 
 <hr/>
