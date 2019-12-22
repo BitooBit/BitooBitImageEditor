@@ -1,9 +1,8 @@
 # BitooBitImageEditor
 Simple image editor for Xamarin Forms based on the [SkiaSharp](https://github.com/mono/SkiaSharp) library
 
-[Nuget 1.0.0.1](https://www.nuget.org/packages/BitooBitImageEditor/)
-
-[Documentation of Getting Started](https://github.com/BitooBit/BitooBitImageEditor/wiki/Getting-Started)
+####[Documentation of Getting Started](https://github.com/BitooBit/BitooBitImageEditor/wiki/Getting-Started)
+####[Nuget](https://www.nuget.org/packages/BitooBitImageEditor/)
 
 <hr/>
 
@@ -17,3 +16,6 @@ Simple image editor for Xamarin Forms based on the [SkiaSharp](https://github.co
 | .NET Standard | 2.0 |
 
 <hr/>
+This project is in development and now supports cropping images and adding text. In the future, the functionality will be expanded. The current entry points will be left unchanged
+<hr/>
+![Landing](ImageEditor.png)
