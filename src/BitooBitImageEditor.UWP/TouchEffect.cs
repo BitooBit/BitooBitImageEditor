@@ -7,8 +7,8 @@ using Windows.UI.Xaml.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
-[assembly: ResolutionGroupName("XamarinDocs")]
-[assembly: ExportEffect(typeof(BitooBitImageEditor.UWP.TouchTracking.TouchEffect), "TouchEffect")]
+[assembly: ResolutionGroupName(TouchEffect.resolutionGroupName)]
+[assembly: ExportEffect(typeof(BitooBitImageEditor.UWP.TouchTracking.TouchEffect), TouchEffect.uniqueName)]
 
 namespace BitooBitImageEditor.UWP.TouchTracking
 {

@@ -9,7 +9,10 @@ namespace BitooBitImageEditor.TouchTracking
     {
         public event TouchActionEventHandler TouchAction;
 
-        public TouchEffect() : base("XamarinDocs.TouchEffect")
+        public const string resolutionGroupName = "BitooBitDocs";
+        public const string uniqueName = "BBTouchEffect";
+
+        public TouchEffect() : base($"{resolutionGroupName}.{uniqueName}")
         {
         }
 
