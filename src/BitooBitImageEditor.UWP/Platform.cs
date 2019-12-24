@@ -1,15 +1,10 @@
-﻿using System;
+﻿using BitooBitImageEditor.TouchTracking;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+using System.Reflection;
 
 namespace BitooBitImageEditor.UWP
 {
-    /// <summary>
-    /// Необходим для исспользования <see cref="BitooBitImageEditor"/> на UWP
-    /// </summary>
+    /// <summary> Необходим для исспользования <see cref="BitooBitImageEditor"/> на UWP </summary>
     public static class Platform
     {
         internal static Windows.UI.Xaml.Application application;
@@ -20,9 +15,28 @@ namespace BitooBitImageEditor.UWP
         }
         internal static bool IsInitialized { get; set; }
 
-        /// <summary>
-        /// Инициализирует <see cref="BitooBitImageEditor"/>
-        /// </summary>
+
+        public static IEnumerable<Assembly> GetExtraAssemblies(IEnumerable<Assembly> defaultAssemblies = null)
+        {
+            var assemblies = new List<Assembly>
+            {
+                GetAssembly<ImageEditor>(),
+                GetAssembly<TouchEffect>()
+            };
+
+            if (defaultAssemblies != null)
+                assemblies.AddRange(defaultAssemblies);
+
+            return assemblies;
+        }
+
+        private static Assembly GetAssembly<T>()
+        {
+            return typeof(T).GetTypeInfo().Assembly;
+        }
+
+
+        /// <summary> Инициализирует <see cref="BitooBitImageEditor"/> </summary>
         /// <param name="applcation">текущее UWP приложение</param>
         public static void Init(Windows.UI.Xaml.Application applcation)
         {

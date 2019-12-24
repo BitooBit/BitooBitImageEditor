@@ -20,12 +20,18 @@ namespace SampleImageEditor
 
         private async void GetEditedImage_Clicked(object sender, EventArgs e)
         {
-
-            byte[] data = await ImageEditor.Instance.GetEditedImage();
-            this.data = data;
-            if (data != null)
+            try
             {
-                MyImage.Source = ImageSource.FromStream(() => new MemoryStream(data));
+                byte[] data = await ImageEditor.Instance.GetEditedImage();
+                this.data = data;
+                if (data != null)
+                {
+                    MyImage.Source = ImageSource.FromStream(() => new MemoryStream(data));
+                }
+            }
+            catch(Exception ex)
+            {
+                await DisplayAlert("", ex.Message, "fewf");
             }
         }
 
