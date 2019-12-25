@@ -53,7 +53,7 @@ namespace SampleImageEditor.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 BitooBitImageEditor.UWP.Platform.Init(this);
-                Xamarin.Forms.Forms.Init(e);
+                Xamarin.Forms.Forms.Init(e, BitooBitImageEditor.UWP.Platform.GetExtraAssemblies());
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

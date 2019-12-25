@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace BitooBitImageEditor.UWP
 {
-    class PlatformHelper : IPlatformHelper
+    internal class PlatformHelper : IPlatformHelper
     {
         public bool IsInitialized => Platform.IsInitialized;
     }

@@ -9,7 +9,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(ImageHelper))]
 namespace BitooBitImageEditor.IOS
 {
-    public class ImageHelper : IImageHelper
+    internal class ImageHelper : IImageHelper
     {
         TaskCompletionSource<Stream> taskCompletionSource;
         UIImagePickerController imagePicker;

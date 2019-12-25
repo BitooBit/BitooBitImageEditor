@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-
 using Android.Views;
 using BitooBitImageEditor.TouchTracking;
 
-[assembly: ResolutionGroupName("XamarinDocs")]
-[assembly: ExportEffect(typeof(BitooBitImageEditor.Droid.TouchTracking.TouchEffect), "TouchEffect")]
+[assembly: ResolutionGroupName(TouchEffect.resolutionGroupName)]
+[assembly: ExportEffect(typeof(BitooBitImageEditor.Droid.TouchTracking.TouchEffect), TouchEffect.uniqueName)]
 
 namespace BitooBitImageEditor.Droid.TouchTracking
 {
-    public class TouchEffect : PlatformEffect
+    internal class TouchEffect : PlatformEffect
     {
         Android.Views.View view;
         Element formsElement;

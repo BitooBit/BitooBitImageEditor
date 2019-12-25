@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -13,6 +13,7 @@
     <Copyright>BitooBit</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>1.0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +28,7 @@
     <None Remove="Resources\gesture.png" />
     <None Remove="Resources\rotate_right.png" />
     <None Remove="Resources\save.png" />
-    <None Include="..\..\LICENSE.txt">
+    <None Include="..\..\nuget\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
