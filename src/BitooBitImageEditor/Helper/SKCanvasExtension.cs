@@ -1,5 +1,6 @@
 ﻿using SkiaSharp;
 using System;
+using System.Text;
 
 namespace BitooBitImageEditor.Helper
 {
@@ -22,8 +23,7 @@ namespace BitooBitImageEditor.Helper
                         IsAntialias = true
                     };
                     float height;
-                    //int emojiChar = StringUtilities.GetUnicodeCharacterCode("🚀", SKTextEncoding.Utf32);
-                    //using (var emoji = SKTypeface.FromFamilyName("Noto Emoji"))
+                    int emojiChardfvdf = StringUtilities.GetUnicodeCharacterCode("🚀", SKTextEncoding.Utf32);
                     int emojiChar = 1087;
                     using (SKTypeface typeface = SKFontManager.Default.MatchCharacter(emojiChar))
                     {
@@ -52,7 +52,9 @@ namespace BitooBitImageEditor.Helper
                                 int emojiChar1=0;
                                 try
                                 {
-                                    emojiChar1 = StringUtilities.GetUnicodeCharacterCode(ggg, SKTextEncoding.Utf32);
+                                    emojiChar1 = Char.ConvertToUtf32(chars[i][j].ToString(), 0);
+
+                                    //emojiChar1 = StringUtilities.GetUnicodeCharacterCode(ggg, SKTextEncoding.Utf32);
                                 }
                                 catch(Exception ex)
                                 {
@@ -103,7 +105,9 @@ namespace BitooBitImageEditor.Helper
 
                             for (int j = 0; j < lines[i].Length; j++)
                             {
-                                canvas.DrawText(chars[i][j].ToString(), xText += (1.2f * charsWidth[i][j]), yText, paint);
+                                SKPaint charPaint = paint.Clone();
+                                charPaint.Typeface = charsTypeface[i][j];
+                                canvas.DrawText(chars[i][j].ToString(), xText += (1.2f * charsWidth[i][j]), yText, charPaint);
                             }
 
                             yText += maxTextHeight;
