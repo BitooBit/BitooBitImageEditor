@@ -11,7 +11,7 @@
              ios:Page.PrefersStatusBarHidden="True"
              ios:Page.PreferredStatusBarUpdateAnimation="Fade"
              ios:Page.PrefersHomeIndicatorAutoHidden="true"
-             x:Name="ThisEditorPage">
+             x:Name="ThisEditorPage" x:ClassModifier="internal" >
 
 
     <ContentPage.Resources>

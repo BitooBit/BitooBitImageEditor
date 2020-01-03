@@ -1,15 +1,14 @@
 ﻿using SkiaSharp;
 using System;
-using System.Text;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace BitooBitImageEditor.Helper
 {
     internal static class SKCanvasExtension
     {
         private const float maxSize = 255;
-
-
-
+        private static readonly string[] splitters = new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" };
 
         internal static void DrawMultilineText(this SKCanvas canvas, string text, SKColor color, ref SKRect rect)
         {
@@ -19,175 +18,118 @@ namespace BitooBitImageEditor.Helper
                 {
                     SKPaint paint = new SKPaint
                     {
-                        Color = color,
-                        IsAntialias = true
+                        Color = color
                     };
+
                     float height;
-                    int emojiChardfvdf = StringUtilities.GetUnicodeCharacterCode("🚀", SKTextEncoding.Utf32);
-                    int emojiChar = 1087;
-                    using (SKTypeface typeface = SKFontManager.Default.MatchCharacter(emojiChar))
+                    string[] lines = text.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                    string[][] chars = new string[lines.Length][];
+                    float[][] charsWidth = new float[chars.Length][];
+                    SKTypeface[][] charsTypeface = new SKTypeface[chars.Length][];
+                    float[] linesWidth = new float[chars.Length];
+                    float maxTextHeight = 0;
+                    float minTextSize = int.MaxValue;
+
+
+                    List<string> currentLineChars = new List<string>();
+                    for (int i = 0; i < chars.Length; i++)
                     {
-                        paint.Typeface = typeface;
-                        string[] lines = text.Split(new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" }, StringSplitOptions.RemoveEmptyEntries);
+                        TextElementEnumerator strEnumerator = StringInfo.GetTextElementEnumerator(lines[i]);
+                        while (strEnumerator.MoveNext())
+                            currentLineChars.Add(strEnumerator.GetTextElement());
 
-                        char[][] chars = new char[lines.Length][];
-                        float[][] charsWidth = new float[lines.Length][];
+                        chars[i] = currentLineChars.ToArray();
+                        currentLineChars.Clear();
 
-                        SKTypeface[][] charsTypeface = new SKTypeface[lines.Length][];
+                        charsTypeface[i] = new SKTypeface[chars[i].Length];
+                        charsWidth[i] = new float[chars[i].Length];
 
-
-
-                        float minTextSize = int.MaxValue;
-                        for (int i = 0; i < lines.Length; i++)
+                        float lineWidth = 0;
+                        for (int j = 0; j < chars[i].Length; j++)
                         {
-                            chars[i] = lines[i].ToCharArray();
-                            charsTypeface[i] = new SKTypeface[lines[i].Length];
-
-                            float widthLine = 0;
-                            for (int j = 0; j < lines[i].Length; j++)
+                            using (SKPaint charPaint = paint.Clone())
                             {
-                                SKPaint charPaint = paint.Clone();
-                                string ggg = chars[i][j].ToString();
+                                int numberChar = 120;
+                                char[] currentChar = chars[i][j].ToCharArray();
 
-                                int emojiChar1=0;
-                                try
+                                switch (currentChar?.Length)
                                 {
-                                    emojiChar1 = Char.ConvertToUtf32(chars[i][j].ToString(), 0);
-
-                                    //emojiChar1 = StringUtilities.GetUnicodeCharacterCode(ggg, SKTextEncoding.Utf32);
+                                    case 1:
+                                        numberChar = Char.ConvertToUtf32(chars[i][j], 0);
+                                        break;
+                                    case 2:
+                                        numberChar = Char.ConvertToUtf32(currentChar[0], currentChar[1]);
+                                        break;
+                                    case 0:
+                                        numberChar = 120;
+                                        chars[i][j] = $"";
+                                        break;
+                                    default:
+                                        numberChar = Char.ConvertToUtf32(currentChar[0], currentChar[1]);
+                                        chars[i][j] = $"{currentChar[0]}{currentChar[1]}";
+                                        break;
                                 }
-                                catch(Exception ex)
-                                {
-                                    emojiChar1 = 1087;
-                                }
 
-
-                                charPaint.Typeface = charsTypeface[i][j] = SKFontManager.Default.MatchCharacter(emojiChar1);
-                                float charWidth = charPaint.MeasureText(chars[i][j].ToString());
-                                widthLine += charWidth;
+                                charPaint.Typeface = charsTypeface[i][j] = SKFontManager.Default.MatchCharacter(numberChar);
+                                lineWidth += charPaint.MeasureText(chars[i][j]);
                             }
-
-                            float minTextSizeCurrent = 0.95f * rect.Width * paint.TextSize / widthLine;
-                            if (minTextSizeCurrent < minTextSize)
-                                minTextSize = minTextSizeCurrent;
                         }
 
-                        paint.TextSize = minTextSize < maxSize ? minTextSize : maxSize;
+                        float minTextSizeCurrent = 0.95f * rect.Width * paint.TextSize / lineWidth;
+                        if (minTextSizeCurrent < minTextSize)
+                            minTextSize = minTextSizeCurrent;
+                    }
 
+                    currentLineChars = null;
+                    paint.TextSize = minTextSize < maxSize ? minTextSize : maxSize;
 
-
-                        float maxTextHeight = 0;
-                        float[] linesWidth = new float[lines.Length];
-                        for (int i = 0; i < lines.Length; i++)
+                    for (int i = 0; i < chars.Length; i++)
+                    {
+                        linesWidth[i] = 0;
+                        for (int j = 0; j < chars[i].Length; j++)
                         {
-                            linesWidth[i] = 0;
-                            charsWidth[i] = new float[lines[i].Length];
-                            for (int j = 0; j < lines[i].Length; j++)
+                            using (SKPaint charPaint = paint.Clone())
                             {
-                                SKPaint charPaint = paint.Clone();
                                 charPaint.Typeface = charsTypeface[i][j];
                                 SKRect currenttextBounds = new SKRect();
-                                charPaint.MeasureText(chars[i][j].ToString(), ref currenttextBounds);
+                                charsWidth[i][j] = charPaint.MeasureText(chars[i][j], ref currenttextBounds);
 
                                 if (maxTextHeight < currenttextBounds.Height)
                                     maxTextHeight = currenttextBounds.Height;
-                                linesWidth[i] += currenttextBounds.Width;
-                                charsWidth[i][j] = currenttextBounds.Width;
+
+                                linesWidth[i] += charsWidth[i][j];
                             }
                         }
-
-                        maxTextHeight = 1.2f * maxTextHeight;
-                        float yText = rect.Top;
-
-                        for (int i = 0; i < lines.Length; i++)
-                        {
-                            float xText = rect.MidX - (linesWidth[i] / 2);
-
-                            for (int j = 0; j < lines[i].Length; j++)
-                            {
-                                SKPaint charPaint = paint.Clone();
-                                charPaint.Typeface = charsTypeface[i][j];
-                                canvas.DrawText(chars[i][j].ToString(), xText += (1.2f * charsWidth[i][j]), yText, charPaint);
-                            }
-
-                            yText += maxTextHeight;
-                        }
-                        height = (lines.Length + 0.32f) * maxTextHeight;
                     }
+
+                    maxTextHeight = 1.2f * maxTextHeight;
+                    float yText = rect.Top + maxTextHeight;
+
+                    for (int i = 0; i < chars.Length; i++)
+                    {
+                        float xText = rect.MidX - (linesWidth[i] / 2);
+
+                        for (int j = 0; j < chars[i].Length; j++)
+                        {
+                            using (SKPaint charPaint = paint.Clone())
+                            {
+                                charPaint.Typeface = charsTypeface[i][j];
+                                canvas.DrawText(chars[i][j], xText, yText, charPaint);
+                                xText += charsWidth[i][j];
+                            }
+                        }
+
+                        yText += maxTextHeight;
+                    }
+                    height = (chars.Length + 0.32f) * maxTextHeight;
 
                     rect.Bottom = rect.Top + height;
                 }
             }
-            catch(Exception ex)
-            {
-
-            }
+            catch { }
         }
 
 
 
-
-
-
-        //internal static void DrawMultilineText(this SKCanvas canvas, string text, SKColor color, ref SKRect rect)
-        //{
-        //    if (!string.IsNullOrWhiteSpace(text))
-        //    {
-        //        SKPaint paint = new SKPaint
-        //        {
-        //            Color = color,
-        //            IsAntialias = true
-        //        };
-        //        float height;
-        //        //int emojiChar = StringUtilities.GetUnicodeCharacterCode("🚀", SKTextEncoding.Utf32);
-        //        //using (var emoji = SKTypeface.FromFamilyName("Noto Emoji"))
-        //        int emojiChar = 1087;
-        //        using (SKTypeface typeface = SKFontManager.Default.MatchCharacter(emojiChar))
-        //        {
-        //            paint.Typeface = typeface;
-        //            string[] lines = text.Split(new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" }, StringSplitOptions.None);
-
-        //            float minTextSize = int.MaxValue;
-        //            for (int i = 0; i < lines.Length; i++)
-        //            {
-        //                float textWidth = paint.MeasureText(lines[i]);
-        //                float minTextSizecurrent = 0.95f * rect.Width * paint.TextSize / textWidth;
-
-        //                if (minTextSizecurrent < minTextSize)
-        //                    minTextSize = minTextSizecurrent;
-        //            }
-
-        //            paint.TextSize = minTextSize < maxSize ? minTextSize : maxSize;
-
-        //            float maxTextHeight = 0;
-        //            float maxTextWidth = 0;
-        //            float[] linesWidth = new float[lines.Length];
-        //            for (int i = 0; i < lines.Length; i++)
-        //            {
-        //                SKRect currenttextBounds = new SKRect();
-        //                paint.MeasureText(lines[i], ref currenttextBounds);
-
-        //                linesWidth[i] = currenttextBounds.Width;
-        //                if (maxTextHeight < currenttextBounds.Height)
-        //                    maxTextHeight = currenttextBounds.Height;
-
-        //                if (maxTextWidth < currenttextBounds.Width)
-        //                    maxTextWidth = currenttextBounds.Width;
-        //            }
-
-        //            maxTextHeight = 1.2f * maxTextHeight;
-        //            float yText = rect.Top;
-
-        //            for (int i = 0; i < lines.Length; i++)
-        //            {
-        //                float xText = rect.MidX - (linesWidth[i] / 2);
-        //                canvas.DrawText(lines[i], xText, yText += maxTextHeight, paint);
-        //            }
-        //            height = (lines.Length + 0.32f) * maxTextHeight;
-        //        }
-
-        //        rect.Bottom = rect.Top + height;
-        //    }
-        //}
     }
 }

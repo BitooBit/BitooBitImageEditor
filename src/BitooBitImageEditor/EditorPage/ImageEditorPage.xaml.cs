@@ -7,7 +7,7 @@ using Xamarin.Forms.Xaml;
 namespace BitooBitImageEditor.EditorPage
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ImageEditorPage : ContentPage
+    public sealed partial class ImageEditorPage : ContentPage
     {
 
         TouchEffect touchEffect = new TouchEffect();
