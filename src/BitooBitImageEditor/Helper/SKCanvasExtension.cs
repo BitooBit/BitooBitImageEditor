@@ -53,7 +53,7 @@ namespace BitooBitImageEditor.Helper
                                     int numberChar = 120;
                                     char[] currentChar = chars[i][j].ToCharArray();
 
-                                    if (currentChar?.Length > 1 && !(currentChar[1] >= 55296 && currentChar[1] <= 56319))
+                                    if (currentChar?.Length > 1 && !(currentChar[1] >= 55296 && currentChar[1] <= 56319)) //checking highSurrogate
                                         currentChar = new char[] { currentChar[0] };
 
                                     switch (currentChar?.Length)
