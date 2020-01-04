@@ -21,6 +21,7 @@ namespace BitooBitImageEditor.Helper
                         paint.Color = color;
                         paint.SubpixelText = true;
                         paint.IsEmbeddedBitmapText = true;
+                        paint.IsAntialias = true;
 
                         float height;
                         string[] lines = text.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
@@ -51,6 +52,9 @@ namespace BitooBitImageEditor.Helper
                                 {
                                     int numberChar = 120;
                                     char[] currentChar = chars[i][j].ToCharArray();
+
+                                    if (currentChar?.Length > 1 && !(currentChar[1] >= 55296 && currentChar[1] <= 56319))
+                                        currentChar = new char[] { currentChar[0] };
 
                                     switch (currentChar?.Length)
                                     {
@@ -130,7 +134,10 @@ namespace BitooBitImageEditor.Helper
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            { 
+            
+            }
         }
 
 
