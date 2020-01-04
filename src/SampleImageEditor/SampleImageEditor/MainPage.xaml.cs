@@ -13,6 +13,8 @@ namespace SampleImageEditor
         {
             InitializeComponent();
             this.BindingContext = this;
+
+            //BitooBitImageEditor.EditorPage.
         }
 
 
