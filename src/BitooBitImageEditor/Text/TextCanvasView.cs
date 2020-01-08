@@ -21,7 +21,8 @@ namespace BitooBitImageEditor.Text
         SKCanvas canvas;
         // Touch tracking  
 
-
+        SKImageInfo Info { get; set; } = new SKImageInfo();
+ 
         Dictionary<long, SKPoint> touchPoints = new Dictionary<long, SKPoint>();
         Dictionary<long, SKPoint> touchPointsInside = new Dictionary<long, SKPoint>();
 
@@ -91,13 +92,30 @@ namespace BitooBitImageEditor.Text
                     canvas.DrawBitmap(bitmap, source, dest);
 
 
-                    //SKRect rect = new SKRect(scaledCropRect.Left * scale, scaledCropRect.Top * scale, scaledCropRect.Right * scale, scaledCropRect.Bottom * scale) ;
+
+                    float scale = Math.Max(bitmap.Width / Info.Width, bitmap.Height / Info.Height)/3;
+
+                    float left = (Info.Width - scale * bitmap.Width) / 2;
+                    float top = (Info.Height - scale * bitmap.Height) / 2;
+                    float right = left + scale * bitmap.Width;
+                    float bottom = top + scale * bitmap.Height;
 
 
-                    SKRect rect = this.textRect.Rect;
 
 
-                    canvas.DrawMultilineText(Text, currentColor, ref rect); 
+                    SKRect rect = new SKRect(left, top, right, bottom);
+
+
+
+                    canvas.Save();
+                    canvas.Translate(rect.MidX, rect.MidY);
+                    canvas.RotateDegrees((float)textRect.angel);
+                    SKRect rectangle = new SKRect(-rect.Width / 2f, -rect.Height / 2f, rect.Width / 2f, rect.Height / 2f);
+
+
+                    canvas.DrawMultilineText(Text, currentColor, ref rectangle);
+                    canvas.Restore();
+
                 }
                 return croppedBitmap;
             }
@@ -112,7 +130,7 @@ namespace BitooBitImageEditor.Text
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
-
+            Info = info;
 
             canvas.Clear(SkiaHelper.backgraundColor);
 
