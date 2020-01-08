@@ -125,11 +125,27 @@ namespace BitooBitImageEditor.Text
             bitmapScaleMatrix.SetScaleTranslate(rect.scale, rect.scale, rect.left, rect.top);
             scaledCropRect = bitmapScaleMatrix.MapRect(this.textRect.Rect);
 
-            canvas.DrawMultilineText(Text, currentColor, ref scaledCropRect);
+
+            canvas.Save();
+            canvas.Translate(scaledCropRect.MidX, scaledCropRect.MidY);
+            
+
+            SKRect rectangle = new SKRect(-scaledCropRect.Width/2f, -scaledCropRect.Height / 2f, scaledCropRect.Width / 2f, scaledCropRect.Height / 2f);
+
+            canvas.RotateDegrees((float)textRect.angel);
+
+
+            //canvas.DrawCircle(0, 0, 5, SkiaHelper.smallPoint);
+
+
+            canvas.DrawMultilineText(Text, currentColor, ref rectangle);
+
+
+            scaledCropRect.Bottom = scaledCropRect.Top + rectangle.Height;
 
             if (!String.IsNullOrWhiteSpace(text))
             {
-                canvas.DrawRect(scaledCropRect, SkiaHelper.edgeStroke);
+                canvas.DrawRect(rectangle, SkiaHelper.edgeStroke);
                 float _radius = scaledCropRect.Width * 0.015f;
                 float radius = _radius < 12 ? 12 : _radius;
                 SKPaint cornerStroke = new SKPaint
@@ -137,22 +153,31 @@ namespace BitooBitImageEditor.Text
                     Style = SKPaintStyle.StrokeAndFill,
                     Color = SKColors.White
                 };
-                canvas.DrawOval(scaledCropRect.Right, scaledCropRect.Bottom, radius, radius, cornerStroke);
+                canvas.DrawOval(rectangle.Right, rectangle.Bottom, radius, radius, cornerStroke);
             }
             this.textRect.height = scaledCropRect.Height / rect.scale;
 
-            SKRect blackoutCropRectTop = new SKRect(0, 0, info.Width, rect.top);
-            canvas.DrawRect(blackoutCropRectTop, SkiaHelper.blackoutFill);
 
-            SKRect blackoutCropRectBottom = new SKRect(0, rect.bottom, info.Width, info.Height);
-            canvas.DrawRect(blackoutCropRectBottom, SkiaHelper.blackoutFill);
 
-            SKRect blackoutCropRectLeft = new SKRect(0, 0, rect.left, rect.bottom);
-            canvas.DrawRect(blackoutCropRectLeft, SkiaHelper.blackoutFill);
+            canvas.Restore();
 
-            SKRect blackoutCropRectRight = new SKRect(rect.right, rect.top, info.Width, rect.bottom);
-            canvas.DrawRect(blackoutCropRectRight, SkiaHelper.blackoutFill);
 
+            //if (!String.IsNullOrWhiteSpace(text))
+            //{
+            //    var point = SkiaHelper.RotatePoint(new SKPoint (scaledCropRect.MidX, scaledCropRect.MidY), textRect.angel, new SKPoint(scaledCropRect.Right, scaledCropRect.Bottom));
+
+
+            //    float radius = 6;
+            //    SKPaint cornerStroke = new SKPaint
+            //    {
+            //        Style = SKPaintStyle.StrokeAndFill,
+            //        Color = SKColors.Red
+            //    };
+            //    canvas.DrawOval(point.X, point.Y, radius, radius, cornerStroke);
+            //}
+
+           
+            canvas.DrawSurrounding(new SKRect(0, 0, info.Width, info.Height), rect.rect, SKColors.DarkGray.WithAlpha((byte)(0xFF * 0.5)));
 
             // Invert the transform for touch tracking
             bitmapScaleMatrix.TryInvert(out inverseBitmapMatrix);
@@ -227,92 +252,3 @@ namespace BitooBitImageEditor.Text
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//public static void DrawMultilineText(SKCanvas canvas, string text, SKColor color, o SKRect rect)
-//{
-//    SKPaint paint = new SKPaint
-//    {
-//        Color = color,
-//        IsAntialias = true
-//    };
-
-//    //int emojiChar = StringUtilities.GetUnicodeCharacterCode("🚀", SKTextEncoding.Utf32);
-//    //using (var emoji = SKTypeface.FromFamilyName("Noto Emoji"))
-//    int emojiChar = 1087;
-//    using (SKTypeface typeface = SKFontManager.Default.MatchCharacter(emojiChar))
-//    {
-//        paint.Typeface = typeface;
-//        string[] lines = text.Split(new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" }, StringSplitOptions.None);
-
-//        float minTextSize = int.MaxValue;
-//        for (int i = 0; i < lines.Length; i++)
-//        {
-//            float textWidth = paint.MeasureText(lines[i]);
-//            float minTextSizecurrent = 0.95f * scaledCropRect.Width * paint.TextSize / textWidth;
-
-//            if (minTextSizecurrent < minTextSize)
-//                minTextSize = minTextSizecurrent;
-//        }
-
-//        paint.TextSize = minTextSize < 255 ? minTextSize : 255;
-
-//        float maxTextHeight = 0;
-//        float maxTextWidth = 0;
-//        float[] linesWidth = new float[lines.Length];
-//        for (int i = 0; i < lines.Length; i++)
-//        {
-//            SKRect currenttextBounds = new SKRect();
-//            paint.MeasureText(lines[i], ref currenttextBounds);
-
-//            linesWidth[i] = currenttextBounds.Width;
-//            if (maxTextHeight < currenttextBounds.Height)
-//                maxTextHeight = currenttextBounds.Height;
-
-//            if (maxTextWidth < currenttextBounds.Width)
-//                maxTextWidth = currenttextBounds.Width;
-//        }
-
-//        maxTextHeight = 1.2f * maxTextHeight;
-//        float yText = scaledCropRect.Top;
-
-//        for (int i = 0; i < lines.Length; i++)
-//        {
-//            float xText = scaledCropRect.MidX - (linesWidth[i] / 2);
-//            canvas.DrawText(lines[i], xText, yText += maxTextHeight, paint);
-//        }
-
-//        this.textRect.height = ((lines.Length) * maxTextHeight) / rect.scale;
-//    }
-
-//    var textRect = this.textRect.Rect;
-//    textRect.Bottom = textRect.Top + this.textRect.height;
-//    scaledCropRect = bitmapScaleMatrix.MapRect(textRect);
-//    if (!String.IsNullOrWhiteSpace(Text))
-//    {
-//        canvas.DrawRect(scaledCropRect, SkiaHelper.edgeStroke);
-//        float _radius = textRect.Width * 0.015f;
-//        float radius = _radius < 15 ? 15 : _radius;
-//        SKPaint cornerStroke = new SKPaint
-//        {
-//            Style = SKPaintStyle.StrokeAndFill,
-//            Color = SKColors.White
-//        };
-//        canvas.DrawOval(scaledCropRect.Right, scaledCropRect.Bottom, radius, radius, cornerStroke);
-//    }
-
-//}

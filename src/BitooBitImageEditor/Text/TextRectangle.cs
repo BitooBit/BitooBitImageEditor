@@ -8,7 +8,7 @@ namespace BitooBitImageEditor.Text
         //float MINIMUM = 500;   // pixels width or height
 
         internal SKRect maxRect;             // generally the size of the bitmap
-
+        internal double angel;
 
         internal float height = 20f;
         internal TextRectangle(SKRect maxRect)
@@ -31,19 +31,14 @@ namespace BitooBitImageEditor.Text
 
         internal SKRect Rect { set; get; }
 
-        internal SKPoint Corner => new SKPoint(Rect.Right, Rect.Bottom);
+        internal SKPoint Corner => SkiaHelper.RotatePoint(new SKPoint(Rect.MidX, Rect.MidY), angel, new SKPoint(Rect.Right, Rect.Bottom)); 
 
         internal SKPoint[] Corners
         {
             get
             {
-                return new SKPoint[]
-                {
-                    new SKPoint(Rect.Left, Rect.Top),
-                    new SKPoint(Rect.Right, Rect.Top),
-                    new SKPoint(Rect.Right, Rect.Bottom),
-                    new SKPoint(Rect.Left, Rect.Bottom)
-                };
+                return SkiaHelper.RotatePoint(new SKPoint(Rect.MidX, Rect.MidY), angel, 
+                    new SKPoint(Rect.Left, Rect.Top), new SKPoint(Rect.Right, Rect.Top), new SKPoint(Rect.Right, Rect.Bottom), new SKPoint(Rect.Left, Rect.Bottom));
             }
         }
 
@@ -58,11 +53,18 @@ namespace BitooBitImageEditor.Text
         internal bool TestPointInsideSquare(SKPoint pixelLocation)
         {
             SKPoint[] corners = Corners;
-            float X = pixelLocation.X, Y = pixelLocation.Y;
-            if (corners[0].X <= X && corners[2].X >= X && corners[0].Y <= Y && corners[2].Y >= Y)
-                return true;
+            //float X = pixelLocation.X, Y = pixelLocation.Y;
+            //if (corners[0].X <= X && corners[2].X >= X && corners[0].Y <= Y && corners[2].Y >= Y)
+            //    return true;
 
-            return false;
+
+
+
+
+
+
+
+            return SkiaHelper.CheckPointInsideTriangle(pixelLocation, corners[0], corners[1], corners[2]) || SkiaHelper.CheckPointInsideTriangle(pixelLocation, corners[2], corners[3], corners[0]);
         }
 
         internal void MoveAllCorner(SKPoint point)
@@ -75,21 +77,10 @@ namespace BitooBitImageEditor.Text
             rectNew.Left += point.X;
             rectNew.Right += point.X;
 
-            //if (!(maxRect.Left > rectNew.Left || maxRect.Right < rectNew.Right))
-            //{
-                rect.Left = rectNew.Left;
-                rect.Right = rectNew.Right;
-            //}
-            //if (!(maxRect.Bottom < rectNew.Bottom || maxRect.Top > rectNew.Top))
-            //{
-                rect.Bottom = rectNew.Top + height;
-                rect.Top = rectNew.Top;
-            //}
-            //else
-            //{
-
-            //}
-
+            rect.Left = rectNew.Left;
+            rect.Right = rectNew.Right;
+            rect.Bottom = rectNew.Top + height;
+            rect.Top = rectNew.Top;
             Rect = rect;
         }
 
@@ -97,10 +88,34 @@ namespace BitooBitImageEditor.Text
         {
             float MINIMUM = Math.Min(maxRect.Width, maxRect.Height) * 0.15f;
             SKRect rect = Rect;
-            rect.Right = Math.Max(point.X, rect.Left + MINIMUM);
-            //rect.Right = Math.Min(point.X, maxRect.Right);
+            double a = CalcLenght(point.X, point.Y, rect.Right, rect.Bottom);
+            double b = CalcLenght(rect.MidX, rect.Bottom, point.X, point.Y);
+            double c = CalcLenght(rect.MidX, rect.Bottom, rect.Right, rect.Bottom);
 
+            double _angel = Math.Acos((b * b + c * c - a * a) / (2 * b * c)) * 180 / Math.PI;
+            angel = rect.Bottom < point.Y ? _angel : - _angel;
+
+
+            float abs = Math.Abs(point.X - rect.MidX);
+
+
+
+
+
+            rect.Right = rect.MidX + abs;
+
+            rect.Left = rect.MidX - abs;
+
+            rect.Bottom = rect.Top + height;
             Rect = rect;
         }
-    }
+
+
+        private double CalcLenght(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+        }
+
+
+    } 
 }

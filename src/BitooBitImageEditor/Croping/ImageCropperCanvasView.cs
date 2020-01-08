@@ -1,4 +1,5 @@
-﻿using BitooBitImageEditor.TouchTracking;
+﻿using BitooBitImageEditor.Helper;
+using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
@@ -40,7 +41,6 @@ namespace BitooBitImageEditor.Croping
             SKRect bitmapRect = new SKRect(0, 0, bitmap.Width, bitmap.Height);
             croppingRect = new CroppingRectangle(bitmapRect, aspectRatio);
 
-            ;
         }
 
         internal SKBitmap CroppedBitmap
@@ -115,17 +115,10 @@ namespace BitooBitImageEditor.Croping
             SKRect scaledCropRect = bitmapScaleMatrix.MapRect(croppingRect.Rect);
             canvas.DrawRect(scaledCropRect, SkiaHelper.edgeStroke);
 
-            SKRect blackoutCropRectTop = new SKRect(rect.left, rect.top, rect.right, scaledCropRect.Top);
-            canvas.DrawRect(blackoutCropRectTop, SkiaHelper.blackoutFill);
 
-            SKRect blackoutCropRectBottom = new SKRect(rect.left, scaledCropRect.Bottom, rect.right, rect.bottom);
-            canvas.DrawRect(blackoutCropRectBottom, SkiaHelper.blackoutFill);
+            canvas.DrawSurrounding(rect.rect, scaledCropRect, SKColors.Gray.WithAlpha((byte)(0xFF * 0.5)));
 
-            SKRect blackoutCropRectLeft = new SKRect(rect.left, scaledCropRect.Top, scaledCropRect.Left, scaledCropRect.Bottom);
-            canvas.DrawRect(blackoutCropRectLeft, SkiaHelper.blackoutFill);
 
-            SKRect blackoutCropRectRight = new SKRect(scaledCropRect.Right, scaledCropRect.Top, rect.right, scaledCropRect.Bottom);
-            canvas.DrawRect(blackoutCropRectRight, SkiaHelper.blackoutFill);
 
             // Display heavier corners
             using (SKPath path = new SKPath())
