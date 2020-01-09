@@ -18,11 +18,13 @@ namespace BitooBitImageEditor.Text
         string text = "";
         SKColor currentColor = Color.Black.ToSKColor();
         SKRect scaledCropRect = new SKRect();
-        SKCanvas canvas;
+
         // Touch tracking  
 
         SKImageInfo Info { get; set; } = new SKImageInfo();
- 
+        SKRect ImgRect { get; set; } = new SKRect();
+
+
         Dictionary<long, SKPoint> touchPoints = new Dictionary<long, SKPoint>();
         Dictionary<long, SKPoint> touchPointsInside = new Dictionary<long, SKPoint>();
 
@@ -92,26 +94,12 @@ namespace BitooBitImageEditor.Text
                     canvas.DrawBitmap(bitmap, source, dest);
 
 
-
-                    float scale = Math.Max(bitmap.Width / Info.Width, bitmap.Height / Info.Height)/3;
-
-                    float left = (Info.Width - scale * bitmap.Width) / 2;
-                    float top = (Info.Height - scale * bitmap.Height) / 2;
-                    float right = left + scale * bitmap.Width;
-                    float bottom = top + scale * bitmap.Height;
-
-
-
-
-                    SKRect rect = new SKRect(left, top, right, bottom);
-
-
+                    SKRect rect = textRect.Rect;
 
                     canvas.Save();
                     canvas.Translate(rect.MidX, rect.MidY);
                     canvas.RotateDegrees((float)textRect.angel);
                     SKRect rectangle = new SKRect(-rect.Width / 2f, -rect.Height / 2f, rect.Width / 2f, rect.Height / 2f);
-
 
                     canvas.DrawMultilineText(Text, currentColor, ref rectangle);
                     canvas.Restore();
@@ -137,12 +125,17 @@ namespace BitooBitImageEditor.Text
             // Calculate rectangle for displaying bitmap 
             var rect = SkiaHelper.CalculateRectangle(info, bitmap);
             canvas.DrawBitmap(bitmap, rect.rect);
+            ImgRect = rect.rect;
+
+
+
 
             // Calculate a matrix transform for displaying the cropping rectangle
             SKMatrix bitmapScaleMatrix = SKMatrix.MakeIdentity();
             bitmapScaleMatrix.SetScaleTranslate(rect.scale, rect.scale, rect.left, rect.top);
             scaledCropRect = bitmapScaleMatrix.MapRect(this.textRect.Rect);
 
+            canvas.DrawCircle(0, 0, 5, SkiaHelper.smallPoint);
 
             canvas.Save();
             canvas.Translate(scaledCropRect.MidX, scaledCropRect.MidY);

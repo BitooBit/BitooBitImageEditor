@@ -85,7 +85,12 @@ namespace BitooBitImageEditor.Helper
                         }
 
                         currentLineChars = null;
-                        paint.TextSize = minTextSize < maxSize ? minTextSize : maxSize;
+
+                        //paint.TextSize = minTextSize < maxSize ? minTextSize : maxSize;
+                        //paint.TextScaleX = minTextSize / paint.TextSize;
+
+                        paint.TextSize = minTextSize ;
+
 
                         for (int i = 0; i < chars.Length; i++)
                         {
