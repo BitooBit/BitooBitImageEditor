@@ -132,7 +132,10 @@
       <Version>6.2.9</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp">
-      <Version>1.68.1</Version>
+      <Version>1.68.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="SkiaSharp.HarfBuzz">
+      <Version>1.68.1.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
       <Version>4.4.0.991265</Version>

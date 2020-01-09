@@ -85,10 +85,27 @@ namespace BitooBitImageEditor.Text
         {
             get
             {
-                SKRect cropRect = textRect.maxRect;
+
+                //SKBitmap textBitmap = new SKBitmap((int)textRect.Rect.Width, (int)textRect.Rect.Height);
+                //SKRect textDest = new SKRect(0, 0, textRect.Rect.Width, textRect.Rect.Height);
+                //using (SKCanvas canvas = new SKCanvas(textBitmap))
+                //{
+                //    canvas.DrawBitmap(textBitmap, textDest);
+                //    canvas.DrawMultilineText(Text, currentColor, ref textDest);
+                //}
+            
+
+
+
+
+
+
+
+
+               SKRect cropRect = textRect.maxRect;
                 SKBitmap croppedBitmap = new SKBitmap((int)cropRect.Width, (int)cropRect.Height);
                 SKRect dest = new SKRect(0, 0, cropRect.Width, cropRect.Height);
-                SKRect source = new SKRect(cropRect.Left, cropRect.Top, cropRect.Right, cropRect.Bottom);
+                SKRect source = new SKRect(cropRect.Left, cropRect.Top, cropRect.Right, cropRect.Bottom);              
                 using (SKCanvas canvas = new SKCanvas(croppedBitmap))
                 {
                     canvas.DrawBitmap(bitmap, source, dest);
@@ -102,6 +119,7 @@ namespace BitooBitImageEditor.Text
                     SKRect rectangle = new SKRect(-rect.Width / 2f, -rect.Height / 2f, rect.Width / 2f, rect.Height / 2f);
 
                     canvas.DrawMultilineText(Text, currentColor, ref rectangle);
+                    //canvas.DrawBitmap(textBitmap, rectangle.Left, rectangle.Top);
                     canvas.Restore();
 
                 }

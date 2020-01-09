@@ -24,8 +24,11 @@
     <None Remove="Resources\crop_rotate.png" />
     <None Remove="Resources\crop_square.png" />
     <None Remove="Resources\done.png" />
+    <None Remove="Resources\EmojiOne.ttf" />
     <None Remove="Resources\format_shapes.png" />
     <None Remove="Resources\gesture.png" />
+    <None Remove="Resources\NotoColorEmoji.ttf" />
+    <None Remove="Resources\NotoEmoji.ttf" />
     <None Remove="Resources\rotate_right.png" />
     <None Remove="Resources\save.png" />
     <None Include="..\..\nuget\LICENSE.txt">
@@ -46,20 +49,24 @@
     <EmbeddedResource Include="Resources\crop_rotate.png" />
     <EmbeddedResource Include="Resources\crop_square.png" />
     <EmbeddedResource Include="Resources\done.png" />
+    <EmbeddedResource Include="Resources\EmojiOne.ttf" />
     <EmbeddedResource Include="Resources\format_shapes.png" />
     <EmbeddedResource Include="Resources\gesture.png" />
+    <EmbeddedResource Include="Resources\NotoColorEmoji.ttf" />
+    <EmbeddedResource Include="Resources\NotoEmoji.ttf" />
     <EmbeddedResource Include="Resources\rotate_right.png" />
     <EmbeddedResource Include="Resources\save.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.0.5">
+    <PackageReference Include="Fody" Version="6.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
-    <PackageReference Include="SkiaSharp" Version="1.68.1" />
-    <PackageReference Include="SkiaSharp.Views.Forms" Version="1.68.1" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.2" />
+    <PackageReference Include="SkiaSharp" Version="1.68.1.1" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="1.68.1.1" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="1.68.1.1" />
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.4.0.991265" />
   </ItemGroup>
