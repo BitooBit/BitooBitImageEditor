@@ -18,17 +18,16 @@
 
   <ItemGroup>
     <None Remove="Resources\arrow_back.png" />
+    <None Remove="Resources\Banana.jpg" />
+    <None Remove="Resources\BananaMatte.png" />
     <None Remove="Resources\clear.png" />
     <None Remove="Resources\crop_free.png" />
     <None Remove="Resources\crop_full.png" />
     <None Remove="Resources\crop_rotate.png" />
     <None Remove="Resources\crop_square.png" />
     <None Remove="Resources\done.png" />
-    <None Remove="Resources\EmojiOne.ttf" />
     <None Remove="Resources\format_shapes.png" />
     <None Remove="Resources\gesture.png" />
-    <None Remove="Resources\NotoColorEmoji.ttf" />
-    <None Remove="Resources\NotoEmoji.ttf" />
     <None Remove="Resources\rotate_right.png" />
     <None Remove="Resources\save.png" />
     <None Include="..\..\nuget\LICENSE.txt">
@@ -43,17 +42,16 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\arrow_back.png" />
+    <EmbeddedResource Include="Resources\Banana.jpg" />
+    <EmbeddedResource Include="Resources\BananaMatte.png" />
     <EmbeddedResource Include="Resources\clear.png" />
     <EmbeddedResource Include="Resources\crop_free.png" />
     <EmbeddedResource Include="Resources\crop_full.png" />
     <EmbeddedResource Include="Resources\crop_rotate.png" />
     <EmbeddedResource Include="Resources\crop_square.png" />
     <EmbeddedResource Include="Resources\done.png" />
-    <EmbeddedResource Include="Resources\EmojiOne.ttf" />
     <EmbeddedResource Include="Resources\format_shapes.png" />
     <EmbeddedResource Include="Resources\gesture.png" />
-    <EmbeddedResource Include="Resources\NotoColorEmoji.ttf" />
-    <EmbeddedResource Include="Resources\NotoEmoji.ttf" />
     <EmbeddedResource Include="Resources\rotate_right.png" />
     <EmbeddedResource Include="Resources\save.png" />
   </ItemGroup>

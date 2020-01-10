@@ -2,9 +2,7 @@
 using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
-using System;
 using System.Collections.Generic;
-using Xamarin.Forms;
 
 namespace BitooBitImageEditor.Croping
 {

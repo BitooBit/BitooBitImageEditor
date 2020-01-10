@@ -8,6 +8,7 @@
              x:Class="BitooBitImageEditor.EditorPage.ImageEditorPage"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              xmlns:editorpage="clr-namespace:BitooBitImageEditor.EditorPage"
+             xmlns:tt="clr-namespace:BitooBitImageEditor.TouchTracking"
              ios:Page.PrefersStatusBarHidden="True"
              ios:Page.PreferredStatusBarUpdateAnimation="Fade"
              ios:Page.PrefersHomeIndicatorAutoHidden="true"
@@ -63,7 +64,7 @@
 
 
     <ContentPage.Content>
-        <!--<ScrollView >-->
+
         <Grid VerticalOptions="FillAndExpand" BackgroundColor="#eeeeee">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -101,24 +102,11 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
 
-                <!--<Grid x:Name="canvasPaintViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding PaintVisible}" IsEnabled="{Binding PaintVisible}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-            </Grid>-->
 
-
-                <Grid x:Name="canvasTextViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding TextVisible}" IsEnabled="{Binding TextVisible}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
+                <Grid.Effects>
+                    <tt:TouchEffect Capture="True"
+                            TouchAction="TouchEffect_TouchAction" />
+                </Grid.Effects>
             </Grid>
 
             <Grid Grid.Row="1" VerticalOptions="End">
@@ -136,7 +124,7 @@
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
                     </CollectionView.ItemsLayout>
-                    
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout HorizontalOptions="Center">
@@ -144,7 +132,7 @@
                             </StackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                    
+
                 </CollectionView>
 
                 <CollectionView Grid.Row="0" ItemsSource="{Binding ColorCollect}" IsVisible="{Binding ColorsCollectVisible}" HeightRequest="32">
@@ -162,22 +150,20 @@
                 </CollectionView>
 
 
-                <Editor Grid.Row="1" IsVisible="{Binding TextVisible}" Text="{Binding Text}" BackgroundColor="White" TextColor="Black" Margin="10,4,10,4" AutoSize="TextChanges"/>
+                <Editor Grid.Row="1" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" BackgroundColor="White" TextColor="Black" Margin="10,4,10,4" AutoSize="TextChanges"/>
 
                 <StackLayout Grid.Row="2" IsVisible="{Binding ApplyChangesVisible}">
-                    <ImageButton Grid.Column="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" CommandParameter="Cancel" />
 
                     <ImageButton Grid.Column="2" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" HorizontalOptions="EndAndExpand"/>
                 </StackLayout>
-                
+
                 <StackLayout Grid.Row="2" IsVisible="{Binding FinishVisible}">
                     <ImageButton Grid.Column="0" Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" />
 
                     <ImageButton Grid.Column="2" Source="{res:ImageResource save}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="EndAndExpand"/>
                 </StackLayout>
-                
+
             </Grid>
         </Grid>
-        <!--</ScrollView>-->
     </ContentPage.Content>
 </ContentPage>
