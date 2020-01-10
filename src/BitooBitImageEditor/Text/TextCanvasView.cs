@@ -102,7 +102,7 @@ namespace BitooBitImageEditor.Text
 
 
 
-               SKRect cropRect = textRect.maxRect;
+                SKRect cropRect = textRect.maxRect;
                 SKBitmap croppedBitmap = new SKBitmap((int)cropRect.Width, (int)cropRect.Height);
                 SKRect dest = new SKRect(0, 0, cropRect.Width, cropRect.Height);
                 SKRect source = new SKRect(cropRect.Left, cropRect.Top, cropRect.Right, cropRect.Bottom);              
@@ -153,21 +153,34 @@ namespace BitooBitImageEditor.Text
             bitmapScaleMatrix.SetScaleTranslate(rect.scale, rect.scale, rect.left, rect.top);
             scaledCropRect = bitmapScaleMatrix.MapRect(this.textRect.Rect);
 
+
+            SKBitmap bitmapText = SkiaHelper.DrawTextOnBitmap(Text, currentColor);
+            canvas.DrawBitmap(bitmapText, 0, 0, SkiaHelper.edgeStroke);
+
+
             canvas.DrawCircle(0, 0, 5, SkiaHelper.smallPoint);
 
             canvas.Save();
             canvas.Translate(scaledCropRect.MidX, scaledCropRect.MidY);
-            
 
-            SKRect rectangle = new SKRect(-scaledCropRect.Width/2f, -scaledCropRect.Height / 2f, scaledCropRect.Width / 2f, scaledCropRect.Height / 2f);
+
+            SKRect rectangle = new SKRect(-scaledCropRect.Width / 2f, -scaledCropRect.Height / 2f, scaledCropRect.Width / 2f, scaledCropRect.Height / 2f);
 
             canvas.RotateDegrees((float)textRect.angel);
 
 
-            //canvas.DrawCircle(0, 0, 5, SkiaHelper.smallPoint);
+            canvas.DrawCircle(0, 0, 5, SkiaHelper.smallPoint);
 
 
             canvas.DrawMultilineText(Text, currentColor, ref rectangle);
+
+
+
+
+
+
+
+
 
 
             scaledCropRect.Bottom = scaledCropRect.Top + rectangle.Height;
