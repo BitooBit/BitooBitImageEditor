@@ -110,7 +110,7 @@ namespace BitooBitImageEditor
                                     int numberChar = 120;
                                     char[] currentChar = chars[i][j].ToCharArray();
 
-                                    if (currentChar?.Length > 1 && !(currentChar[1] >= 55296 && currentChar[1] <= 56319)) //checking highSurrogate
+                                    if (currentChar?.Length > 1 && !(currentChar[1] >= 55296 && currentChar[1] <= 57000)) //checking highSurrogate
                                         currentChar = new char[] { currentChar[0] };
 
                                     switch (currentChar?.Length)
@@ -147,7 +147,7 @@ namespace BitooBitImageEditor
                         currentLineChars = null;
                         maxLineHeight = (float)Math.Ceiling((double)maxLineHeight * 1.2);
                         maxLineWidth = (float)Math.Ceiling((double)maxLineWidth * 1.2);
-                        height = (chars.Length + 0.32f) * maxLineHeight;
+                        height = (float)Math.Ceiling((double)((chars.Length + 0.32f) * maxLineHeight));
 
                         SKBitmap textBitmap = new SKBitmap((int)maxLineWidth, (int)height);
                         SKRect textDest = new SKRect(0, 0, maxLineWidth, height);
@@ -169,14 +169,20 @@ namespace BitooBitImageEditor
                                         charPaint.Typeface = charsTypeface[i][j];
                                         canvasText.DrawText(chars[i][j], xText, yText, charPaint);
                                         xText += charsWidth[i][j];
-                                        charsTypeface[i][j].Dispose();
+                                        //charsTypeface[i][j].Dispose();
                                     }
                                 }
 
                                 yText += maxLineHeight;
                             }
 
+                            canvasText.DrawRect(new SKRect(0,0, maxLineWidth, height), SkiaHelper.edgeStroke);
                         }
+
+                        foreach (var a in charsTypeface)
+                            foreach (var b in a)
+                                b.Dispose();
+
 
                         return textBitmap;
                     }

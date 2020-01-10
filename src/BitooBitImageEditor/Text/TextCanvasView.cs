@@ -155,7 +155,6 @@ namespace BitooBitImageEditor.Text
 
 
             SKBitmap bitmapText = SkiaHelper.DrawTextOnBitmap(Text, currentColor);
-            canvas.DrawBitmap(bitmapText, 0, 0, SkiaHelper.edgeStroke);
 
 
             canvas.DrawCircle(0, 0, 5, SkiaHelper.smallPoint);
@@ -172,12 +171,23 @@ namespace BitooBitImageEditor.Text
             canvas.DrawCircle(0, 0, 5, SkiaHelper.smallPoint);
 
 
-            canvas.DrawMultilineText(Text, currentColor, ref rectangle);
+            float scale = rectangle.Width / bitmapText.Width;
+            canvas.Save();
+
+            canvas.Scale(scale);
+
+
+
+
+            canvas.DrawBitmap(bitmapText, rectangle.Left, rectangle.Top, SkiaHelper.edgeStroke);
+
+            //canvas.DrawMultilineText(Text, currentColor, ref rectangle);
 
 
 
 
 
+            canvas.Restore();
 
 
 
@@ -197,11 +207,11 @@ namespace BitooBitImageEditor.Text
                 };
                 canvas.DrawOval(rectangle.Right, rectangle.Bottom, radius, radius, cornerStroke);
             }
-            this.textRect.height = scaledCropRect.Height / rect.scale;
 
 
 
             canvas.Restore();
+
 
 
             //if (!String.IsNullOrWhiteSpace(text))
@@ -218,7 +228,7 @@ namespace BitooBitImageEditor.Text
             //    canvas.DrawOval(point.X, point.Y, radius, radius, cornerStroke);
             //}
 
-           
+
             canvas.DrawSurrounding(new SKRect(0, 0, info.Width, info.Height), rect.rect, SKColors.DarkGray.WithAlpha((byte)(0xFF * 0.5)));
 
             // Invert the transform for touch tracking

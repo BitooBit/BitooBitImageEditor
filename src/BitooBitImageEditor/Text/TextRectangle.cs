@@ -10,7 +10,7 @@ namespace BitooBitImageEditor.Text
         internal SKRect maxRect;             // generally the size of the bitmap
         internal double angel;
 
-        internal float height = 20f;
+
         internal TextRectangle(SKRect maxRect)
         {
             SetRect(maxRect);
@@ -53,16 +53,6 @@ namespace BitooBitImageEditor.Text
         internal bool TestPointInsideSquare(SKPoint pixelLocation)
         {
             SKPoint[] corners = Corners;
-            //float X = pixelLocation.X, Y = pixelLocation.Y;
-            //if (corners[0].X <= X && corners[2].X >= X && corners[0].Y <= Y && corners[2].Y >= Y)
-            //    return true;
-
-
-
-
-
-
-
 
             return SkiaHelper.CheckPointInsideTriangle(pixelLocation, corners[0], corners[1], corners[2]) || SkiaHelper.CheckPointInsideTriangle(pixelLocation, corners[2], corners[3], corners[0]);
         }
@@ -72,14 +62,14 @@ namespace BitooBitImageEditor.Text
             SKRect rect = Rect;
             SKRect rectNew = Rect;
 
-            rectNew.Bottom = rectNew.Top + height;
+            rectNew.Bottom += point.Y;
             rectNew.Top += point.Y;
             rectNew.Left += point.X;
             rectNew.Right += point.X;
 
             rect.Left = rectNew.Left;
             rect.Right = rectNew.Right;
-            rect.Bottom = rectNew.Top + height;
+            rect.Bottom += point.Y;
             rect.Top = rectNew.Top;
             Rect = rect;
         }
@@ -88,6 +78,19 @@ namespace BitooBitImageEditor.Text
         {
             float MINIMUM = Math.Min(maxRect.Width, maxRect.Height) * 0.15f;
             SKRect rect = Rect;
+
+
+            float absX = Math.Abs(point.X - rect.MidX);
+            float absY = Math.Abs(point.Y - rect.MidY);
+
+            rect.Right = rect.MidX + absX;
+
+            rect.Left = rect.MidX - absX;
+
+            rect.Bottom = rect.MidY + absY;
+            rect.Top = rect.MidY - absY;
+
+
             double a = CalcLenght(point.X, point.Y, rect.Right, rect.Bottom);
             double b = CalcLenght(rect.MidX, rect.Bottom, point.X, point.Y);
             double c = CalcLenght(rect.MidX, rect.Bottom, rect.Right, rect.Bottom);
@@ -96,17 +99,13 @@ namespace BitooBitImageEditor.Text
             angel = rect.Bottom < point.Y ? _angel : - _angel;
 
 
-            float abs = Math.Abs(point.X - rect.MidX);
+            
 
 
 
 
+            
 
-            rect.Right = rect.MidX + abs;
-
-            rect.Left = rect.MidX - abs;
-
-            rect.Bottom = rect.Top + height;
             Rect = rect;
         }
 
