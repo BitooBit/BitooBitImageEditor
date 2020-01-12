@@ -222,7 +222,7 @@
 
                 <StackLayout VerticalOptions="Start" IsVisible="{Binding MainVisible}" IsEnabled="{Binding MainVisible}">
                     <ImageButton Grid.Column="0" Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" HorizontalOptions="EndAndExpand"/>
-                    <ImageButton Grid.Row="0" Source="{res:ImageResource crop_rotate}" IsVisible="{Binding Config.CanCropRotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
                     <ImageButton Grid.Row="0" Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>
                     <ImageButton Grid.Row="0" Source="{res:ImageResource stickers}" IsVisible="{Binding Config.CanAddStickers}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Stickers}" HorizontalOptions="End"/>
                     <ImageButton Grid.Row="0" Source="{res:ImageResource gesture}" IsVisible="{Binding Config.CanFingerPaint}"  HorizontalOptions="End"/>

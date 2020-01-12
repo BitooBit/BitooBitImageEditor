@@ -120,7 +120,7 @@ namespace BitooBitImageEditor.Helper
                                 yText += maxLineHeight;
                             }
 
-                            canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), SkiaHelper.edgeStroke);
+                            //canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), SkiaHelper.edgeStroke);
                         }
 
                         foreach (var a in charsTypeface)

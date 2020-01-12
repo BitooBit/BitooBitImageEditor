@@ -21,13 +21,12 @@ namespace BitooBitImageEditor
 
         public ImageEditorConfig() { }
 
-        public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, bool canCropRotate = true, float? cropAspectRatio = null, 
+        public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, float? cropAspectRatio = null, 
                                  List<SKBitmap> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit, 
                                  BackgroundType backgroundType = BackgroundType.Transparent, SKColor backgroundColor = default)
         {
             CanAddText = canAddText;
             CanFingerPaint = canFingerPaint;
-            CanCropRotate = canCropRotate;
             CropAspectRatio = cropAspectRatio;
             Stickers = stickers;
             Aspect = aspect;            
@@ -39,7 +38,6 @@ namespace BitooBitImageEditor
 
         public bool CanAddText { get; set; } = true;
         public bool CanFingerPaint { get; set; } = true;
-        public bool CanCropRotate { get; set; } = true;
         public float? CropAspectRatio { get; set; } = null;
         public List<SKBitmap> Stickers { get; set; } = null;
         public int? OutImageHeight { get; private set; } = null;

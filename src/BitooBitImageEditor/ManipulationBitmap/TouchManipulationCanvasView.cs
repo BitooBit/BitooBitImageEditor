@@ -20,6 +20,8 @@ namespace BitooBitImageEditor.ManipulationBitmap
         private float widthBitmap;
         private float heightBitmap;
         SKBitmap backgroundBitmap = new SKBitmap();
+        SKImageInfo info;
+        SKRect rectInfo = new SKRect();
 
         internal List<TouchManipulationBitmap> bitmapCollection =
             new List<TouchManipulationBitmap>();
@@ -43,6 +45,53 @@ namespace BitooBitImageEditor.ManipulationBitmap
         }
 
 
+
+
+
+        internal SKBitmap EditedBitmap
+        {
+            get
+            {
+                SKRect dest = new SKRect(0, 0, width, height);
+                SKBitmap croppedBitmap = new SKBitmap((int)width, (int)height);
+
+                float scaleX = (float)rectInfo.Width / width;
+                float scaleY = (float)rectInfo.Height / height;
+                //float scale = 1 / Math.Max(scaleX, scaleY);
+
+
+                var rectCanvas = SkiaHelper.CalculateRectangle(rectInfo, width, height).rect;
+
+
+                var rectCanvasfefe = SkiaHelper.CalculateRectangle(rectInfo, width, height);
+                float scale = 1 / rectCanvasfefe.scaleX;
+
+                var rectCanvas1 = SkiaHelper.CalculateRectangle(rectInfo, width, height, Aspect.AspectFill);
+                var rectCanvas2 = SkiaHelper.CalculateRectangle(rectInfo, width, height, Aspect.AspectFit).rect;
+
+                //float left = 
+
+
+
+                SKMatrix matrix = new SKMatrix(scale, 0, -rectCanvasfefe.rect.Left * rectCanvasfefe.scaleX, 0, scale, -rectCanvasfefe.rect.Top * rectCanvasfefe.scaleX, 0, 0, 1);
+
+                //SKMatrix matrix = new SKMatrix(rectCanvas1.scaleX, 0, -rectCanvas2.Left * rectCanvas1.scaleX, 0, rectCanvas1.scaleY, rectCanvas2.Top * rectCanvas1.scaleY, 0, 0, 1);
+
+
+                using (SKCanvas canvas = new SKCanvas(croppedBitmap))
+                {
+                    
+                    canvas.DrawManipulationBitmaps(dest, config, backgroundBitmap, bitmapCollection, width, height, widthBitmap, heightBitmap, matrix, -rectCanvasfefe.rect.Left, -rectCanvasfefe.rect.Top, scale);
+                }
+                return croppedBitmap;
+            }
+        }
+
+
+
+
+
+
         float PointToDraw(float point1, float point2)
         {
             return point1 / 2 - point2;
@@ -62,6 +111,9 @@ namespace BitooBitImageEditor.ManipulationBitmap
         {
             if (bitmap != null)
             {
+                if (bitmapCollection.Count == 0)
+                    type = BitmapType.Main;
+
                 bool mainExists = false;
                 if (type == BitmapType.Main)
                 {
@@ -90,67 +142,19 @@ namespace BitooBitImageEditor.ManipulationBitmap
                     bitmapCollection.Add(new TouchManipulationBitmap(bitmap, SKMatrix.MakeTranslation(0, 0), type, null));
             }
 
-
-
             InvalidateSurface();
         }
-
-
 
 
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
         {
             base.OnPaintSurface(args);
-            SKImageInfo info = args.Info;
+            info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
+            rectInfo = new SKRect(0, 0, info.Width, info.Height);
 
-
-
-            var rectCanvas = SkiaHelper.CalculateRectangle(new SKRect(0, 0, info.Width, info.Height), width, height);
-            var rect = SkiaHelper.CalculateRectangle(rectCanvas.rect, widthBitmap, heightBitmap, config.Aspect);
-
-            canvas.Clear();
-
-
-            switch (config?.BackgroundType)
-            {
-                case BackgroundType.Color:
-                    using (SKPaint paint = new SKPaint())
-                    {
-                        paint.Color = config.BackgroundColor;
-                        paint.IsAntialias = true;
-                        paint.Style = SKPaintStyle.Fill;
-                        canvas.DrawRect(rectCanvas.rect, paint);
-                    }
-                    break;
-                case BackgroundType.StretchedImage:
-                    using (SKPaint paint = new SKPaint())
-                    {
-                        paint.Color = SKColor.Parse("#1f1f1f");
-                        canvas.DrawRect(rectCanvas.rect, paint);
-                        paint.ImageFilter = SKImageFilter.CreateBlur(100, 100);
-                        canvas.DrawBitmap(backgroundBitmap, rectCanvas.rect, paint);
-                    }
-
-                    break;
-            }
-
-
-
-     
-            
-
-
-
-            foreach (TouchManipulationBitmap bitmap in bitmapCollection)
-            {
-                bitmap.Paint(canvas, args.Info, rect.rect);
-            }
-
-            canvas.DrawSurrounding(new SKRect(0,0, info.Width, info.Height), rectCanvas.rect, SKColors.DarkGray.WithAlpha((byte)(0xFF * 0.5)));
-
-
+            canvas.DrawManipulationBitmaps(rectInfo, config, backgroundBitmap, bitmapCollection, width, height, widthBitmap, heightBitmap, SKMatrix.MakeIdentity(), 0, 0, 1);
         }
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
@@ -168,7 +172,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                         {
                             TouchManipulationBitmap bitmap = bitmapCollection[i];
 
-                            int testResult = bitmap.HitTest(point);
+                            int testResult = bitmap.HitTest(point, rectInfo);
                             if (testResult != -1)
                             {
                                 if(isUWP)

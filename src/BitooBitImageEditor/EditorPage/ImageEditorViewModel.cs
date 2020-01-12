@@ -23,7 +23,6 @@ namespace BitooBitImageEditor.EditorPage
         {
             Config = config;
             originalBitmap = bitmap;
-            EditedBitmap = bitmap;
             imageCropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
             mainCanvas = new TouchManipulationCanvasView(config);
             imageCropperCanvas.Margin = mainCanvas.Margin = 0;
@@ -42,7 +41,6 @@ namespace BitooBitImageEditor.EditorPage
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
         public Color CurrentColor { get; set; } = Color.Black;
         public string CurrentText { set; get; } = "";
-        public SKBitmap EditedBitmap { get; set; }
         public ObservableCollection<Color> ColorCollect { get; } = SkiaHelper.GetColors();
         public ObservableCollection<CropItem> CropCollect { get; set; } = CropItem.GetCropItems();
 
@@ -95,7 +93,7 @@ namespace BitooBitImageEditor.EditorPage
         {
             SKBitmap bitmap = null;
             if (!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save")
-                bitmap = EditedBitmap;
+                bitmap = mainCanvas.EditedBitmap;
 
             ImageEditor.Instance.SetImage(bitmap);
         });

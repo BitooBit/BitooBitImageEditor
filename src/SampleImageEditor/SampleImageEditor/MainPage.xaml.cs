@@ -53,12 +53,13 @@ namespace SampleImageEditor
             try
             {
                 ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), canFingerPaint: false, backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue, 
-                    outImageHeight: 300, outImageWidht: 200, aspect: Aspect.AspectFit);
+                    /*outImageHeight: 1000, outImageWidht: 700,*/ aspect: Aspect.AspectFit);
 
                 byte[] data = await ImageEditor.Instance.GetEditedImage(config: config);
                 this.data = data;
                 if (data != null)
                 {
+                    MyImage.Source = null;
                     MyImage.Source = ImageSource.FromStream(() => new MemoryStream(data));
                 }
             }
