@@ -90,8 +90,8 @@ namespace BitooBitImageEditor.Helper
                         }
 
                         currentLineChars = null;
-                        maxLineHeight = (float)Math.Ceiling((double)maxLineHeight * 1.2);
-                        maxLineWidth = (float)Math.Ceiling((double)maxLineWidth * 1.2);
+                        maxLineHeight = (float)Math.Ceiling((double)maxLineHeight * 1.15);
+                        maxLineWidth = (float)Math.Ceiling((double)maxLineWidth * 1.05);
                         height = (float)Math.Ceiling((double)((chars.Length + 0.32f) * maxLineHeight));
 
                         SKBitmap textBitmap = new SKBitmap((int)maxLineWidth, (int)height);
@@ -120,7 +120,7 @@ namespace BitooBitImageEditor.Helper
                                 yText += maxLineHeight;
                             }
 
-                            //canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), SkiaHelper.edgeStroke);
+                            canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), SkiaHelper.edgeStroke);
                         }
 
                         foreach (var a in charsTypeface)

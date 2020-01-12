@@ -5,6 +5,7 @@ using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Xamarin.Forms;
 
@@ -12,47 +13,84 @@ namespace BitooBitImageEditor.ManipulationBitmap
 {
     internal class TouchManipulationCanvasView : SKCanvasView
     {
+        private bool isUWP;
+        ImageEditorConfig config;
+        private float width;
+        private float height;
+        private float widthBitmap;
+        private float heightBitmap;
+        SKBitmap backgroundBitmap = new SKBitmap();
+
         internal List<TouchManipulationBitmap> bitmapCollection =
             new List<TouchManipulationBitmap>();
 
         internal Dictionary<long, TouchManipulationBitmap> bitmapDictionary =
             new Dictionary<long, TouchManipulationBitmap>();
 
-        public TouchManipulationCanvasView()
+        
+
+
+
+        public TouchManipulationCanvasView(ImageEditorConfig config)
         {
-            Assembly assembly = GetType().GetTypeInfo().Assembly;
-            string[] resourceIDs = assembly.GetManifestResourceNames();
-            SKPoint position = new SKPoint();
-
-            foreach (string resourceID in resourceIDs)
+            isUWP = Device.RuntimePlatform == Device.UWP;
+            this.config = config;
+            if (!config?.OutImageAutoSize ?? false)
             {
-                if (resourceID.EndsWith("Banana.jpg") || resourceID.EndsWith("BananaMatte.png"))
-                {
-                    using (Stream stream = assembly.GetManifestResourceStream(resourceID))
-                    {
-                        SKBitmap bitmap = SKBitmap.Decode(stream);
-                        bitmapCollection.Add(new TouchManipulationBitmap(bitmap)
-                        {
-                            Matrix = SKMatrix.MakeTranslation(position.X, position.Y),
-                        });
-                        position.X += 100;
-                        position.Y += 100;
-                    }
-                }
+                width = config?.OutImageWidht ?? 0;
+                height = config?.OutImageHeight ?? 0;
             }
-            //InvalidateSurface();
-
         }
 
 
-        internal void AddTextToCanvas(string text, SKColor color)
+        float PointToDraw(float point1, float point2)
         {
-            var bitmapText= SKBitmapBuilder.FromText(text, color);
-            if(bitmapText != null)
-                bitmapCollection.Add(new TouchManipulationBitmap(bitmapText)
+            return point1 / 2 - point2;
+        }
+
+
+        internal void AddBitmapToCanvas(string text, SKColor color)
+        {
+            var bitmap= SKBitmapBuilder.FromText(text, color);
+            if (bitmap != null)
+                bitmapCollection.Add(new TouchManipulationBitmap(bitmap, SKMatrix.MakeTranslation(PointToDraw((float)Width, bitmap.Width), PointToDraw((float)Height, bitmap.Height)), BitmapType.Text, text));
+
+            InvalidateSurface();
+        }
+
+        internal void AddBitmapToCanvas(SKBitmap bitmap, BitmapType type)
+        {
+            if (bitmap != null)
+            {
+                bool mainExists = false;
+                if (type == BitmapType.Main)
                 {
-                    Matrix = SKMatrix.MakeTranslation(0, 0),
-                });
+                    if (config?.OutImageAutoSize ?? false)
+                    {
+                        width = bitmap.Width;
+                        height = bitmap.Height;
+                    }
+                    widthBitmap = bitmap.Width;
+                    heightBitmap = bitmap.Height;
+
+
+                    backgroundBitmap = new SKBitmap(15, 15);
+                    bitmap.ScalePixels(backgroundBitmap, SKFilterQuality.High);
+
+
+                    TouchManipulationBitmap mainBitmap = bitmapCollection.Where(a => a.Type == BitmapType.Main).FirstOrDefault();
+                    if (mainBitmap != null)
+                    {
+                        mainBitmap.Bitmap = bitmap;
+                        mainExists = true;
+                    }
+                }
+
+                if (!mainExists)
+                    bitmapCollection.Add(new TouchManipulationBitmap(bitmap, SKMatrix.MakeTranslation(0, 0), type, null));
+            }
+
+
 
             InvalidateSurface();
         }
@@ -60,18 +98,58 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
 
 
-
-
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
         {
             base.OnPaintSurface(args);
-            SKCanvas canvas = args.Surface.Canvas;
+            SKImageInfo info = args.Info;
+            SKSurface surface = args.Surface;
+            SKCanvas canvas = surface.Canvas;
+
+
+
+            var rectCanvas = SkiaHelper.CalculateRectangle(new SKRect(0, 0, info.Width, info.Height), width, height);
+            var rect = SkiaHelper.CalculateRectangle(rectCanvas.rect, widthBitmap, heightBitmap, config.Aspect);
+
             canvas.Clear();
+
+
+            switch (config?.BackgroundType)
+            {
+                case BackgroundType.Color:
+                    using (SKPaint paint = new SKPaint())
+                    {
+                        paint.Color = config.BackgroundColor;
+                        paint.IsAntialias = true;
+                        paint.Style = SKPaintStyle.Fill;
+                        canvas.DrawRect(rectCanvas.rect, paint);
+                    }
+                    break;
+                case BackgroundType.StretchedImage:
+                    using (SKPaint paint = new SKPaint())
+                    {
+                        paint.Color = SKColor.Parse("#1f1f1f");
+                        canvas.DrawRect(rectCanvas.rect, paint);
+                        paint.ImageFilter = SKImageFilter.CreateBlur(100, 100);
+                        canvas.DrawBitmap(backgroundBitmap, rectCanvas.rect, paint);
+                    }
+
+                    break;
+            }
+
+
+
+     
+            
+
+
 
             foreach (TouchManipulationBitmap bitmap in bitmapCollection)
             {
-                bitmap.Paint(canvas);
+                bitmap.Paint(canvas, args.Info, rect.rect);
             }
+
+            canvas.DrawSurrounding(new SKRect(0,0, info.Width, info.Height), rectCanvas.rect, SKColors.DarkGray.WithAlpha((byte)(0xFF * 0.5)));
+
 
         }
 
@@ -85,24 +163,29 @@ namespace BitooBitImageEditor.ManipulationBitmap
             switch (args.Type)
             {
                 case TouchActionType.Pressed:
-                    if(!bitmapDictionary.ContainsKey(args.Id))
-                    for (int i = bitmapCollection.Count - 1; i >= 0; i--)
-                    {
-                        TouchManipulationBitmap bitmap = bitmapCollection[i];
-
-                        if (bitmap.HitTest(point))
+                    if (!bitmapDictionary.ContainsKey(args.Id))
+                        for (int i = bitmapCollection.Count - 1; i >= 0; i--)
                         {
-                            // Move bitmap to end of collection
-                            bitmapCollection.Remove(bitmap);
-                            bitmapCollection.Add(bitmap);
+                            TouchManipulationBitmap bitmap = bitmapCollection[i];
 
-                            // Do the touch processing
-                            bitmapDictionary.Add(args.Id, bitmap);
-                            bitmap.ProcessTouchEvent(args.Id, args.Type, point);
-                            InvalidateSurface();
-                            break;
+                            int testResult = bitmap.HitTest(point);
+                            if (testResult != -1)
+                            {
+                                if(isUWP)
+                                    bitmap.TouchManager.Mode = testResult == 4 ? TouchManipulationMode.ScaleRotate : TouchManipulationMode.ScaleDualRotate; 
+
+
+                                // Move bitmap to end of collection
+                                bitmapCollection.Remove(bitmap);
+                                bitmapCollection.Add(bitmap);
+
+                                // Do the touch processing
+                                bitmapDictionary.Add(args.Id, bitmap);
+                                bitmap.ProcessTouchEvent(args.Id, args.Type, point);
+                                InvalidateSurface();
+                                break;
+                            }
                         }
-                    }
 
                     break;
 

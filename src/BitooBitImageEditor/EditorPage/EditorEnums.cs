@@ -6,16 +6,8 @@
         Paint,
         SelectType,
         Text,
-        All
+        Stickers
     }
 
-    internal enum ActionEditType
-    {
-        SetCurrentType,
-
-        CropRotate,
-        CropFree,
-        CropFull,
-        CropSquare
-    }
+    
 }

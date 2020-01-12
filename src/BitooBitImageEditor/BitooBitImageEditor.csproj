@@ -18,8 +18,6 @@
 
   <ItemGroup>
     <None Remove="Resources\arrow_back.png" />
-    <None Remove="Resources\Banana.jpg" />
-    <None Remove="Resources\BananaMatte.png" />
     <None Remove="Resources\clear.png" />
     <None Remove="Resources\crop_free.png" />
     <None Remove="Resources\crop_full.png" />
@@ -30,6 +28,9 @@
     <None Remove="Resources\gesture.png" />
     <None Remove="Resources\rotate_right.png" />
     <None Remove="Resources\save.png" />
+    <None Remove="Resources\stickers.png" />
+    <None Remove="Resources\trash.png" />
+    <None Remove="Resources\undo.png" />
     <None Include="..\..\nuget\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -42,8 +43,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\arrow_back.png" />
-    <EmbeddedResource Include="Resources\Banana.jpg" />
-    <EmbeddedResource Include="Resources\BananaMatte.png" />
     <EmbeddedResource Include="Resources\clear.png" />
     <EmbeddedResource Include="Resources\crop_free.png" />
     <EmbeddedResource Include="Resources\crop_full.png" />
@@ -54,6 +53,9 @@
     <EmbeddedResource Include="Resources\gesture.png" />
     <EmbeddedResource Include="Resources\rotate_right.png" />
     <EmbeddedResource Include="Resources\save.png" />
+    <EmbeddedResource Include="Resources\stickers.png" />
+    <EmbeddedResource Include="Resources\trash.png" />
+    <EmbeddedResource Include="Resources\undo.png" />
   </ItemGroup>
 
   <ItemGroup>

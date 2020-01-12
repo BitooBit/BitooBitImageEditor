@@ -7,17 +7,29 @@ using SkiaSharp;
 
 namespace BitooBitImageEditor.ManipulationBitmap
 {
+    enum BitmapType
+    {
+        Main,
+        Stickers,
+        Text
+    }
+
     class TouchManipulationBitmap
     {
-        SKBitmap bitmap;
+        
+
 
         Dictionary<long, TouchManipulationInfo> touchDictionary =
             new Dictionary<long, TouchManipulationInfo>();
 
-        public TouchManipulationBitmap(SKBitmap bitmap)
+        public TouchManipulationBitmap(SKBitmap bitmap, SKMatrix matrix, BitmapType type, string text)
         {
-            this.bitmap = bitmap;
-            Matrix = SKMatrix.MakeIdentity();
+            this.Bitmap = bitmap;
+
+            //Matrix = SKMatrix.MakeIdentity();            
+            Matrix = matrix;
+            Type = type;
+            Text = text;
 
             TouchManager = new TouchManipulationManager
             {
@@ -25,35 +37,71 @@ namespace BitooBitImageEditor.ManipulationBitmap
             };
         }
 
-        public TouchManipulationManager TouchManager { set; get; } 
+        public TouchManipulationManager TouchManager { set; get; }
 
+
+        public SKBitmap Bitmap { set; get; }
         public SKMatrix Matrix { set; get; }
+        public string Text { set; get; }
+        public BitmapType Type { set; get; }
 
-        public void Paint(SKCanvas canvas)
+
+        public void Paint(SKCanvas canvas, SKImageInfo info, SKRect rect)
         {
-            canvas.Save();
-            SKMatrix matrix = Matrix;
-            canvas.Concat(ref matrix);
-            canvas.DrawBitmap(bitmap, 0, 0);
-            canvas.Restore();
+            if (Type != BitmapType.Main)
+            {
+                canvas.Save();
+                SKMatrix matrix = Matrix;
+                canvas.Concat(ref matrix);
+                canvas.DrawBitmap(Bitmap, 0, 0);
+                canvas.Restore();
+            }
+            else
+            {
+                canvas.DrawBitmap(Bitmap, rect);
+            }
         }
 
-        public bool HitTest(SKPoint location)
+        public int HitTest(SKPoint location)
         {
             // Invert the matrix
             SKMatrix inverseMatrix;
 
-            if (Matrix.TryInvert(out inverseMatrix))
+            if (Type != BitmapType.Main && Matrix.TryInvert(out inverseMatrix))
             {
+                SKRect rect = new SKRect(0, 0, Bitmap.Width, Bitmap.Height);
+
                 // Transform the point using the inverted matrix
                 SKPoint transformedPoint = inverseMatrix.MapPoint(location);
 
-                // Check if it's in the untransformed bitmap rectangle
-                SKRect rect = new SKRect(0, 0, bitmap.Width, bitmap.Height);
-                return rect.Contains(transformedPoint);
+
+                float radiusX = Math.Abs(1 / inverseMatrix.ScaleX * SkiaHelper.radius);
+                float radiusY = Math.Abs(1 / inverseMatrix.ScaleY * SkiaHelper.radius);
+
+
+                var corners = new SKPoint[]
+                {
+                    new SKPoint(rect.Left, rect.Top),
+                    new SKPoint(rect.Right, rect.Top),
+                    new SKPoint(rect.Right, rect.Bottom),
+                    new SKPoint(rect.Left, rect.Bottom)
+                };
+
+                for (int index = 0; index < corners.Length; index++)
+                {
+                    SKPoint diff = transformedPoint - corners[index];
+                    float delta = (float)Math.Sqrt(diff.X * diff.X + diff.Y * diff.Y);
+
+                    if (delta < radiusX || delta < radiusY)
+                        return index;
+                }
+
+
+                return rect.Contains(transformedPoint) ? 4 : -1;
             }
-            return false;
+            return -1;
         }
+
 
         public void ProcessTouchEvent(long id, TouchActionType type, SKPoint location)
         {
@@ -96,7 +144,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             {
                 SKPoint prevPoint = infos[0].PreviousPoint;
                 SKPoint newPoint = infos[0].NewPoint;
-                SKPoint pivotPoint = Matrix.MapPoint(bitmap.Width / 2, bitmap.Height / 2);
+                SKPoint pivotPoint = Matrix.MapPoint(Bitmap.Width / 2, Bitmap.Height / 2);
 
                 touchMatrix = TouchManager.OneFingerManipulate(prevPoint, newPoint, pivotPoint);
             }

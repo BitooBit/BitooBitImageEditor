@@ -28,7 +28,7 @@ namespace BitooBitImageEditor
         private TaskCompletionSource<byte[]> taskCompletionEditImage;
         private bool imageEditLock;
         private bool imageSetLock;
-
+        
 
         public string FolderName
         {
@@ -39,7 +39,7 @@ namespace BitooBitImageEditor
 
         public async Task<bool> SaveImage(byte[] data, string filename) => await ImageHelper.SaveImageAsync(data, filename);
 
-        public async Task<byte[]> GetEditedImage(SKBitmap bitmap = null)
+        public async Task<byte[]> GetEditedImage(SKBitmap bitmap = null, ImageEditorConfig config = null)
         {
             if (!imageEditLock)
             {
@@ -51,8 +51,10 @@ namespace BitooBitImageEditor
                         bitmap = stream != null ? SKBitmap.Decode(stream) : null;
                     }
                 }
-                
-                var data = bitmap != null ? await PushImageEditorPage(bitmap) : null;
+                if (config == null)
+                    config = new ImageEditorConfig();
+
+                var data = bitmap != null ? await PushImageEditorPage(bitmap, config) : null;
                 imageEditLock = false;
                 return data;
             }
@@ -80,13 +82,13 @@ namespace BitooBitImageEditor
             }
         }
 
-        private async Task<byte[]> PushImageEditorPage(SKBitmap bitmap)
+        private async Task<byte[]> PushImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
         {          
             taskCompletionEditImage = new TaskCompletionSource<byte[]>();
 
             if (bitmap != null)
             {
-                var page = new ImageEditorPage(bitmap);
+                var page = new ImageEditorPage(bitmap, config);
                 //var page = new BitmapScatterViewPage();
 
                 if (Device.RuntimePlatform == Device.Android)

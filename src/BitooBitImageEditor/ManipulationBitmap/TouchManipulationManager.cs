@@ -22,8 +22,11 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 SKPoint oldVector = prevPoint - pivotPoint;
                 SKPoint newVector = newPoint - pivotPoint;
 
+                float scale = Magnitude(newVector) / Magnitude(oldVector);
+                
+
                 // Avoid rotation if fingers are too close to center
-                if (Magnitude(newVector) > 25 && Magnitude(oldVector) > 25)
+                if (Magnitude(newVector) > 30 && Magnitude(oldVector) > 30)
                 {
                     float prevAngle = (float)Math.Atan2(oldVector.Y, oldVector.X);
                     float newAngle = (float)Math.Atan2(newVector.Y, newVector.X);
@@ -39,6 +42,12 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
                     // Recalculate delta
                     delta = newVector - oldVector;
+                }
+
+                if (!float.IsNaN(scale) && !float.IsInfinity(scale))
+                {
+                    SKMatrix.PostConcat(ref touchMatrix,
+                        SKMatrix.MakeScale(scale, scale, pivotPoint.X, pivotPoint.Y));
                 }
             }
 

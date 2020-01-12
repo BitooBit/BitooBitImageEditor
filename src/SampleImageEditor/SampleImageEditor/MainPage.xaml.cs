@@ -1,6 +1,9 @@
 ﻿using BitooBitImageEditor;
+using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Xamarin.Forms;
 
 namespace SampleImageEditor
@@ -20,11 +23,39 @@ namespace SampleImageEditor
 
         private byte[] data;
 
+
+
+        private List<SKBitmap> GetBitmaps()
+        {
+            List<SKBitmap> stickers = null;
+            Assembly assembly = GetType().GetTypeInfo().Assembly;
+            string[] resourceIDs = assembly.GetManifestResourceNames();
+
+            foreach (string resourceID in resourceIDs)
+            {
+                if (resourceID.EndsWith(".png") || resourceID.EndsWith(".jpg"))
+                {
+                    if (stickers == null)
+                        stickers = new List<SKBitmap>();
+
+                    using (Stream stream = assembly.GetManifestResourceStream(resourceID))
+                    {
+                        stickers.Add(SKBitmap.Decode(stream));
+                    }
+                }
+            }
+            return stickers;
+        }
+
+
         private async void GetEditedImage_Clicked(object sender, EventArgs e)
         {
             try
             {
-                byte[] data = await ImageEditor.Instance.GetEditedImage();
+                ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), canFingerPaint: false, backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue, 
+                    outImageHeight: 300, outImageWidht: 200, aspect: Aspect.AspectFit);
+
+                byte[] data = await ImageEditor.Instance.GetEditedImage(config: config);
                 this.data = data;
                 if (data != null)
                 {

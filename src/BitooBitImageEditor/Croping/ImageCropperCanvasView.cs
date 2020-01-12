@@ -34,11 +34,10 @@ namespace BitooBitImageEditor.Croping
 
         internal ImageCropperCanvasView(SKBitmap bitmap, float? aspectRatio = null)
         {
-            this.aspectRatio = aspectRatio;
             this.bitmap = bitmap;
             SKRect bitmapRect = new SKRect(0, 0, bitmap.Width, bitmap.Height);
             croppingRect = new CroppingRectangle(bitmapRect, aspectRatio);
-
+            SetAspectRatio(aspectRatio);
         }
 
         internal SKBitmap CroppedBitmap
@@ -59,20 +58,33 @@ namespace BitooBitImageEditor.Croping
             }
         }
 
-        protected override void OnParentSet()
-        {
-            base.OnParentSet();
-
-        }
-
         internal void SetAspectRatio(float? aspectRatio = null, bool isFullRect = false)
         {
             this.aspectRatio = aspectRatio;
-            SKRect bitmapRect = new SKRect(0, 0, bitmap.Width, bitmap.Height);
-            croppingRect.SetRect(bitmapRect, aspectRatio, isFullRect);
-
+            croppingRect.SetRect(new SKRect(0, 0, bitmap.Width, bitmap.Height), aspectRatio, isFullRect);
             InvalidateSurface();
         }
+
+
+        internal void SetAspectRatio(CropItem crop)
+        {
+            switch (crop?.Action)
+            {
+                case CropRotateType.CropRotate:
+                    Rotate();
+                    break;
+                case CropRotateType.CropFree:
+                    SetAspectRatio(null, false);
+                    break;
+                case CropRotateType.CropFull:
+                    SetAspectRatio(null, true);
+                    break;
+                case CropRotateType.CropSquare:
+                    SetAspectRatio(1f);
+                    break;
+            }
+        }
+
 
         internal void Rotate()
         {
@@ -102,12 +114,12 @@ namespace BitooBitImageEditor.Croping
             canvas.Clear(SkiaHelper.backgraundColor);
 
             // Calculate rectangle for displaying bitmap 
-            var rect = SkiaHelper.CalculateRectangle(info, bitmap);
+            var rect = SkiaHelper.CalculateRectangle(new SKRect(0, 0, info.Width, info.Height), bitmap);
             canvas.DrawBitmap(bitmap, rect.rect);
 
             // Calculate a matrix transform for displaying the cropping rectangle
             SKMatrix bitmapScaleMatrix = SKMatrix.MakeIdentity();
-            bitmapScaleMatrix.SetScaleTranslate(rect.scale, rect.scale, rect.left, rect.top);
+            bitmapScaleMatrix.SetScaleTranslate(rect.scaleX, rect.scaleX, rect.rect.Left, rect.rect.Top);
 
             // Display rectangle
             SKRect scaledCropRect = bitmapScaleMatrix.MapRect(croppingRect.Rect);

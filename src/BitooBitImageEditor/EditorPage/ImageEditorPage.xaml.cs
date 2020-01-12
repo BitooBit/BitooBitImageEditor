@@ -10,10 +10,10 @@ namespace BitooBitImageEditor.EditorPage
     public sealed partial class ImageEditorPage : ContentPage
     {
         readonly ImageEditorViewModel viewModel;
-        internal ImageEditorPage(SKBitmap bitmap, float? aspectRatio = null)
+        internal ImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
         {
             InitializeComponent();
-            viewModel = new ImageEditorViewModel(bitmap, aspectRatio);
+            viewModel = new ImageEditorViewModel(bitmap, config);
             this.BindingContext = viewModel;
             canvasCropViewHost.Children.Add(viewModel.imageCropperCanvas, 0, 0);
             canvasMainViewHost.Children.Add(viewModel.mainCanvas, 0,0);

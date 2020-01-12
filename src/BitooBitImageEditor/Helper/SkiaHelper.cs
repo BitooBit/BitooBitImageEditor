@@ -2,6 +2,7 @@
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using Xamarin.Forms;
 
@@ -44,16 +45,30 @@ namespace BitooBitImageEditor
         };
 
 
-        internal static (SKRect rect, float scale, float left, float top, float right, float bottom) CalculateRectangle(SKImageInfo info, SKBitmap bitmap)
+        internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, SKBitmap bitmap, Aspect aspect = Aspect.AspectFit)
         {
-            float scale = Math.Min((float)info.Width / bitmap.Width, (float)info.Height / bitmap.Height);
-            float left = (info.Width - scale * bitmap.Width) / 2;
-            float top = (info.Height - scale * bitmap.Height) / 2;
-            float right = left + scale * bitmap.Width;
-            float bottom = top + scale * bitmap.Height;
-            return (new SKRect(left, top, right, bottom), scale, left, top, right, bottom);
+            return CalculateRectangle(info, bitmap.Width, bitmap.Height, aspect);
         }
 
+        internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, float width, float height, Aspect aspect = Aspect.AspectFit)
+        {
+            float scaleX = (float)info.Width / width;
+            float scaleY = (float)info.Height / height;
+
+
+            if (aspect != Aspect.Fill)
+            {
+                scaleX = scaleY = aspect == Aspect.AspectFit ? Math.Min(scaleX, scaleY) : Math.Max(scaleX, scaleY);
+                float left = ((info.Width - scaleX * width) / 2) + info.Left;
+                float top = ((info.Height - scaleX * height) / 2) + info.Top;
+                float right = left + scaleX * width;
+                float bottom = top + scaleX * height;
+                return (new SKRect(left, top, right, bottom), scaleX, scaleY);
+
+            }
+            else
+                return (info, scaleX, scaleY);
+        }
 
         internal static SKPoint ConvertToPixel(SKCanvasView canvasView, Xamarin.Forms.Point pt)
         {
@@ -62,14 +77,36 @@ namespace BitooBitImageEditor
 
 
 
-        
-
-        
 
 
 
 
 
+
+
+        static internal ObservableCollection<Color> GetColors()
+        {
+            ObservableCollection<Color> colors = new ObservableCollection<Color>
+            {
+                 Color.White
+                ,Color.Gray
+                ,Color.Black
+                ,Color.Red
+                ,Color.Orange
+                ,Color.Yellow
+                ,Color.Green
+                ,Color.Cyan
+                ,Color.Blue
+                ,Color.Violet
+            };
+
+            int count = 35;
+            double offset = 16777215 / (double)count;
+            for (int i = 1; i < count - 1; i++)
+                colors.Add(Color.FromHex(((int)((double)i * offset)).ToString("X")));
+
+            return colors;
+        }
 
 
         internal static float CalcLenght(SKPoint point1, SKPoint point2)
