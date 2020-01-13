@@ -12,7 +12,7 @@ namespace BitooBitImageEditor
     {
         internal const int corner = 30;      // pixel length of cropper corner
         internal const int radius = 50;     // pixel radius of touch hit-test
-        internal readonly static SKColor backgraundColor = Color.FromHex("#eeeeee").ToSKColor();
+        internal readonly static SKColor backgraundColor = 0xFFeeeeee;
 
         internal readonly static SKPaint cornerStroke = new SKPaint
         {
@@ -76,14 +76,6 @@ namespace BitooBitImageEditor
         }
 
 
-
-
-
-
-
-
-
-
         static internal ObservableCollection<Color> GetColors()
         {
             ObservableCollection<Color> colors = new ObservableCollection<Color>
@@ -108,62 +100,84 @@ namespace BitooBitImageEditor
             return colors;
         }
 
-
-        internal static float CalcLenght(SKPoint point1, SKPoint point2)
-        {
-            return (float)Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2));
-        }
-
-        internal static SKPoint[] RotatePoint(SKPoint center, double degrees, params SKPoint[] points)
-        {
-            double angel = (degrees / 180D) * Math.PI;
-            double cos = Math.Cos(angel);
-            double sin = Math.Sin(angel);
-            SKPoint[] rotatePoints = new SKPoint[points.Length];
-
-            for (int i = 0; i < points.Length; i++)
-                rotatePoints[i] = RotatePoint(center, cos, sin, points[i]);
-
-            return rotatePoints;
-        }
-
-
-        internal static SKPoint RotatePoint(SKPoint center, double degrees, SKPoint point)
-        {
-            double angel = (degrees / 180D) * Math.PI;
-            return RotatePoint(center, Math.Cos(angel), Math.Sin(angel), point);
-        }
-
-        internal static SKPoint RotatePoint(SKPoint center, double cos, double sin, SKPoint point)
-        {
-            double x = (center.X + (point.X - center.X) * cos - (point.Y - center.Y) * sin);
-            double y = (center.Y + (point.X - center.X) * sin + (point.Y - center.Y) * cos);
-            return new SKPoint((float)x, (float)y);
-        }
-
-        internal static bool CheckPointInsideTriangle(SKPoint point, SKPoint triangle1, SKPoint triangle2, SKPoint triangle3)
-        {
-            float a1 = (triangle1.X - point.X) * (triangle2.Y - triangle1.Y) - (triangle2.X - triangle1.X) * (triangle1.Y - point.Y);
-            float a2 = (triangle2.X - point.X) * (triangle3.Y - triangle2.Y) - (triangle3.X - triangle2.X) * (triangle2.Y - point.Y);
-            float a3 = (triangle3.X - point.X) * (triangle1.Y - triangle3.Y) - (triangle1.X - triangle3.X) * (triangle3.Y - point.Y);
-
-            if (a1 == 0 || a2 == 0 || a3 == 0)
-                return true;
-
-            a1 /= Math.Abs(a1);
-            a2 /= Math.Abs(a2);
-            a3 /= Math.Abs(a3);
-
-            if (a1 == a2 && a2 == a3)
-                return true;
-
-            else
-                return false;
-
-        }
-
-
-
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//internal static float CalcLenght(SKPoint point1, SKPoint point2)
+//{
+//    return (float)Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2));
+//}
+
+//internal static SKPoint[] RotatePoint(SKPoint center, double degrees, params SKPoint[] points)
+//{
+//    double angel = (degrees / 180D) * Math.PI;
+//    double cos = Math.Cos(angel);
+//    double sin = Math.Sin(angel);
+//    SKPoint[] rotatePoints = new SKPoint[points.Length];
+
+//    for (int i = 0; i < points.Length; i++)
+//        rotatePoints[i] = RotatePoint(center, cos, sin, points[i]);
+
+//    return rotatePoints;
+//}
+
+//internal static SKPoint RotatePoint(SKPoint center, double degrees, SKPoint point)
+//{
+//    double angel = (degrees / 180D) * Math.PI;
+//    return RotatePoint(center, Math.Cos(angel), Math.Sin(angel), point);
+//}
+
+//internal static SKPoint RotatePoint(SKPoint center, double cos, double sin, SKPoint point)
+//{
+//    double x = (center.X + (point.X - center.X) * cos - (point.Y - center.Y) * sin);
+//    double y = (center.Y + (point.X - center.X) * sin + (point.Y - center.Y) * cos);
+//    return new SKPoint((float)x, (float)y);
+//}
+
+//internal static bool CheckPointInsideTriangle(SKPoint point, SKPoint triangle1, SKPoint triangle2, SKPoint triangle3)
+//{
+//    float a1 = (triangle1.X - point.X) * (triangle2.Y - triangle1.Y) - (triangle2.X - triangle1.X) * (triangle1.Y - point.Y);
+//    float a2 = (triangle2.X - point.X) * (triangle3.Y - triangle2.Y) - (triangle3.X - triangle2.X) * (triangle2.Y - point.Y);
+//    float a3 = (triangle3.X - point.X) * (triangle1.Y - triangle3.Y) - (triangle1.X - triangle3.X) * (triangle3.Y - point.Y);
+
+//    if (a1 == 0 || a2 == 0 || a3 == 0)
+//        return true;
+
+//    a1 /= Math.Abs(a1);
+//    a2 /= Math.Abs(a2);
+//    a3 /= Math.Abs(a3);
+
+//    if (a1 == a2 && a2 == a3)
+//        return true;
+
+//    else
+//        return false;
+
+//}

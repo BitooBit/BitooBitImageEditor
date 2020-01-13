@@ -195,13 +195,13 @@
 
                     <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" HorizontalOptions="EndAndExpand"/>
 
-                    <CollectionView Grid.Row="1" Margin="0" ItemsSource="{Binding Config.Stickers}" VerticalOptions="FillAndExpand" >
+                    <CollectionView Grid.Row="1" Margin="0" ItemsSource="{Binding Config.Stickers}" VerticalOptions="FillAndExpand" BackgroundColor="Transparent">
                         <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Vertical" Span="1" HorizontalItemSpacing="0" VerticalItemSpacing="0" />
+                            <GridItemsLayout Orientation="Vertical"  Span="2" HorizontalItemSpacing="0" VerticalItemSpacing="0" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate >
-                                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Margin="0" Padding="0" RowSpacing="0" ColumnSpacing="0"  >
+                                <Grid VerticalOptions="Center" HorizontalOptions="Center" Margin="0" BackgroundColor="Transparent" Padding="0" RowSpacing="0" ColumnSpacing="0"  >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
@@ -209,7 +209,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Image Grid.Row="0" Source="{Binding ., Converter={StaticResource SourceConverter}}" Aspect="AspectFill" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Margin="5" HeightRequest="100" WidthRequest="100"/>
+                                    <Image Grid.Row="0" Source="{Binding ., Converter={StaticResource SourceConverter}}" Aspect="AspectFit" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Margin="5" HeightRequest="100" WidthRequest="100"/>
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Path=BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />
                                     </Grid.GestureRecognizers>
@@ -220,7 +220,7 @@
 
                 </Grid>
 
-                <StackLayout VerticalOptions="Start" IsVisible="{Binding MainVisible}" IsEnabled="{Binding MainVisible}">
+                <StackLayout VerticalOptions="Start" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}">
                     <ImageButton Grid.Column="0" Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" HorizontalOptions="EndAndExpand"/>
                     <ImageButton Grid.Row="0" Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
                     <ImageButton Grid.Row="0" Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>

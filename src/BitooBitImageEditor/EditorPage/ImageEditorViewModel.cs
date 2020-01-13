@@ -11,31 +11,29 @@ using Xamarin.Forms;
 namespace BitooBitImageEditor.EditorPage
 {
     internal class ImageEditorViewModel : BaseNotifier
-    {
-
-        public ImageCropperCanvasView imageCropperCanvas;
+    {       
+        private bool buttonsVisible = true;
+        public ImageCropperCanvasView cropperCanvas;
         public TouchManipulationCanvasView mainCanvas;
-        public SKBitmap originalBitmap;
-
-
 
         public ImageEditorViewModel(SKBitmap bitmap, ImageEditorConfig config)
         {
             Config = config;
-            originalBitmap = bitmap;
-            imageCropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
+            cropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
             mainCanvas = new TouchManipulationCanvasView(config);
-            imageCropperCanvas.Margin = mainCanvas.Margin = 0;
-            mainCanvas.AddBitmapToCanvas(originalBitmap, BitmapType.Main);
+            mainCanvas.AddBitmapToCanvas(bitmap, BitmapType.Main);
         }
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
-        public bool MainVisible => CurrentEditType == ImageEditType.SelectType;
+        public bool MainVisible => !CropVisible;
         public bool TextVisible => CurrentEditType == ImageEditType.Text;
         public bool StickersVisible => CurrentEditType == ImageEditType.Stickers;
-
-
-
+        public bool ButtonsVisible
+        {
+            get => CurrentEditType == ImageEditType.SelectType && buttonsVisible;
+            set => buttonsVisible = value;
+        }
+            
 
         public ImageEditorConfig Config { get; set; }
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
@@ -56,9 +54,7 @@ namespace BitooBitImageEditor.EditorPage
                         CurrentText = "";
                         break;
                     case ImageEditType.CropRotate:
-                        mainCanvas.AddBitmapToCanvas(imageCropperCanvas.CroppedBitmap, BitmapType.Main);
-                        break;
-                    default:
+                        mainCanvas.AddBitmapToCanvas(cropperCanvas.CroppedBitmap, BitmapType.Main);
                         break;
                 }
             }
@@ -77,7 +73,7 @@ namespace BitooBitImageEditor.EditorPage
                     CurrentColor = value;
                     break;
                 case CropItem value:
-                    imageCropperCanvas.SetAspectRatio(value);
+                    cropperCanvas.SetAspectRatio(value);
                     break;
                 case SKBitmap value:
                     mainCanvas.AddBitmapToCanvas(value, BitmapType.Stickers);
@@ -101,10 +97,12 @@ namespace BitooBitImageEditor.EditorPage
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
-            if(CurrentEditType != ImageEditType.CropRotate)
+            ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Pressed && args.Type != TouchActionType.Entered && args.Type != TouchActionType.Moved);
+
+            if (CurrentEditType != ImageEditType.CropRotate)
                 mainCanvas?.OnTouchEffectTouchAction(sender, args);
             else
-                imageCropperCanvas?.OnTouchEffectTouchAction(sender, args);
+                cropperCanvas?.OnTouchEffectTouchAction(sender, args);
         }
     
     }

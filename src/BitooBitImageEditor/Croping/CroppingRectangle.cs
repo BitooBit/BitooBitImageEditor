@@ -15,52 +15,6 @@ namespace BitooBitImageEditor.Croping
             SetRect(maxRect, aspectRatio);
         }
 
-
-        internal void SetRect(SKRect maxRect, float? aspectRatio = null, bool isFullRect = false)
-        {
-            this.maxRect = maxRect;
-            this.aspectRatio = aspectRatio;
-
-            MINIMUM = Math.Min(maxRect.Width, maxRect.Height) * 0.22f;
-
-            // Set initial cropping rectangle
-            if(isFullRect)
-                Rect = new SKRect(1f * maxRect.Left + 0f * maxRect.Right,
-                                1f * maxRect.Top + 0f * maxRect.Bottom,
-                                0f * maxRect.Left + 1f * maxRect.Right,
-                                0f * maxRect.Top + 1f * maxRect.Bottom);
-            else
-                Rect = new SKRect(0.9f * maxRect.Left + 0.1f * maxRect.Right,
-                                0.9f * maxRect.Top + 0.1f * maxRect.Bottom,
-                                0.1f * maxRect.Left + 0.9f * maxRect.Right,
-                                0.1f * maxRect.Top + 0.9f * maxRect.Bottom);
-            
-
-            // Adjust for aspect ratio
-            if (aspectRatio.HasValue)
-            {
-                SKRect rect = Rect;
-                float aspect = aspectRatio.Value;
-
-                if (rect.Width > aspect * rect.Height)
-                {
-                    float width = aspect * rect.Height;
-                    rect.Left = (maxRect.Width - width) / 2;
-                    rect.Right = rect.Left + width;
-                }
-                else
-                {
-                    float height = rect.Width / aspect;
-                    rect.Top = (maxRect.Height - height) / 2;
-                    rect.Bottom = rect.Top + height;
-                }
-
-                Rect = rect;
-            }
-        }
-
-
-
         internal SKRect Rect { set; get; }
 
         internal SKPoint[] Corners
@@ -193,5 +147,50 @@ namespace BitooBitImageEditor.Croping
 
             Rect = rect;
         }
+
+        internal void SetRect(SKRect maxRect, float? aspectRatio = null, bool isFullRect = false)
+        {
+            this.maxRect = maxRect;
+            this.aspectRatio = aspectRatio;
+
+            MINIMUM = Math.Min(maxRect.Width, maxRect.Height) * 0.22f;
+
+            // Set initial cropping rectangle
+            if (isFullRect)
+                Rect = new SKRect(1f * maxRect.Left + 0f * maxRect.Right,
+                                1f * maxRect.Top + 0f * maxRect.Bottom,
+                                0f * maxRect.Left + 1f * maxRect.Right,
+                                0f * maxRect.Top + 1f * maxRect.Bottom);
+            else
+                Rect = new SKRect(0.9f * maxRect.Left + 0.1f * maxRect.Right,
+                                0.9f * maxRect.Top + 0.1f * maxRect.Bottom,
+                                0.1f * maxRect.Left + 0.9f * maxRect.Right,
+                                0.1f * maxRect.Top + 0.9f * maxRect.Bottom);
+
+
+            // Adjust for aspect ratio
+            if (aspectRatio.HasValue)
+            {
+                SKRect rect = Rect;
+                float aspect = aspectRatio.Value;
+
+                if (rect.Width > aspect * rect.Height)
+                {
+                    float width = aspect * rect.Height;
+                    rect.Left = (maxRect.Width - width) / 2;
+                    rect.Right = rect.Left + width;
+                }
+                else
+                {
+                    float height = rect.Width / aspect;
+                    rect.Top = (maxRect.Height - height) / 2;
+                    rect.Bottom = rect.Top + height;
+                }
+
+                Rect = rect;
+            }
+        }
+
+
     }
 }

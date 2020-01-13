@@ -54,6 +54,7 @@ namespace BitooBitImageEditor
                 if (config == null)
                     config = new ImageEditorConfig();
 
+                await Task.Delay(100);
                 var data = bitmap != null ? await PushImageEditorPage(bitmap, config) : null;
                 imageEditLock = false;
                 return data;

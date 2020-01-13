@@ -52,8 +52,8 @@ namespace SampleImageEditor
         {
             try
             {
-                ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), canFingerPaint: false, backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue, 
-                    /*outImageHeight: 1000, outImageWidht: 700,*/ aspect: Aspect.AspectFit);
+                ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), canFingerPaint: false, backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue,
+                    outImageHeight: 1000, outImageWidht: 700, aspect: Aspect.AspectFit);
 
                 byte[] data = await ImageEditor.Instance.GetEditedImage(config: config);
                 this.data = data;

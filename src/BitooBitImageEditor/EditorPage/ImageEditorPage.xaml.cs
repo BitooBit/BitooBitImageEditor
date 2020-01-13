@@ -15,8 +15,13 @@ namespace BitooBitImageEditor.EditorPage
             InitializeComponent();
             viewModel = new ImageEditorViewModel(bitmap, config);
             this.BindingContext = viewModel;
-            canvasCropViewHost.Children.Add(viewModel.imageCropperCanvas, 0, 0);
+            canvasCropViewHost.Children.Add(viewModel.cropperCanvas, 0, 0);
             canvasMainViewHost.Children.Add(viewModel.mainCanvas, 0,0);
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
         }
 
         protected override void OnDisappearing()
@@ -25,7 +30,7 @@ namespace BitooBitImageEditor.EditorPage
             base.OnDisappearing();
         }
 
-        private void TouchEffect_TouchAction(object sender, TouchActionEventArgs args) =>  viewModel.OnTouchEffectTouchAction(sender, args);
+        private void TouchEffect_TouchAction(object sender, TouchActionEventArgs args) => viewModel.OnTouchEffectTouchAction(sender, args);
         
     }
 }

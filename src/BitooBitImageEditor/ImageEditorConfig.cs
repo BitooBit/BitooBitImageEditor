@@ -32,7 +32,7 @@ namespace BitooBitImageEditor
             Aspect = aspect;            
             BackgroundType = backgroundType;
             BackgroundColor = backgroundColor;
-            SetOutWidthHeight(outImageHeight, outImageWidht);
+            SetOutImageSize(outImageHeight, outImageWidht);
         }
 
 
@@ -46,30 +46,30 @@ namespace BitooBitImageEditor
 
         public BackgroundType BackgroundType
         {
-            get => OutImageAutoSize ? BackgroundType.Transparent : backgroundType;
+            get => IsOutImageAutoSize ? BackgroundType.Transparent : backgroundType;
             set => backgroundType = value;
         }
         public Aspect Aspect
         {
-            get => OutImageAutoSize ? Aspect.AspectFit : aspect;
+            get => IsOutImageAutoSize ? Aspect.AspectFit : aspect;
             set => aspect = value;
         }
 
         public bool CanChangeCropAspectRatio => CropAspectRatio == null;
         public bool CanAddStickers => Stickers?.Count > 0;
-        public bool OutImageAutoSize => OutImageHeight == null || OutImageWidht == null;
+        public bool IsOutImageAutoSize => OutImageHeight == null || OutImageWidht == null;
 
-        public void SetOutWidthHeight(int? outImageHeight = null, int? outImageWidht = null)
+        public void SetOutImageSize(int? height = null, int? widht = null)
         {
-            if(outImageHeight == null || outImageWidht == null)
+            if(height == null || widht == null)
             {
                 OutImageHeight = null;
                 OutImageWidht = null;
             }
             else
             {
-                OutImageHeight = outImageHeight;
-                OutImageWidht = outImageWidht;
+                OutImageHeight = height;
+                OutImageWidht = widht;
             }
         }
 

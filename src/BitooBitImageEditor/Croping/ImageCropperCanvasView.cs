@@ -9,29 +9,20 @@ namespace BitooBitImageEditor.Croping
     internal class ImageCropperCanvasView : SKCanvasView
     {
         SKBitmap bitmap;
-        //double angleR;
         float? aspectRatio;
-        CroppingRectangle croppingRect;
+        readonly CroppingRectangle croppingRect;
         SKMatrix inverseBitmapMatrix;
-
-        // Touch tracking  
+        readonly Dictionary<long, TouchPoint> touchPoints = new Dictionary<long, TouchPoint>();
+        readonly Dictionary<long, SKPoint> touchPointsInside = new Dictionary<long, SKPoint>();
+        SKPoint bitmapLocationfirst = new SKPoint();
+        SKPoint bitmapLocationlast = new SKPoint();
 
         struct TouchPoint
         {
             public int CornerIndex { set; get; }
             public SKPoint Offset { set; get; }
         }
-
-        Dictionary<long, TouchPoint> touchPoints = new Dictionary<long, TouchPoint>();
-        Dictionary<long, SKPoint> touchPointsInside = new Dictionary<long, SKPoint>();
-
-        SKPoint bitmapLocationfirst = new SKPoint();
-        SKPoint bitmapLocationlast = new SKPoint();
-
-        internal bool IsActive { get; set; }
-
-
-
+       
         internal ImageCropperCanvasView(SKBitmap bitmap, float? aspectRatio = null)
         {
             this.bitmap = bitmap;
@@ -45,11 +36,9 @@ namespace BitooBitImageEditor.Croping
             get
             {
                 SKRect cropRect = croppingRect.Rect;
-                SKBitmap croppedBitmap = new SKBitmap((int)cropRect.Width,
-                                                      (int)cropRect.Height);
+                SKBitmap croppedBitmap = new SKBitmap((int)cropRect.Width, (int)cropRect.Height);
                 SKRect dest = new SKRect(0, 0, cropRect.Width, cropRect.Height);
-                SKRect source = new SKRect(cropRect.Left, cropRect.Top,
-                                           cropRect.Right, cropRect.Bottom);
+                SKRect source = new SKRect(cropRect.Left, cropRect.Top, cropRect.Right, cropRect.Bottom);
                 using (SKCanvas canvas = new SKCanvas(croppedBitmap))
                 {
                     canvas.DrawBitmap(bitmap, source, dest);
@@ -124,11 +113,7 @@ namespace BitooBitImageEditor.Croping
             // Display rectangle
             SKRect scaledCropRect = bitmapScaleMatrix.MapRect(croppingRect.Rect);
             canvas.DrawRect(scaledCropRect, SkiaHelper.edgeStroke);
-
-
             canvas.DrawSurrounding(rect.rect, scaledCropRect, SKColors.Gray.WithAlpha((byte)(0xFF * 0.5)));
-
-
 
             // Display heavier corners
             using (SKPath path = new SKPath())
@@ -158,7 +143,6 @@ namespace BitooBitImageEditor.Croping
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
-
             SKPoint pixelLocation = SkiaHelper.ConvertToPixel(this, args.Location);
             SKPoint bitmapLocation = inverseBitmapMatrix.MapPoint(pixelLocation);
 
@@ -196,17 +180,14 @@ namespace BitooBitImageEditor.Croping
                     if (touchPoints.ContainsKey(args.Id))
                     {
                         TouchPoint touchPoint = touchPoints[args.Id];
-                        croppingRect.MoveCorner(touchPoint.CornerIndex,
-                                                bitmapLocation - touchPoint.Offset);
+                        croppingRect.MoveCorner(touchPoint.CornerIndex, bitmapLocation - touchPoint.Offset);
                         InvalidateSurface();
                     }
                     if (touchPointsInside.ContainsKey(args.Id))
                     {
                         //Если перемещение соответсвует айдишнику от его кардинат вычитаем корадинаты начальной точки и передаем в метод перемещения
                         bitmapLocationlast = bitmapLocation;
-                        SKPoint point = new SKPoint();
-                        point.X = bitmapLocationlast.X - bitmapLocationfirst.X;
-                        point.Y = bitmapLocationlast.Y - bitmapLocationfirst.Y;
+                        SKPoint point = new SKPoint(bitmapLocationlast.X - bitmapLocationfirst.X, bitmapLocationlast.Y - bitmapLocationfirst.Y);
                         croppingRect.MoveAllCorner(point);
                         bitmapLocationfirst = bitmapLocationlast;
                         InvalidateSurface();
@@ -216,17 +197,12 @@ namespace BitooBitImageEditor.Croping
                 case TouchActionType.Released:
                 case TouchActionType.Cancelled:
                     if (touchPoints.ContainsKey(args.Id))
-                    {
                         touchPoints.Remove(args.Id);
-                    }
-                    if (touchPointsInside.ContainsKey(args.Id))
-                    {
+
+                    else if (touchPointsInside.ContainsKey(args.Id))
                         touchPointsInside.Remove(args.Id);
-                    }
                     break;
             }
-
-
         }
 
     }
