@@ -5,10 +5,9 @@ namespace BitooBitImageEditor.Croping
 {
     internal class CroppingRectangle
     {
-        float MINIMUM = 500;   // pixels width or height
-
-        SKRect maxRect;             // generally the size of the bitmap
-        float? aspectRatio;
+        private float MINIMUM = 500;   // pixels width or height
+        private SKRect maxRect;             // generally the size of the bitmap
+        private float? aspectRatio;
 
         internal CroppingRectangle(SKRect maxRect, float? aspectRatio = null)
         {
@@ -67,11 +66,10 @@ namespace BitooBitImageEditor.Croping
         {
             SKRect rect = Rect;
             SKRect rectNew = Rect;
-
-            rectNew.Bottom = rectNew.Bottom + point.Y;
-            rectNew.Top = rectNew.Top + point.Y;
-            rectNew.Left = rectNew.Left + point.X;
-            rectNew.Right = rectNew.Right + point.X;
+            rectNew.Bottom += point.Y;
+            rectNew.Top += point.Y;
+            rectNew.Left += point.X;
+            rectNew.Right += point.X;
 
             if (!(maxRect.Left > rectNew.Left || maxRect.Right < rectNew.Right))
             {

@@ -10,13 +10,13 @@ using Xamarin.Forms;
 
 namespace BitooBitImageEditor.EditorPage
 {
-    internal class ImageEditorViewModel : BaseNotifier
+    internal class ImageEditorViewModel : BaseNotifier, IDisposable
     {       
         private bool buttonsVisible = true;
-        public ImageCropperCanvasView cropperCanvas;
-        public TouchManipulationCanvasView mainCanvas;
+        internal ImageCropperCanvasView cropperCanvas;
+        internal TouchManipulationCanvasView mainCanvas;
 
-        public ImageEditorViewModel(SKBitmap bitmap, ImageEditorConfig config)
+        internal ImageEditorViewModel(SKBitmap bitmap, ImageEditorConfig config)
         {
             Config = config;
             cropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
@@ -31,16 +31,16 @@ namespace BitooBitImageEditor.EditorPage
         public bool ButtonsVisible
         {
             get => CurrentEditType == ImageEditType.SelectType && buttonsVisible;
-            set => buttonsVisible = value;
+            private set => buttonsVisible = value;
         }
-            
 
-        public ImageEditorConfig Config { get; set; }
+
+        public ImageEditorConfig Config { get; private set; }
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
         public Color CurrentColor { get; set; } = Color.Black;
         public string CurrentText { set; get; } = "";
-        public ObservableCollection<Color> ColorCollect { get; } = SkiaHelper.GetColors();
-        public ObservableCollection<CropItem> CropCollect { get; set; } = CropItem.GetCropItems();
+        public ObservableCollection<Color> ColorCollect { get; private set; } = SkiaHelper.GetColors();
+        public ObservableCollection<CropItem> CropCollect { get; private set; } = CropItem.GetCropItems();
 
 
         public ICommand ApplyChangesCommand => new Command<string>((value) =>
@@ -104,6 +104,42 @@ namespace BitooBitImageEditor.EditorPage
             else
                 cropperCanvas?.OnTouchEffectTouchAction(sender, args);
         }
-    
+
+
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Config = null;
+                    ColorCollect = null;
+                    CropCollect = null;
+                    CurrentText = null;
+                }
+
+                ((IDisposable)cropperCanvas).Dispose();
+                ((IDisposable)mainCanvas).Dispose();
+
+                disposedValue = true;
+            }
+        }
+
+        ~ImageEditorViewModel()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+
     }
 }

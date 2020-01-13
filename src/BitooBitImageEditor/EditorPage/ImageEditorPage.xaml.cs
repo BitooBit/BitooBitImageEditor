@@ -1,6 +1,6 @@
 ﻿using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
-
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -19,11 +19,6 @@ namespace BitooBitImageEditor.EditorPage
             canvasMainViewHost.Children.Add(viewModel.mainCanvas, 0,0);
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-        }
-
         protected override void OnDisappearing()
         {
             ImageEditor.Instance.SetImage();
@@ -31,6 +26,13 @@ namespace BitooBitImageEditor.EditorPage
         }
 
         private void TouchEffect_TouchAction(object sender, TouchActionEventArgs args) => viewModel.OnTouchEffectTouchAction(sender, args);
-        
+
+
+        public void Dispose()
+        {
+            viewModel.Dispose();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
     }
 }

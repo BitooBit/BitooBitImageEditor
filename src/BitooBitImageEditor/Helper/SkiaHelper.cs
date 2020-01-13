@@ -10,40 +10,6 @@ namespace BitooBitImageEditor
 {
     internal static class SkiaHelper
     {
-        internal const int corner = 30;      // pixel length of cropper corner
-        internal const int radius = 50;     // pixel radius of touch hit-test
-        internal readonly static SKColor backgraundColor = 0xFFeeeeee;
-
-        internal readonly static SKPaint cornerStroke = new SKPaint
-        {
-            Style = SKPaintStyle.Stroke,
-            Color = SKColors.White,
-            StrokeWidth = 7
-        };
-
-        internal readonly static SKPaint edgeStroke = new SKPaint
-        {
-            Style = SKPaintStyle.Stroke,
-            Color = SKColors.White,
-            StrokeWidth = 3,
-            IsAntialias = true
-        };
-
-        internal readonly static SKPaint blackoutFill = new SKPaint
-        {
-            Style = SKPaintStyle.Fill,
-            Color = SKColors.Gray.WithAlpha((byte)(0xFF * 0.5)),
-            StrokeWidth = 2
-        };
-
-
-        internal readonly static SKPaint smallPoint = new SKPaint
-        {
-            Style = SKPaintStyle.StrokeAndFill,
-            Color = SKColors.Red,
-            StrokeWidth = 7
-        };
-
 
         internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, SKBitmap bitmap, Aspect aspect = Aspect.AspectFit)
         {
@@ -54,7 +20,6 @@ namespace BitooBitImageEditor
         {
             float scaleX = (float)info.Width / width;
             float scaleY = (float)info.Height / height;
-
 
             if (aspect != Aspect.Fill)
             {
@@ -70,11 +35,7 @@ namespace BitooBitImageEditor
                 return (info, scaleX, scaleY);
         }
 
-        internal static SKPoint ConvertToPixel(SKCanvasView canvasView, Xamarin.Forms.Point pt)
-        {
-            return new SKPoint((float)(canvasView.CanvasSize.Width * pt.X / canvasView.Width), (float)(canvasView.CanvasSize.Height * pt.Y / canvasView.Height));
-        }
-
+        
 
         static internal ObservableCollection<Color> GetColors()
         {

@@ -61,10 +61,10 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
                     var corners = new SKPoint[]
                     {
-                    new SKPoint(rect.Left, rect.Top),
-                    new SKPoint(rect.Right, rect.Top),
-                    new SKPoint(rect.Right, rect.Bottom),
-                    new SKPoint(rect.Left, rect.Bottom)
+                        new SKPoint(rect.Left, rect.Top),
+                        new SKPoint(rect.Right, rect.Top),
+                        new SKPoint(rect.Right, rect.Bottom),
+                        new SKPoint(rect.Left, rect.Bottom)
                     };
 
                     for (int index = 0; index < corners.Length; index++)

@@ -4,22 +4,20 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using Xamarin.Forms;
 
 namespace BitooBitImageEditor.ManipulationBitmap
 {
-    internal class TouchManipulationCanvasView : SKCanvasView
+    internal class TouchManipulationCanvasView : SKCanvasView, IDisposable
     {
-        readonly ImageEditorConfig config;
+        ImageEditorConfig config;
         private float outImageWidht;
         private float outImageHeight;
         private float widthBitmap;
         private float heightBitmap;
         SKBitmap backgroundBitmap = new SKBitmap();
         SKBitmap mainBitmap = new SKBitmap();
+        SKBitmap temporaryBitmap = new SKBitmap();
         SKImageInfo info;
         SKRect rectInfo = new SKRect();
 
@@ -45,21 +43,23 @@ namespace BitooBitImageEditor.ManipulationBitmap
         {
             get
             {
-                SKRect dest = new SKRect(0, 0, outImageWidht, outImageHeight);
-                SKBitmap croppedBitmap = new SKBitmap((int)outImageWidht, (int)outImageHeight);
+                SKRect outRect = new SKRect(0, 0, outImageWidht, outImageHeight);
+                SKBitmap outBitmap = new SKBitmap((int)outImageWidht, (int)outImageHeight);
+                var rectTranslate = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight);
+                float scale = 1 / rectTranslate.scaleX;
+                var rectMianBitmap = SkiaHelper.CalculateRectangle(outRect, widthBitmap, heightBitmap, config.Aspect).rect;
 
-                var rectCanvas = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight);
-                float scale = 1 / rectCanvas.scaleX;
-
-                using (SKCanvas canvas = new SKCanvas(croppedBitmap))
-                {                  
-                    canvas.DrawManipulationBitmaps(mainBitmap, backgroundBitmap, bitmapCollection, dest, config, outImageWidht, outImageHeight, widthBitmap, heightBitmap, -rectCanvas.rect.Left, -rectCanvas.rect.Top, scale);
+                using (SKCanvas canvas = new SKCanvas(outBitmap))
+                {
+                    canvas.Clear();
+                    canvas.DrawBitmap(mainBitmap, backgroundBitmap, outRect, rectMianBitmap, config);
+                    canvas.DrawBitmap(bitmapCollection, -rectTranslate.rect.Left, -rectTranslate.rect.Top, scale);
                 }
-                return croppedBitmap;
+                return outBitmap;
             }
         }
 
-
+       
         internal void AddBitmapToCanvas(string text, SKColor color)
         {
             var bitmap = SKBitmapBuilder.FromText(text, color);
@@ -74,34 +74,32 @@ namespace BitooBitImageEditor.ManipulationBitmap
             if (bitmap != null)
             {
                 if (type != BitmapType.Main)
-                {
-
                     AddBitmapToCanvas(new TouchManipulationBitmap(bitmap, type, null));
-                }
                 else
-                {
-                    if (config?.IsOutImageAutoSize ?? false)
-                    {
-                        outImageWidht = bitmap.Width;
-                        outImageHeight = bitmap.Height;
-                    }
-                    widthBitmap = bitmap.Width;
-                    heightBitmap = bitmap.Height;
-
-                    if (config.BackgroundType == BackgroundType.StretchedImage)
-                    {
-                        backgroundBitmap = new SKBitmap(CalcBackgraundBitmapsize(widthBitmap), CalcBackgraundBitmapsize(heightBitmap));
-                        bitmap.ScalePixels(backgroundBitmap, SKFilterQuality.High);
-                    }
-
-                    mainBitmap = bitmap;
-                }
+                    SetMainBitmap(bitmap);
+                
+                InvalidateSurface();
             }
+        }
+        protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
+        {
+            base.OnPaintSurface(args);
+            info = args.Info;
+            SKCanvas canvas = args.Surface.Canvas;
+            if (rectInfo.Width != info.Width || rectInfo.Height != info.Height)
+            {
+                rectInfo = new SKRect(0, 0, info.Width, info.Height);
+                SetTemporaryBitmap();
+            }
+            var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
 
-            InvalidateSurface();
+            canvas.Clear();
+            canvas.DrawBitmap(temporaryBitmap, rectImage);
+            canvas.DrawBitmap(bitmapCollection);
+            canvas.DrawSurrounding(rectInfo, rectImage, SKColors.DarkGray.WithAlpha(190));
         }
 
-        internal void AddBitmapToCanvas(TouchManipulationBitmap bitmap)
+        private void AddBitmapToCanvas(TouchManipulationBitmap bitmap)
         {
             var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
             var rectSticker = new SKRect(rectImage.Left + rectImage.Width * 0.25f, rectImage.Top + rectImage.Height * 0.25f, rectImage.Right - rectImage.Width * 0.25f, rectImage.Bottom - rectImage.Height * 0.25f);
@@ -110,15 +108,42 @@ namespace BitooBitImageEditor.ManipulationBitmap
             bitmapCollection.Add(bitmap);
         }
 
-        protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
+        private void SetMainBitmap(SKBitmap bitmap)
         {
-            base.OnPaintSurface(args);
-            info = args.Info;
-            SKCanvas canvas = args.Surface.Canvas;
-            rectInfo = new SKRect(0, 0, info.Width, info.Height);
+            if (config?.IsOutImageAutoSize ?? false)
+            {
+                outImageWidht = bitmap.Width;
+                outImageHeight = bitmap.Height;
+            }
+            widthBitmap = bitmap.Width;
+            heightBitmap = bitmap.Height;
 
-            canvas.DrawManipulationBitmaps(mainBitmap, backgroundBitmap, bitmapCollection, rectInfo, config, outImageWidht, outImageHeight, widthBitmap, heightBitmap);
+            if (config.BackgroundType == BackgroundType.StretchedImage)
+            {
+                backgroundBitmap = new SKBitmap(CalcBackgraundBitmapsize(widthBitmap), CalcBackgraundBitmapsize(heightBitmap));
+                bitmap.ScalePixels(backgroundBitmap, SKFilterQuality.High);
+            }
+
+            mainBitmap = bitmap;
+            SetTemporaryBitmap();
         }
+
+        private void SetTemporaryBitmap()
+        {
+            var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
+            SKRect outRect = new SKRect(0, 0, rectImage.Width, rectImage.Height);
+            var rectMianBitmap = SkiaHelper.CalculateRectangle(outRect, widthBitmap, heightBitmap, config.Aspect).rect;
+
+            SKBitmap outBitmap = new SKBitmap((int)rectImage.Width, (int)rectImage.Height);
+            using (SKCanvas canvas = new SKCanvas(outBitmap))
+            {
+                canvas.Clear();
+                canvas.DrawBitmap(mainBitmap, backgroundBitmap, outRect, rectMianBitmap, config);
+            }
+            temporaryBitmap = outBitmap;
+            GC.Collect(0);
+        }
+
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
@@ -181,5 +206,40 @@ namespace BitooBitImageEditor.ManipulationBitmap
             int _value = (int)(value * 0.008f);
             return _value > 2 ? _value : 2;
         }
+
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    config = null;
+                    bitmapDictionary = null;
+                    bitmapCollection = null;
+                }
+
+                ((IDisposable)backgroundBitmap).Dispose();
+                ((IDisposable)mainBitmap).Dispose();
+                ((IDisposable)temporaryBitmap).Dispose();
+               
+                disposedValue = true;
+            }
+        }
+
+        ~TouchManipulationCanvasView()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

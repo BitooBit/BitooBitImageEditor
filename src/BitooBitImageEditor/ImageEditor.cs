@@ -28,7 +28,8 @@ namespace BitooBitImageEditor
         private TaskCompletionSource<byte[]> taskCompletionEditImage;
         private bool imageEditLock;
         private bool imageSetLock;
-        
+        private ImageEditorPage page;
+
 
         public string FolderName
         {
@@ -54,7 +55,7 @@ namespace BitooBitImageEditor
                 if (config == null)
                     config = new ImageEditorConfig();
 
-                await Task.Delay(100);
+                //await Task.Delay(100);
                 var data = bitmap != null ? await PushImageEditorPage(bitmap, config) : null;
                 imageEditLock = false;
                 return data;
@@ -80,6 +81,12 @@ namespace BitooBitImageEditor
                 }
                 else
                     taskCompletionEditImage.SetResult(null);
+
+                if(page != null)
+                {
+                    page.Dispose();
+                    page = null;
+                }
             }
         }
 
@@ -89,8 +96,7 @@ namespace BitooBitImageEditor
 
             if (bitmap != null)
             {
-                var page = new ImageEditorPage(bitmap, config);
-                //var page = new BitmapScatterViewPage();
+                page = new ImageEditorPage(bitmap, config);
 
                 if (Device.RuntimePlatform == Device.Android)
                 {
