@@ -4,6 +4,10 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace BitooBitImageEditor.ManipulationBitmap
@@ -20,6 +24,14 @@ namespace BitooBitImageEditor.ManipulationBitmap
         SKBitmap temporaryBitmap = new SKBitmap();
         SKImageInfo info;
         SKRect rectInfo = new SKRect();
+        private float sizeTrash;
+        SKRect rectTrash = new SKRect();
+        SKRect rectTrashBig = new SKRect();
+        bool trashVisible = false;
+        bool trashBigVisible = false;
+        SKBitmap trashBitmap;
+
+
 
         internal List<TouchManipulationBitmap> bitmapCollection =
             new List<TouchManipulationBitmap>();
@@ -35,6 +47,16 @@ namespace BitooBitImageEditor.ManipulationBitmap
             {
                 outImageWidht = config?.OutImageWidht ?? 0;
                 outImageHeight = config?.OutImageHeight ?? 0;
+            }
+            DisplayInfo displayInfo = DeviceDisplay.MainDisplayInfo;
+            sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.04f;
+           
+            Assembly assembly = GetType().GetTypeInfo().Assembly;
+            string[] resourceIDs = assembly.GetManifestResourceNames();
+            string resourceID = resourceIDs.ToList().Where(a => a.Contains("trash.png")).FirstOrDefault();
+            using (Stream stream = assembly.GetManifestResourceStream(resourceID))
+            {
+                trashBitmap = SKBitmap.Decode(stream);
             }
         }
 
@@ -90,6 +112,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             {
                 rectInfo = new SKRect(0, 0, info.Width, info.Height);
                 SetTemporaryBitmap();
+                SetTrashRects(info);
             }
             var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
 
@@ -97,7 +120,12 @@ namespace BitooBitImageEditor.ManipulationBitmap
             canvas.DrawBitmap(temporaryBitmap, rectImage);
             canvas.DrawBitmap(bitmapCollection);
             canvas.DrawSurrounding(rectInfo, rectImage, SKColors.DarkGray.WithAlpha(190));
+            if(trashVisible)
+                canvas.DrawBitmap(trashBitmap, rectTrash);
+            if (trashBigVisible)
+                canvas.DrawBitmap(trashBitmap, rectTrashBig);
         }
+
 
         private void AddBitmapToCanvas(TouchManipulationBitmap bitmap)
         {
@@ -144,12 +172,22 @@ namespace BitooBitImageEditor.ManipulationBitmap
             GC.Collect(0);
         }
 
+        private void SetTrashRects(SKImageInfo info)
+        {
+            float sizeTrashBig = sizeTrash * 1.5f;
+            float midX = info.Width / 2;
+            rectTrash = new SKRect(midX - sizeTrash / 2, info.Height - sizeTrash - 20, midX + sizeTrash / 2, info.Height - 20);
+            rectTrashBig = new SKRect(midX - sizeTrashBig / 2, info.Height - sizeTrashBig - 10, midX + sizeTrashBig / 2, info.Height - 10);
+        }
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
             Point pt = args.Location;
             SKPoint point = new SKPoint((float)(CanvasSize.Width * pt.X / Width),
                             (float)(CanvasSize.Height * pt.Y / Height));
+
+            if(args.Type != TouchActionType.Moved)
+                trashVisible = trashBigVisible = false;
 
             switch (args.Type)
             {
@@ -181,10 +219,25 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 case TouchActionType.Moved:
                     if (bitmapDictionary.ContainsKey(args.Id))
                     {
+                        
                         TouchManipulationBitmap bitmap = bitmapDictionary[args.Id];
                         bitmap.ProcessTouchEvent(args.Id, args.Type, point);
+
+                        if (rectTrash.Contains(point))
+                        {
+                            trashVisible = false;
+                            trashBigVisible = true;
+                        }
+                        else
+                        {
+                            trashBigVisible = false;
+                            trashVisible = true;
+                        }
+
                         InvalidateSurface();
                     }
+                    else
+                        trashVisible = trashBigVisible = false;
                     break;
 
                 case TouchActionType.Released:
@@ -194,10 +247,18 @@ namespace BitooBitImageEditor.ManipulationBitmap
                         TouchManipulationBitmap bitmap = bitmapDictionary[args.Id];
                         bitmap.ProcessTouchEvent(args.Id, args.Type, point);
                         bitmapDictionary.Remove(args.Id);
+                        
+                        if (rectTrash.Contains(point))
+                        {
+                            bitmapCollection.Remove(bitmap);
+                        }
+
                         InvalidateSurface();
                     }
                     break;
             }
+
+
 
         }
 

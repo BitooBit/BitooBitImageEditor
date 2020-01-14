@@ -21,13 +21,13 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>8.0</string>
+	<string>12.4</string>
 	<key>CFBundleDisplayName</key>
 	<string>BB Image Editor</string>
 	<key>CFBundleIdentifier</key>
 	<string>ru.bitoobit.imageeditor</string>
 	<key>CFBundleVersion</key>
-	<string>5.0</string>
+	<string>9.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>

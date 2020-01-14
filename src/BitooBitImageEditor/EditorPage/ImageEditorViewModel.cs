@@ -85,19 +85,25 @@ namespace BitooBitImageEditor.EditorPage
             }
         });
 
+
+        private bool lockFinish = false;
         public ICommand EditFinishCommand => new Command<string>((value) =>
         {
-            SKBitmap bitmap = null;
-            if (!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save")
-                bitmap = mainCanvas.EditedBitmap;
+            if (!lockFinish)
+            {
+                lockFinish = true;
+                SKBitmap bitmap = null;
+                if (!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save")
+                    bitmap = mainCanvas.EditedBitmap;
 
-            ImageEditor.Instance.SetImage(bitmap);
+                ImageEditor.Instance.SetImage(bitmap);
+            }
         });
 
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
-            ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Pressed && args.Type != TouchActionType.Entered && args.Type != TouchActionType.Moved);
+            ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Moved);
 
             if (CurrentEditType != ImageEditType.CropRotate)
                 mainCanvas?.OnTouchEffectTouchAction(sender, args);
