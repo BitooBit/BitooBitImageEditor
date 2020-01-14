@@ -9,6 +9,7 @@
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              xmlns:editorpage="clr-namespace:BitooBitImageEditor.EditorPage"
              xmlns:tt="clr-namespace:BitooBitImageEditor.TouchTracking"
+             xmlns:controls="clr-namespace:BitooBitImageEditor.Controls"
              ios:Page.PrefersStatusBarHidden="True"
              ios:Page.PreferredStatusBarUpdateAnimation="Fade"
              ios:Page.PrefersHomeIndicatorAutoHidden="true"
@@ -150,7 +151,7 @@
 
                 </Grid>
 
-                <Grid VerticalOptions="FillAndExpand" BackgroundColor="Transparent" IsVisible="{Binding TextVisible}" IsEnabled="{Binding TextVisible}">
+                <Grid VerticalOptions="FillAndExpand" BackgroundColor="Transparent" IsVisible="{Binding TextVisible}" IsEnabled="{Binding TextVisible}" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -176,9 +177,8 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    
-                    <Editor Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" BackgroundColor="Transparent" Margin="10,4,10,4" AutoSize="TextChanges"  VerticalOptions="CenterAndExpand"/>
 
+                    <controls:CustomEditor x:Name="textEditor" Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" FontSize="23" Keyboard="Plain" BackgroundColor="Transparent" Margin="10,4,10,4" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                 </Grid>
 
 

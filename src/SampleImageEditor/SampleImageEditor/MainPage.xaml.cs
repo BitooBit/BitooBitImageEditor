@@ -8,8 +8,6 @@ using Xamarin.Forms;
 
 namespace SampleImageEditor
 {
-
-
     public partial class MainPage : ContentPage
     {
         public MainPage()
@@ -20,10 +18,7 @@ namespace SampleImageEditor
             //BitooBitImageEditor.EditorPage.
         }
 
-
         private byte[] data;
-
-
 
         private List<SKBitmap> GetBitmaps()
         {

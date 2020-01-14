@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using BitooBitImageEditor.IOS.Renders;
+using Xamarin.Forms;
 
 namespace BitooBitImageEditor.IOS
 {

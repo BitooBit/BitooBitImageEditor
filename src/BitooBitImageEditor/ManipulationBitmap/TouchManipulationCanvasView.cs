@@ -1,4 +1,5 @@
 ﻿using BitooBitImageEditor.Helper;
+using BitooBitImageEditor.Resources;
 using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
@@ -19,17 +20,17 @@ namespace BitooBitImageEditor.ManipulationBitmap
         private float outImageHeight;
         private float widthBitmap;
         private float heightBitmap;
-        SKBitmap backgroundBitmap = new SKBitmap();
-        SKBitmap mainBitmap = new SKBitmap();
-        SKBitmap temporaryBitmap = new SKBitmap();
-        SKImageInfo info;
-        SKRect rectInfo = new SKRect();
-        private float sizeTrash;
-        SKRect rectTrash = new SKRect();
-        SKRect rectTrashBig = new SKRect();
-        bool trashVisible = false;
-        bool trashBigVisible = false;
-        SKBitmap trashBitmap;
+        private SKBitmap backgroundBitmap = new SKBitmap();
+        private SKBitmap mainBitmap = new SKBitmap();
+        private SKBitmap tempBitmap = new SKBitmap();
+        private SKImageInfo info;
+        private SKRect rectInfo = new SKRect();
+        private readonly float sizeTrash;
+        private SKRect rectTrash = new SKRect();
+        private SKRect rectTrashBig = new SKRect();
+        private bool trashVisible = false;
+        private bool trashBigVisible = false;
+        private readonly SKBitmap trashBitmap;
 
 
 
@@ -49,12 +50,9 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 outImageHeight = config?.OutImageHeight ?? 0;
             }
             DisplayInfo displayInfo = DeviceDisplay.MainDisplayInfo;
-            sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.04f;
+            sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.05f;
            
-            Assembly assembly = GetType().GetTypeInfo().Assembly;
-            string[] resourceIDs = assembly.GetManifestResourceNames();
-            string resourceID = resourceIDs.ToList().Where(a => a.Contains("trash.png")).FirstOrDefault();
-            using (Stream stream = assembly.GetManifestResourceStream(resourceID))
+            using (Stream stream = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash.png"))
             {
                 trashBitmap = SKBitmap.Decode(stream);
             }
@@ -111,13 +109,13 @@ namespace BitooBitImageEditor.ManipulationBitmap
             if (rectInfo.Width != info.Width || rectInfo.Height != info.Height)
             {
                 rectInfo = new SKRect(0, 0, info.Width, info.Height);
-                SetTemporaryBitmap();
+                SetTempBitmap();
                 SetTrashRects(info);
             }
             var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
 
             canvas.Clear();
-            canvas.DrawBitmap(temporaryBitmap, rectImage);
+            canvas.DrawBitmap(tempBitmap, rectImage);
             canvas.DrawBitmap(bitmapCollection);
             canvas.DrawSurrounding(rectInfo, rectImage, SKColors.DarkGray.WithAlpha(190));
             if(trashVisible)
@@ -130,7 +128,8 @@ namespace BitooBitImageEditor.ManipulationBitmap
         private void AddBitmapToCanvas(TouchManipulationBitmap bitmap)
         {
             var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
-            var rectSticker = new SKRect(rectImage.Left + rectImage.Width * 0.25f, rectImage.Top + rectImage.Height * 0.25f, rectImage.Right - rectImage.Width * 0.25f, rectImage.Bottom - rectImage.Height * 0.25f);
+            float scale = 0.25f;
+            var rectSticker = new SKRect(rectImage.Left + rectImage.Width * scale, rectImage.Top + rectImage.Height * scale, rectImage.Right - rectImage.Width * scale, rectImage.Bottom - rectImage.Height * scale);
             var rect = SkiaHelper.CalculateRectangle(rectSticker, bitmap.Bitmap.Width, bitmap.Bitmap.Height);
             bitmap.Matrix = new SKMatrix(rect.scaleX, 0, rectInfo.MidX - rect.rect.Width / 2, 0, rect.scaleY, rectInfo.MidY - rect.rect.Height / 2, 0, 0, 1);
             bitmapCollection.Add(bitmap);
@@ -153,10 +152,10 @@ namespace BitooBitImageEditor.ManipulationBitmap
             }
 
             mainBitmap = bitmap;
-            SetTemporaryBitmap();
+            SetTempBitmap();
         }
 
-        private void SetTemporaryBitmap()
+        private void SetTempBitmap()
         {
             var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
             SKRect outRect = new SKRect(0, 0, rectImage.Width, rectImage.Height);
@@ -168,7 +167,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 canvas.Clear();
                 canvas.DrawBitmap(mainBitmap, backgroundBitmap, outRect, rectMianBitmap, config);
             }
-            temporaryBitmap = outBitmap;
+            tempBitmap = outBitmap;
             GC.Collect(0);
         }
 
@@ -257,9 +256,6 @@ namespace BitooBitImageEditor.ManipulationBitmap
                     }
                     break;
             }
-
-
-
         }
 
         private int CalcBackgraundBitmapsize(float value)
@@ -285,8 +281,10 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
                 ((IDisposable)backgroundBitmap).Dispose();
                 ((IDisposable)mainBitmap).Dispose();
-                ((IDisposable)temporaryBitmap).Dispose();
-               
+                ((IDisposable)tempBitmap).Dispose();
+                trashBitmap.Dispose();
+
+
                 disposedValue = true;
             }
         }
