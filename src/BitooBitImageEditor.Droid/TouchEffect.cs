@@ -18,7 +18,7 @@ namespace BitooBitImageEditor.Droid.TouchTracking
         BitooBitImageEditor.TouchTracking.TouchEffect libTouchEffect;
         bool capture;
         Func<double, double> fromPixels;
-        int[] twoIntArray = new int[2];
+        readonly int[] twoIntArray = new int[2];
 
         static Dictionary<Android.Views.View, TouchEffect> viewDictionary =
             new Dictionary<Android.Views.View, TouchEffect>();
@@ -63,6 +63,7 @@ namespace BitooBitImageEditor.Droid.TouchTracking
 
         void OnTouch(object sender, Android.Views.View.TouchEventArgs args)
         {
+
             // Two object common to all the events
             Android.Views.View senderView = sender as Android.Views.View;
             MotionEvent motionEvent = args.Event;
@@ -151,10 +152,12 @@ namespace BitooBitImageEditor.Droid.TouchTracking
                     idToEffectDictionary.Remove(id);
                     break;
             }
+
         }
 
         void CheckForBoundaryHop(int id, Point pointerLocation)
         {
+
             TouchEffect touchEffectHit = null;
 
             foreach (Android.Views.View view in viewDictionary.Keys)
@@ -189,6 +192,7 @@ namespace BitooBitImageEditor.Droid.TouchTracking
                 idToEffectDictionary[id] = touchEffectHit;
             }
         }
+            
 
         void FireEvent(TouchEffect touchEffect, int id, TouchActionType actionType, Point pointerLocation, bool isInContact)
         {

@@ -19,19 +19,21 @@ namespace BitooBitImageEditor.ManipulationBitmap
         Dictionary<long, TouchManipulationInfo> touchDictionary =
             new Dictionary<long, TouchManipulationInfo>();
 
-        public TouchManipulationBitmap(SKBitmap bitmap, SKMatrix matrix, BitmapType type, string text)
+        public TouchManipulationBitmap(SKBitmap bitmap, SKMatrix matrix, BitmapType type, string text, SKColor color = default)
         {
             Bitmap = bitmap;          
             Matrix = matrix;
             Type = type;
             Text = text;
+            Color = color;
         }
 
-        public TouchManipulationBitmap(SKBitmap bitmap, BitmapType type, string text)
+        public TouchManipulationBitmap(SKBitmap bitmap, BitmapType type, string text, SKColor color = default)
         {
             Matrix = SKMatrix.MakeIdentity();
             Bitmap = bitmap;
             Type = type;
+            Color = color;
             Text = text;
         }
 
@@ -41,9 +43,11 @@ namespace BitooBitImageEditor.ManipulationBitmap
         };
 
 
+        public TouchActionType? TouchAction { set; get; } = null;
         public SKBitmap Bitmap { set; get; }
         public SKMatrix Matrix { set; get; }
         public string Text { set; get; }
+        public SKColor Color { set; get; }
         public BitmapType Type { set; get; }
 
 

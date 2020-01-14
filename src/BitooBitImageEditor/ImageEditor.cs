@@ -91,38 +91,47 @@ namespace BitooBitImageEditor
         }
 
         private async Task<byte[]> PushImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
-        {          
-            taskCompletionEditImage = new TaskCompletionSource<byte[]>();
-
-            if (bitmap != null)
+        {
+            try
             {
-                page = new ImageEditorPage(bitmap, config);
+                taskCompletionEditImage = new TaskCompletionSource<byte[]>();
 
-                if (Device.RuntimePlatform == Device.Android)
+                if (bitmap != null)
                 {
-                   await Application.Current.MainPage.Navigation.PushModalAsync(page);
+                    page = new ImageEditorPage(bitmap, config);
+
+                    if (Device.RuntimePlatform == Device.Android)
+                    {
+                        await Application.Current.MainPage.Navigation.PushModalAsync(page);
+                    }
+                    else
+                    {
+                        mainPage = Application.Current.MainPage;
+                        Application.Current.MainPage = page;
+                        mainPageIsChanged = true;
+                    }
                 }
                 else
-                {
-                    mainPage = Application.Current.MainPage;
-                    Application.Current.MainPage = page;
-                    mainPageIsChanged = true;
-                }
+                    taskCompletionEditImage.SetResult(null);
+
+                byte[] data = await taskCompletionEditImage.Task;
+
+                if (mainPageIsChanged)
+                    Application.Current.MainPage = mainPage;
+                else
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
+
+                mainPage = null;
+                imageEditLock = false;
+                imageSetLock = false;
+                return data;
             }
-            else
-                taskCompletionEditImage.SetResult(null);
-
-            byte[] data = await taskCompletionEditImage.Task;
-
-            if (mainPageIsChanged)
-                Application.Current.MainPage = mainPage;
-            else
-                await Application.Current.MainPage.Navigation.PopModalAsync();
-
-            mainPage = null;
-            imageEditLock = false;
-            imageSetLock = false;
-            return data;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                SetImage(null);
+                return null;
+            }
         }
     }
 }

@@ -67,11 +67,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution: AITI-GRUPP, OOO (26JKV2Z3FR)</CodesignKey>
     <CodesignEntitlements>
     </CodesignEntitlements>
-    <CodesignProvision>
-    </CodesignProvision>
+    <CodesignProvision>ImageEditorDestribution</CodesignProvision>
     <BuildIpa>true</BuildIpa>
     <CodesignExtraArgs />
     <CodesignResourceRules />
