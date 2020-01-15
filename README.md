@@ -1,5 +1,5 @@
 # BitooBitImageEditor
-Simple image editor for Xamarin Forms based on the [SkiaSharp](https://github.com/mono/SkiaSharp) library
+Simple image editor for Xamarin Forms based on the [SkiaSharp](https://github.com/mono/SkiaSharp) library and [SkiaSharpForms-Demos](https://github.com/xamarin/xamarin-forms-samples/tree/master/SkiaSharpForms/Demos)
 
 [<h4>Documentation of Getting Started</h4>](https://github.com/BitooBit/BitooBitImageEditor/wiki/Getting-Started)
 
