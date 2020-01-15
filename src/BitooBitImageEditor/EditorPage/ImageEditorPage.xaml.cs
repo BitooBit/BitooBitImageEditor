@@ -6,6 +6,7 @@ using Xamarin.Forms.Xaml;
 
 namespace BitooBitImageEditor.EditorPage
 {
+    /// <summary>for internal use by <see cref="BitooBitImageEditor"/></summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public sealed partial class ImageEditorPage : ContentPage
     {
@@ -29,6 +30,7 @@ namespace BitooBitImageEditor.EditorPage
             }
         }
 
+        /// <summary> </summary>
         protected override void OnDisappearing()
         {
             ImageEditor.Instance.SetImage();
@@ -37,7 +39,7 @@ namespace BitooBitImageEditor.EditorPage
 
         private void TouchEffect_TouchAction(object sender, TouchActionEventArgs args) => viewModel.OnTouchEffectTouchAction(sender, args);
 
-        public void Dispose()
+        internal void Dispose()
         {
             viewModel.Dispose();
             GC.Collect();

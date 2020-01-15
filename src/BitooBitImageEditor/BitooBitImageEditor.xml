@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BitooBitImageEditor</name>
+    </assembly>
+    <members>
+        <member name="T:BitooBitImageEditor.EditorPage.BaseNotifier">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

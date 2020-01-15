@@ -4,53 +4,48 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace SampleImageEditor
 {
     public partial class MainPage : ContentPage
     {
+        private byte[] data;
+        Assembly assembly;
+        List<SKBitmap> stickers;
         public MainPage()
         {
             InitializeComponent();
+            assembly = GetType().GetTypeInfo().Assembly;
             this.BindingContext = this;
-
-            //BitooBitImageEditor.EditorPage.
+            GetBitmaps();
         }
 
-        private byte[] data;
+        public bool ConfigVisible { get; set; }
+        public ImageEditorConfig Config { get; set; } = new ImageEditorConfig();
+        public bool CanAddStickers { get; set; } = true;
+        public int? OutImageHeight { get; set; } = null;
+        public int? OutImageWidht { get; set; } = null;
+        public bool UseSampleImage { get; set; } = true;
 
-        private List<SKBitmap> GetBitmaps()
-        {
-            List<SKBitmap> stickers = null;
-            Assembly assembly = GetType().GetTypeInfo().Assembly;
-            string[] resourceIDs = assembly.GetManifestResourceNames();
-
-            foreach (string resourceID in resourceIDs)
-            {
-                if (resourceID.EndsWith(".png") || resourceID.EndsWith(".jpg"))
-                {
-                    if (stickers == null)
-                        stickers = new List<SKBitmap>();
-
-                    using (Stream stream = assembly.GetManifestResourceStream(resourceID))
-                    {
-                        stickers.Add(SKBitmap.Decode(stream));
-                    }
-                }
-            }
-            return stickers;
-        }
-
+        public List<Aspect> Aspects { get; } = new List<Aspect> { Aspect.AspectFill, Aspect.AspectFit, Aspect.Fill };
+        public List<BackgroundType> BackgroundTypes { get; } = new List<BackgroundType> { BackgroundType.Transparent, BackgroundType.StretchedImage, BackgroundType.Color };
+        public List<SKColor> Colors { get; } = new List<SKColor> { SKColors.Red, SKColors.Green, SKColors.Blue };
 
         private async void GetEditedImage_Clicked(object sender, EventArgs e)
         {
             try
             {
-                ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue,
-                    outImageHeight: 512, outImageWidht: 512, aspect: Aspect.AspectFit);
+                Config.Stickers = CanAddStickers ? stickers : null;
+                Config.SetOutImageSize(OutImageHeight, OutImageWidht);
 
-                byte[] data = await ImageEditor.Instance.GetEditedImage(config: config);
+                SKBitmap bitmap = null;
+                if (UseSampleImage)
+                    using (Stream stream = assembly.GetManifestResourceStream("SampleImageEditor.Resources.sample.png"))
+                        bitmap = SKBitmap.Decode(stream);
+
+                byte[] data = await ImageEditor.Instance.GetEditedImage(bitmap, Config);
                 this.data = data;
                 if (data != null)
                 {
@@ -80,5 +75,31 @@ namespace SampleImageEditor
             await DisplayAlert("", message, "Ok");
         }
 
+        private void SetConfig_Clicked(object sender, EventArgs e)
+        {
+            ConfigVisible = !ConfigVisible;
+        }
+
+        private void GetBitmaps()
+        {
+            List<SKBitmap> _stickers = null;
+
+            string[] resourceIDs = assembly.GetManifestResourceNames();
+
+            foreach (string resourceID in resourceIDs)
+            {
+                if (resourceID.Contains("sticker") && resourceID.EndsWith(".png"))
+                {
+                    if (_stickers == null)
+                        _stickers = new List<SKBitmap>();
+
+                    using (Stream stream = assembly.GetManifestResourceStream(resourceID))
+                    {
+                        _stickers.Add(SKBitmap.Decode(stream));
+                    }
+                }
+            }
+            stickers = _stickers;
+        }
     }
 }

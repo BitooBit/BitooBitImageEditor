@@ -10,6 +10,7 @@
              xmlns:editorpage="clr-namespace:BitooBitImageEditor.EditorPage"
              xmlns:tt="clr-namespace:BitooBitImageEditor.TouchTracking"
              xmlns:controls="clr-namespace:BitooBitImageEditor.Controls"
+             xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              ios:Page.PrefersStatusBarHidden="True"
              ios:Page.PreferredStatusBarUpdateAnimation="Fade"
              ios:Page.PrefersHomeIndicatorAutoHidden="true"
@@ -221,10 +222,11 @@
 
                     <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" Margin="0,7,7,0" HorizontalOptions="EndAndExpand"/>
 
-                    <CollectionView Grid.Row="1" Margin="0" ItemsSource="{Binding Config.Stickers}" VerticalOptions="FillAndExpand" BackgroundColor="Transparent">
+                    <CollectionView Grid.Row="1" Margin="0" ItemSizingStrategy="MeasureFirstItem" ItemsSource="{Binding Config.Stickers}" VerticalOptions="FillAndExpand" BackgroundColor="Transparent">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical"  Span="2" HorizontalItemSpacing="0" VerticalItemSpacing="0" />
                         </CollectionView.ItemsLayout>
+                        
                         <CollectionView.ItemTemplate>
                             <DataTemplate >
                                 <Grid VerticalOptions="Center" HorizontalOptions="Center" Margin="0" BackgroundColor="Transparent" Padding="0" RowSpacing="0" ColumnSpacing="0"  >
@@ -235,6 +237,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
+                                
                                     <Image Grid.Row="0" Source="{Binding ., Converter={StaticResource SourceConverter}}" Aspect="AspectFit" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Margin="5" HeightRequest="100" WidthRequest="100"/>
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Path=BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />

@@ -17,6 +17,10 @@
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\source\repos\bitoobit\BitooBitImageEditor\src\BitooBitImageEditor\BitooBitImageEditor.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Resources\arrow_back.png" />
     <None Remove="Resources\clear.png" />

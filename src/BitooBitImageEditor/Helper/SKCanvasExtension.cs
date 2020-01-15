@@ -48,6 +48,7 @@ namespace BitooBitImageEditor.Helper
                     using (SKPaint paintStretch = paint.Clone())
                     {
                         float blur = 0.08f * Math.Max(rectImage.Width, rectImage.Height);
+                        blur = blur < 100 ? blur : 100;
                         paintStretch.ImageFilter = SKImageFilter.CreateBlur(blur, blur);
                         canvas.DrawBitmap(backgroundBitmap, rectImage, paintStretch);
                     }

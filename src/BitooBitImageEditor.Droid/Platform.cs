@@ -5,9 +5,7 @@ using Xamarin.Forms.Platform.Android;
 
 namespace BitooBitImageEditor.Droid
 {
-    /// <summary>
-    /// Необходим для исспользования <see cref="BitooBitImageEditor"/> на Android
-    /// </summary>
+    /// <summary> Required to use <see cref="BitooBitImageEditor"/> on Android</summary>
     public static class Platform
     {
         internal static bool IsInitialized { get; set; }
@@ -16,10 +14,10 @@ namespace BitooBitImageEditor.Droid
         internal static Bundle CurrentBundle { get; private set; }
         internal const int PickImageId = 1000;
         /// <summary>
-        /// Инициализирует <see cref="BitooBitImageEditor"/>
+        /// initializes <see cref="BitooBitImageEditor"/>
         /// </summary>
-        /// <param name="activity">Текущий <see cref="Activity"/> android приложения</param>
-        /// <param name="bundle">Текущий <see cref="Bundle"/> android приложения</param>
+        /// <param name="activity">current <see cref="Activity"/> </param>
+        /// <param name="bundle">current <see cref="Bundle"/> </param>
         public static void Init(FormsAppCompatActivity activity, Bundle bundle)
         {
             CurrentActivity = activity;
@@ -28,17 +26,12 @@ namespace BitooBitImageEditor.Droid
             LinkAssemblies();
         }
 
-
+        /// <summary>required to get an image from the gallery</summary>
         public static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
-
             if (requestCode == PickImageId)
-            {
                 ImageHelper.OnActivityResult(resultCode, intent);
-            }
         }
-
-
 
         private static void LinkAssemblies()
         {

@@ -185,7 +185,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             if (config.BackgroundType == BackgroundType.StretchedImage)
             {
                 backgroundBitmap = new SKBitmap(CalcBackgraundBitmapsize(widthBitmap), CalcBackgraundBitmapsize(heightBitmap));
-                bitmap.ScalePixels(backgroundBitmap, SKFilterQuality.High);
+                bitmap.ScalePixels(backgroundBitmap, SKFilterQuality.Low);
             }
 
             mainBitmap = bitmap;
