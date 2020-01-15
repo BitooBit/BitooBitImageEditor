@@ -1,69 +1,112 @@
-﻿using SkiaSharp;
+﻿using BitooBitImageEditor.ManipulationBitmap;
+using SkiaSharp;
 using System;
+using System.Collections.Generic;
 
 namespace BitooBitImageEditor.Helper
 {
     internal static class SKCanvasExtension
     {
-        internal static void DrawMultilineText(this SKCanvas canvas, string text, SKColor color, ref SKRect rect)
+        internal static void DrawBitmap(this SKCanvas canvas, List<TouchManipulationBitmap> bitmapCollection, float transX = 0, float transY = 0, float scale = 1)
         {
-            if (!string.IsNullOrWhiteSpace(text))
+            using (SKPaint paint = new SKPaint())
             {
-                SKPaint paint = new SKPaint
+                paint.IsAntialias = true;
+
+                foreach (var item in bitmapCollection)
                 {
-                    Color = color,
-                    IsAntialias = true
-                };
-                float height;
-                //int emojiChar = StringUtilities.GetUnicodeCharacterCode("🚀", SKTextEncoding.Utf32);
-                //using (var emoji = SKTypeface.FromFamilyName("Noto Emoji"))
-                int emojiChar = 1087;
-                using (SKTypeface typeface = SKFontManager.Default.MatchCharacter(emojiChar))
+                    if (item.Type != BitmapType.Main && !item.IsHide)
+                    {
+                        canvas.Save();
+                        SKMatrix matrix = item.Matrix;
+                        SKMatrix bitmapMatrix = new SKMatrix(matrix.ScaleX * scale, matrix.SkewX * scale, (matrix.TransX + transX) * scale, matrix.SkewY * scale, matrix.ScaleY * scale, (matrix.TransY + transY) * scale, 0, 0, 1);
+                        //canvas.Concat(ref bitmapMatrix);
+                        canvas.SetMatrix(bitmapMatrix);
+                        canvas.DrawBitmap(item.Bitmap, 0, 0, paint);
+                        canvas.Restore();
+                    }
+                }
+            }
+
+        }
+
+        internal static void DrawBitmap(this SKCanvas canvas, SKBitmap mainBitmap, SKBitmap backgroundBitmap, SKRect rectImage, SKRect rect, ImageEditorConfig config)
+        {
+            using (SKPaint paint = new SKPaint())
+            {
+                paint.IsAntialias = true;
+
+                if (config?.BackgroundType != BackgroundType.Transparent)
                 {
-                    paint.Typeface = typeface;
-                    string[] lines = text.Split(new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" }, StringSplitOptions.None);
-
-                    float minTextSize = int.MaxValue;
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        float textWidth = paint.MeasureText(lines[i]);
-                        float minTextSizecurrent = 0.95f * rect.Width * paint.TextSize / textWidth;
-
-                        if (minTextSizecurrent < minTextSize)
-                            minTextSize = minTextSizecurrent;
-                    }
-
-                    paint.TextSize = minTextSize < 255 ? minTextSize : 255;
-
-                    float maxTextHeight = 0;
-                    float maxTextWidth = 0;
-                    float[] linesWidth = new float[lines.Length];
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        SKRect currenttextBounds = new SKRect();
-                        paint.MeasureText(lines[i], ref currenttextBounds);
-
-                        linesWidth[i] = currenttextBounds.Width;
-                        if (maxTextHeight < currenttextBounds.Height)
-                            maxTextHeight = currenttextBounds.Height;
-
-                        if (maxTextWidth < currenttextBounds.Width)
-                            maxTextWidth = currenttextBounds.Width;
-                    }
-
-                    maxTextHeight = 1.2f * maxTextHeight;
-                    float yText = rect.Top;
-
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        float xText = rect.MidX - (linesWidth[i] / 2);
-                        canvas.DrawText(lines[i], xText, yText += maxTextHeight, paint);
-                    }
-                    height = (lines.Length + 0.32f) * maxTextHeight;
+                    paint.Color = config?.BackgroundType == BackgroundType.Color ? config.BackgroundColor : 0xFF1f1f1f;
+                    paint.Style = SKPaintStyle.Fill;
+                    canvas.DrawRect(rectImage, paint);
                 }
 
-                rect.Bottom = rect.Top + height;
+                if (BackgroundType.StretchedImage == config?.BackgroundType)
+                {
+                    using (SKPaint paintStretch = paint.Clone())
+                    {
+                        float blur = 0.08f * Math.Max(rectImage.Width, rectImage.Height);
+                        paintStretch.ImageFilter = SKImageFilter.CreateBlur(blur, blur);
+                        canvas.DrawBitmap(backgroundBitmap, rectImage, paintStretch);
+                    }
+                }
+
+                canvas.DrawBitmap(mainBitmap, rect, paint);
             }
         }
+
+
+        internal static void DrawPath(this SKCanvas canvas, List<PaintedPath> completedPaths, Dictionary<long, PaintedPath> inProgressPaths)
+        {
+            using (SKPaint paint = new SKPaint())
+            {
+                paint.Style = SKPaintStyle.Stroke;
+                paint.StrokeWidth = 10;
+                paint.StrokeCap = SKStrokeCap.Round;
+                paint.StrokeJoin = SKStrokeJoin.Round;
+                paint.IsAntialias = true;
+
+
+                if(completedPaths != null)
+                    foreach (PaintedPath path in completedPaths)
+                    {
+                        paint.Color = path.Color;
+                        canvas.DrawPath(path.Path, paint);
+                    }
+
+                if (inProgressPaths != null)
+                    foreach (PaintedPath path in inProgressPaths?.Values)
+                    {
+                        paint.Color = path.Color;
+                        canvas.DrawPath(path.Path, paint);
+                    }
+            }
+        }
+
+
+        internal static void DrawSurrounding(this SKCanvas canvas, SKRect outerRect, SKRect innerRect, SKColor color)
+        {
+            using (SKPaint paint = new SKPaint())
+            {
+                paint.Color = color;
+                paint.IsAntialias = true;
+                paint.Style = SKPaintStyle.Fill;
+
+                SKRect blackoutCropRectLeft = new SKRect(outerRect.Left, innerRect.Top, innerRect.Left, innerRect.Bottom);
+                SKRect blackoutCropRectTop = new SKRect(outerRect.Left, outerRect.Top, outerRect.Right, innerRect.Top);
+                SKRect blackoutCropRectRight = new SKRect(innerRect.Right, innerRect.Top, outerRect.Right, innerRect.Bottom);
+                SKRect blackoutCropRectBottom = new SKRect(outerRect.Left, innerRect.Bottom, outerRect.Right, outerRect.Bottom);
+
+                canvas.DrawRect(blackoutCropRectTop, paint);
+                canvas.DrawRect(blackoutCropRectBottom, paint);
+                canvas.DrawRect(blackoutCropRectLeft, paint);
+                canvas.DrawRect(blackoutCropRectRight, paint);
+            }
+        }
+
     }
 }
+
+

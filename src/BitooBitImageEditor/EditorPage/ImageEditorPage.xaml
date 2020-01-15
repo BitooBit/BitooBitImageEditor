@@ -8,10 +8,12 @@
              x:Class="BitooBitImageEditor.EditorPage.ImageEditorPage"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              xmlns:editorpage="clr-namespace:BitooBitImageEditor.EditorPage"
+             xmlns:tt="clr-namespace:BitooBitImageEditor.TouchTracking"
+             xmlns:controls="clr-namespace:BitooBitImageEditor.Controls"
              ios:Page.PrefersStatusBarHidden="True"
              ios:Page.PreferredStatusBarUpdateAnimation="Fade"
              ios:Page.PrefersHomeIndicatorAutoHidden="true"
-             x:Name="ThisEditorPage">
+             x:Name="ThisEditorPage" x:ClassModifier="internal" >
 
 
     <ContentPage.Resources>
@@ -63,121 +65,201 @@
 
 
     <ContentPage.Content>
-        <!--<ScrollView >-->
+
         <Grid VerticalOptions="FillAndExpand" BackgroundColor="#eeeeee">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="canvasTop" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Grid VerticalOptions="FillAndExpand" BackgroundColor="#eeeeee">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid x:Name="canvasCropViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding CropVisible}" IsEnabled="{Binding CropVisible}">
+                <Grid x:Name="canvasTop" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+
+                    <Grid x:Name="canvasCropViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding CropVisible}" IsEnabled="{Binding CropVisible}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+
+
+
+                    <Grid x:Name="canvasMainViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding MainVisible}" IsEnabled="{Binding MainVisible}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+
+
+                    <Grid.Effects>
+                        <tt:TouchEffect Capture="True"
+                            TouchAction="TouchEffect_TouchAction" />
+                    </Grid.Effects>
                 </Grid>
 
-
-
-                <Grid x:Name="canvasMainViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding MainVisible}" IsEnabled="{Binding MainVisible}">
+                <Grid Grid.Row="1" VerticalOptions="End" IsVisible="{Binding CropVisible}" IsEnabled="{Binding CropVisible}">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <CollectionView Grid.Row="0"  ItemsSource="{Binding CropCollect}" IsVisible="{Binding Config.CanChangeCropAspectRatio}" IsEnabled="{Binding Config.CanChangeCropAspectRatio}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout HorizontalOptions="Center">
+                                    <ImageButton Grid.Column="0" Source="{Binding ImageName, Converter={StaticResource SourceConverter}}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
+
+                    <StackLayout Grid.Row="2" >
+                        <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="EndAndExpand"/>
+                    </StackLayout>
+
+
+                </Grid>
+
+                <Grid VerticalOptions="FillAndExpand" BackgroundColor="Transparent" IsVisible="{Binding TextVisible}" IsEnabled="{Binding TextVisible}" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    <BoxView Grid.RowSpan="3" BackgroundColor="Black" Opacity="0.7" />
+
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" Margin="0,7,7,0" HorizontalOptions="End" VerticalOptions="Start"/>
+
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}" HeightRequest="32">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="30">
+                                    <Button BackgroundColor="{Binding .}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" Margin="0" BorderColor="Transparent" BorderWidth="1" CommandParameter="{Binding .}" VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <controls:CustomEditor x:Name="textEditor" Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" FontSize="23" Keyboard="Plain" BackgroundColor="Transparent" Margin="10,8,10,4" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                 </Grid>
 
-                <!--<Grid x:Name="canvasPaintViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding PaintVisible}" IsEnabled="{Binding PaintVisible}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-            </Grid>-->
-
-
-                <Grid x:Name="canvasTextViewHost" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" IsVisible="{Binding TextVisible}" IsEnabled="{Binding TextVisible}">
+                <Grid VerticalOptions="StartAndExpand" BackgroundColor="Transparent" IsVisible="{Binding PaintVisible}" IsEnabled="{Binding PaintVisible}" >
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                 
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource undo}" Command="{Binding CancelCommand}" CommandParameter="Apply" Margin="7,7,0,0" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" Margin="0,7,7,0" HorizontalOptions="End" VerticalOptions="Start"/>
+                  
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}"  HeightRequest="32">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="30">
+                                    <Button BackgroundColor="{Binding .}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" Margin="0" BorderColor="Transparent" BorderWidth="1" CommandParameter="{Binding .}" VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    </Grid>
+
+                <Grid VerticalOptions="FillAndExpand" BackgroundColor="Transparent" IsVisible="{Binding StickersVisible}" IsEnabled="{Binding StickersVisible}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    <BoxView Grid.RowSpan="2" BackgroundColor="Black" Opacity="0.7" />
+
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" Margin="0,7,7,0" HorizontalOptions="EndAndExpand"/>
+
+                    <CollectionView Grid.Row="1" Margin="0" ItemsSource="{Binding Config.Stickers}" VerticalOptions="FillAndExpand" BackgroundColor="Transparent">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical"  Span="2" HorizontalItemSpacing="0" VerticalItemSpacing="0" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate >
+                                <Grid VerticalOptions="Center" HorizontalOptions="Center" Margin="0" BackgroundColor="Transparent" Padding="0" RowSpacing="0" ColumnSpacing="0"  >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Row="0" Source="{Binding ., Converter={StaticResource SourceConverter}}" Aspect="AspectFit" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Margin="5" HeightRequest="100" WidthRequest="100"/>
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
                 </Grid>
+
+                <ImageButton Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" Margin="7,7,0,0" VerticalOptions="Start" HorizontalOptions="Start"/>
+
+
+                <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" Margin="0,7,7,0">
+                    <ImageButton Source="{res:ImageResource save}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="End"/>
+                    <ImageButton Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
+                    <ImageButton Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>
+                    <ImageButton Source="{res:ImageResource stickers}" IsVisible="{Binding Config.CanAddStickers}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Stickers}" HorizontalOptions="End"/>
+                    <ImageButton Source="{res:ImageResource gesture}" IsVisible="{Binding Config.CanFingerPaint}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Paint}" HorizontalOptions="End"/>
+                </StackLayout>
+
+
             </Grid>
 
-            <Grid Grid.Row="1" VerticalOptions="End">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-
-                <CollectionView Grid.Row="0" ItemsSource="{Binding ItemsCollect}" IsVisible="{Binding MenuCollectVisible}" >
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
-                    </CollectionView.ItemsLayout>
-                    
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout HorizontalOptions="Center">
-                                <ImageButton Grid.Column="0" Source="{Binding ImageName, Converter={StaticResource SourceConverter}}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                    
-                </CollectionView>
-
-                <CollectionView Grid.Row="0" ItemsSource="{Binding ColorCollect}" IsVisible="{Binding ColorsCollectVisible}" HeightRequest="32">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
-                    </CollectionView.ItemsLayout>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="30">
-                                <Button BackgroundColor="{Binding .}" Command="{Binding BindingContext.SelectColorCommand, Source={x:Reference ThisEditorPage}}" Margin="0" BorderColor="Transparent" BorderWidth="1" CommandParameter="{Binding .}" VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-
-                <Editor Grid.Row="1" IsVisible="{Binding TextVisible}" Text="{Binding Text}" BackgroundColor="White" TextColor="Black" Margin="10,4,10,4" AutoSize="TextChanges"/>
-
-                <StackLayout Grid.Row="2" IsVisible="{Binding ApplyChangesVisible}">
-                    <ImageButton Grid.Column="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" CommandParameter="Cancel" />
-
-                    <ImageButton Grid.Column="2" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" HorizontalOptions="EndAndExpand"/>
-                </StackLayout>
-                
-                <StackLayout Grid.Row="2" IsVisible="{Binding FinishVisible}">
-                    <ImageButton Grid.Column="0" Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" />
-
-                    <ImageButton Grid.Column="2" Source="{res:ImageResource save}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="EndAndExpand"/>
-                </StackLayout>
-                
-            </Grid>
         </Grid>
-        <!--</ScrollView>-->
     </ContentPage.Content>
 </ContentPage>

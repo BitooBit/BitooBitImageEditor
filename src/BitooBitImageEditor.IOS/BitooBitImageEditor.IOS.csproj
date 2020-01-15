@@ -44,6 +44,7 @@
     <Compile Include="Platform.cs" />
     <Compile Include="PlatformHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renders\CustomEditorRender.cs" />
     <Compile Include="TouchEffect.cs" />
     <Compile Include="TouchRecognizer.cs" />
   </ItemGroup>
@@ -55,7 +56,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SkiaSharp">
-      <Version>1.68.1</Version>
+      <Version>1.68.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms">
+      <Version>4.4.0.991477</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

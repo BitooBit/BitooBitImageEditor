@@ -1,46 +1,35 @@
-﻿using BitooBitImageEditor.TouchTracking;
+﻿using BitooBitImageEditor.Helper;
+using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
-using Xamarin.Forms;
 
 namespace BitooBitImageEditor.Croping
 {
-    internal class ImageCropperCanvasView : SKCanvasView
+    internal struct TouchPoint
     {
-        SKBitmap bitmap;
-        //double angleR;
-        float? aspectRatio;
-        CroppingRectangle croppingRect;
-        SKMatrix inverseBitmapMatrix;
+        public int CornerIndex { set; get; }
+        public SKPoint Offset { set; get; }
+    }
 
-        // Touch tracking  
-
-        struct TouchPoint
-        {
-            public int CornerIndex { set; get; }
-            public SKPoint Offset { set; get; }
-        }
-
-        Dictionary<long, TouchPoint> touchPoints = new Dictionary<long, TouchPoint>();
-        Dictionary<long, SKPoint> touchPointsInside = new Dictionary<long, SKPoint>();
-
-        SKPoint bitmapLocationfirst = new SKPoint();
-        SKPoint bitmapLocationlast = new SKPoint();
-
-        internal bool IsActive { get; set; }
-
-
+    internal class ImageCropperCanvasView : SKCanvasView, IDisposable
+    {
+        private SKBitmap bitmap;
+        private float? aspectRatio;
+        private readonly CroppingRectangle croppingRect;
+        private SKMatrix inverseBitmapMatrix;
+        private Dictionary<long, TouchPoint> touchPoints = new Dictionary<long, TouchPoint>();
+        private Dictionary<long, SKPoint> touchPointsInside = new Dictionary<long, SKPoint>();
+        private SKPoint bitmapLocationfirst = new SKPoint();
+        private SKPoint bitmapLocationlast = new SKPoint();
+        private const int corner = 30;
 
         internal ImageCropperCanvasView(SKBitmap bitmap, float? aspectRatio = null)
         {
-            this.aspectRatio = aspectRatio;
             this.bitmap = bitmap;
-            SKRect bitmapRect = new SKRect(0, 0, bitmap.Width, bitmap.Height);
-            croppingRect = new CroppingRectangle(bitmapRect, aspectRatio);
-
-            ;
+            croppingRect = new CroppingRectangle(new SKRect(0, 0, bitmap.Width, bitmap.Height), aspectRatio);
+            SetAspectRatio(aspectRatio);
         }
 
         internal SKBitmap CroppedBitmap
@@ -48,11 +37,9 @@ namespace BitooBitImageEditor.Croping
             get
             {
                 SKRect cropRect = croppingRect.Rect;
-                SKBitmap croppedBitmap = new SKBitmap((int)cropRect.Width,
-                                                      (int)cropRect.Height);
+                SKBitmap croppedBitmap = new SKBitmap((int)cropRect.Width, (int)cropRect.Height);
                 SKRect dest = new SKRect(0, 0, cropRect.Width, cropRect.Height);
-                SKRect source = new SKRect(cropRect.Left, cropRect.Top,
-                                           cropRect.Right, cropRect.Bottom);
+                SKRect source = new SKRect(cropRect.Left, cropRect.Top, cropRect.Right, cropRect.Bottom);
                 using (SKCanvas canvas = new SKCanvas(croppedBitmap))
                 {
                     canvas.DrawBitmap(bitmap, source, dest);
@@ -61,109 +48,35 @@ namespace BitooBitImageEditor.Croping
             }
         }
 
-        protected override void OnParentSet()
+        internal void SetAspectRatio(CropItem crop)
         {
-            base.OnParentSet();
-
-        }
-
-        internal void SetAspectRatio(float? aspectRatio = null, bool isFullRect = false)
-        {
-            this.aspectRatio = aspectRatio;
-            SKRect bitmapRect = new SKRect(0, 0, bitmap.Width, bitmap.Height);
-            croppingRect.SetRect(bitmapRect, aspectRatio, isFullRect);
-
-            InvalidateSurface();
-        }
-
-        internal void Rotate()
-        {
-            var rotatedBitmap = new SKBitmap(bitmap.Height, bitmap.Width);
-
-            using (var surface = new SKCanvas(rotatedBitmap))
+            switch (crop?.Action)
             {
-                surface.Translate(rotatedBitmap.Width, 0);
-                surface.RotateDegrees(90);
-                surface.DrawBitmap(bitmap, 0, 0);
+                case CropRotateType.CropRotate:
+                    Rotate();
+                    break;
+                case CropRotateType.CropFree:
+                    SetAspectRatio(null, false);
+                    break;
+                case CropRotateType.CropFull:
+                    SetAspectRatio(null, true);
+                    break;
+                case CropRotateType.CropSquare:
+                    SetAspectRatio(1f);
+                    break;
             }
-
-            bitmap = rotatedBitmap;
-
-            SetAspectRatio(aspectRatio);
         }
 
-
-        protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
+        internal void OnTouchEffectTouchAction(TouchActionEventArgs args)
         {
-            base.OnPaintSurface(args);
-
-            SKImageInfo info = args.Info;
-            SKSurface surface = args.Surface;
-            SKCanvas canvas = surface.Canvas;
-
-            canvas.Clear(SkiaHelper.backgraundColor);
-
-            // Calculate rectangle for displaying bitmap 
-            var rect = SkiaHelper.CalculateRectangle(info, bitmap);
-            canvas.DrawBitmap(bitmap, rect.rect);
-
-            // Calculate a matrix transform for displaying the cropping rectangle
-            SKMatrix bitmapScaleMatrix = SKMatrix.MakeIdentity();
-            bitmapScaleMatrix.SetScaleTranslate(rect.scale, rect.scale, rect.left, rect.top);
-
-            // Display rectangle
-            SKRect scaledCropRect = bitmapScaleMatrix.MapRect(croppingRect.Rect);
-            canvas.DrawRect(scaledCropRect, SkiaHelper.edgeStroke);
-
-            SKRect blackoutCropRectTop = new SKRect(rect.left, rect.top, rect.right, scaledCropRect.Top);
-            canvas.DrawRect(blackoutCropRectTop, SkiaHelper.blackoutFill);
-
-            SKRect blackoutCropRectBottom = new SKRect(rect.left, scaledCropRect.Bottom, rect.right, rect.bottom);
-            canvas.DrawRect(blackoutCropRectBottom, SkiaHelper.blackoutFill);
-
-            SKRect blackoutCropRectLeft = new SKRect(rect.left, scaledCropRect.Top, scaledCropRect.Left, scaledCropRect.Bottom);
-            canvas.DrawRect(blackoutCropRectLeft, SkiaHelper.blackoutFill);
-
-            SKRect blackoutCropRectRight = new SKRect(scaledCropRect.Right, scaledCropRect.Top, rect.right, scaledCropRect.Bottom);
-            canvas.DrawRect(blackoutCropRectRight, SkiaHelper.blackoutFill);
-
-            // Display heavier corners
-            using (SKPath path = new SKPath())
-            {
-                path.MoveTo(scaledCropRect.Left, scaledCropRect.Top + SkiaHelper.corner);
-                path.LineTo(scaledCropRect.Left, scaledCropRect.Top);
-                path.LineTo(scaledCropRect.Left + SkiaHelper.corner, scaledCropRect.Top);
-
-                path.MoveTo(scaledCropRect.Right - SkiaHelper.corner, scaledCropRect.Top);
-                path.LineTo(scaledCropRect.Right, scaledCropRect.Top);
-                path.LineTo(scaledCropRect.Right, scaledCropRect.Top + SkiaHelper.corner);
-
-                path.MoveTo(scaledCropRect.Right, scaledCropRect.Bottom - SkiaHelper.corner);
-                path.LineTo(scaledCropRect.Right, scaledCropRect.Bottom);
-                path.LineTo(scaledCropRect.Right - SkiaHelper.corner, scaledCropRect.Bottom);
-
-                path.MoveTo(scaledCropRect.Left + SkiaHelper.corner, scaledCropRect.Bottom);
-                path.LineTo(scaledCropRect.Left, scaledCropRect.Bottom);
-                path.LineTo(scaledCropRect.Left, scaledCropRect.Bottom - SkiaHelper.corner);
-
-                canvas.DrawPath(path, SkiaHelper.cornerStroke);
-            }
-
-            // Invert the transform for touch tracking
-            bitmapScaleMatrix.TryInvert(out inverseBitmapMatrix);
-        }
-
-        internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
-        {
-
-            SKPoint pixelLocation = SkiaHelper.ConvertToPixel(this, args.Location);
+            SKPoint pixelLocation = new SKPoint((float)(CanvasSize.Width * args.Location.X / Width), (float)(CanvasSize.Height * args.Location.Y / Height)); ;
             SKPoint bitmapLocation = inverseBitmapMatrix.MapPoint(pixelLocation);
 
             switch (args.Type)
             {
                 case TouchActionType.Pressed:
                     // Convert radius to bitmap/cropping scale
-                    float radius = inverseBitmapMatrix.ScaleX * SkiaHelper.radius;
+                    float radius = inverseBitmapMatrix.ScaleX * 50;
 
                     // Find corner that the finger is touching
                     int cornerIndex = croppingRect.HitTest(bitmapLocation, radius);
@@ -193,17 +106,14 @@ namespace BitooBitImageEditor.Croping
                     if (touchPoints.ContainsKey(args.Id))
                     {
                         TouchPoint touchPoint = touchPoints[args.Id];
-                        croppingRect.MoveCorner(touchPoint.CornerIndex,
-                                                bitmapLocation - touchPoint.Offset);
+                        croppingRect.MoveCorner(touchPoint.CornerIndex, bitmapLocation - touchPoint.Offset);
                         InvalidateSurface();
                     }
                     if (touchPointsInside.ContainsKey(args.Id))
                     {
                         //Если перемещение соответсвует айдишнику от его кардинат вычитаем корадинаты начальной точки и передаем в метод перемещения
                         bitmapLocationlast = bitmapLocation;
-                        SKPoint point = new SKPoint();
-                        point.X = bitmapLocationlast.X - bitmapLocationfirst.X;
-                        point.Y = bitmapLocationlast.Y - bitmapLocationfirst.Y;
+                        SKPoint point = new SKPoint(bitmapLocationlast.X - bitmapLocationfirst.X, bitmapLocationlast.Y - bitmapLocationfirst.Y);
                         croppingRect.MoveAllCorner(point);
                         bitmapLocationfirst = bitmapLocationlast;
                         InvalidateSurface();
@@ -213,18 +123,133 @@ namespace BitooBitImageEditor.Croping
                 case TouchActionType.Released:
                 case TouchActionType.Cancelled:
                     if (touchPoints.ContainsKey(args.Id))
-                    {
                         touchPoints.Remove(args.Id);
-                    }
-                    if (touchPointsInside.ContainsKey(args.Id))
-                    {
+
+                    else if (touchPointsInside.ContainsKey(args.Id))
                         touchPointsInside.Remove(args.Id);
-                    }
                     break;
             }
-
-
         }
+
+
+        protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
+        {
+            base.OnPaintSurface(args);
+
+            SKImageInfo info = args.Info;
+            SKSurface surface = args.Surface;
+            SKCanvas canvas = surface.Canvas;
+
+            canvas.Clear();
+
+            // Calculate rectangle for displaying bitmap 
+            var rect = SkiaHelper.CalculateRectangle(new SKRect(0, 0, info.Width, info.Height), bitmap);
+            canvas.DrawBitmap(bitmap, rect.rect);
+
+            // Calculate a matrix transform for displaying the cropping rectangle
+            SKMatrix bitmapScaleMatrix = SKMatrix.MakeIdentity();
+            bitmapScaleMatrix.SetScaleTranslate(rect.scaleX, rect.scaleX, rect.rect.Left, rect.rect.Top);
+
+            // Display rectangle
+            SKRect scaledCropRect = bitmapScaleMatrix.MapRect(croppingRect.Rect);
+
+
+            using (SKPaint edgeStroke = new SKPaint())
+            {
+                edgeStroke.Style = SKPaintStyle.Stroke;
+                edgeStroke.Color = SKColors.White;
+                edgeStroke.StrokeWidth = 3;
+                edgeStroke.IsAntialias = true;
+                canvas.DrawRect(scaledCropRect, edgeStroke);
+            }
+
+            canvas.DrawSurrounding(rect.rect, scaledCropRect, SKColors.Gray.WithAlpha(190));
+
+            // Display heavier corners
+            using (SKPaint cornerStroke = new SKPaint())
+            using (SKPath path = new SKPath())
+            {
+                cornerStroke.Style = SKPaintStyle.Stroke;
+                cornerStroke.Color = SKColors.White;
+                cornerStroke.StrokeWidth = 7;
+
+                path.MoveTo(scaledCropRect.Left, scaledCropRect.Top + corner);
+                path.LineTo(scaledCropRect.Left, scaledCropRect.Top);
+                path.LineTo(scaledCropRect.Left + corner, scaledCropRect.Top);
+
+                path.MoveTo(scaledCropRect.Right - corner, scaledCropRect.Top);
+                path.LineTo(scaledCropRect.Right, scaledCropRect.Top);
+                path.LineTo(scaledCropRect.Right, scaledCropRect.Top + corner);
+
+                path.MoveTo(scaledCropRect.Right, scaledCropRect.Bottom - corner);
+                path.LineTo(scaledCropRect.Right, scaledCropRect.Bottom);
+                path.LineTo(scaledCropRect.Right - corner, scaledCropRect.Bottom);
+
+                path.MoveTo(scaledCropRect.Left + corner, scaledCropRect.Bottom);
+                path.LineTo(scaledCropRect.Left, scaledCropRect.Bottom);
+                path.LineTo(scaledCropRect.Left, scaledCropRect.Bottom - corner);
+
+                canvas.DrawPath(path, cornerStroke);
+            }
+
+            // Invert the transform for touch tracking
+            bitmapScaleMatrix.TryInvert(out inverseBitmapMatrix);
+        }
+
+        private void Rotate()
+        {
+            var rotatedBitmap = new SKBitmap(bitmap.Height, bitmap.Width);
+
+            using (var surface = new SKCanvas(rotatedBitmap))
+            {
+                surface.Translate(rotatedBitmap.Width, 0);
+                surface.RotateDegrees(90);
+                surface.DrawBitmap(bitmap, 0, 0);
+            }
+
+            bitmap = rotatedBitmap;
+
+            SetAspectRatio(aspectRatio);
+        }
+
+        private void SetAspectRatio(float? aspectRatio = null, bool isFullRect = false)
+        {
+            this.aspectRatio = aspectRatio;
+            croppingRect.SetRect(new SKRect(0, 0, bitmap.Width, bitmap.Height), aspectRatio, isFullRect);
+            InvalidateSurface();
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    aspectRatio = null;
+                    touchPoints = null;
+                    touchPointsInside = null;
+                }
+
+                ((IDisposable)bitmap).Dispose();
+
+                disposedValue = true;
+            }
+        }
+
+        ~ImageCropperCanvasView()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
 
     }
 }

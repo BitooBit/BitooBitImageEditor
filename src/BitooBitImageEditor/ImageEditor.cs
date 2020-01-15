@@ -27,6 +27,7 @@ namespace BitooBitImageEditor
         private TaskCompletionSource<byte[]> taskCompletionEditImage;
         private bool imageEditLock;
         private bool imageSetLock;
+        private ImageEditorPage page;
 
 
         public string FolderName
@@ -38,7 +39,7 @@ namespace BitooBitImageEditor
 
         public async Task<bool> SaveImage(byte[] data, string filename) => await ImageHelper.SaveImageAsync(data, filename);
 
-        public async Task<byte[]> GetEditedImage(SKBitmap bitmap = null)
+        public async Task<byte[]> GetEditedImage(SKBitmap bitmap = null, ImageEditorConfig config = null)
         {
             if (!imageEditLock)
             {
@@ -50,8 +51,11 @@ namespace BitooBitImageEditor
                         bitmap = stream != null ? SKBitmap.Decode(stream) : null;
                     }
                 }
-                
-                var data = bitmap != null ? await PushImageEditorPage(bitmap) : null;
+                if (config == null)
+                    config = new ImageEditorConfig();
+
+                //await Task.Delay(100);
+                var data = bitmap != null ? await PushImageEditorPage(bitmap, config) : null;
                 imageEditLock = false;
                 return data;
             }
@@ -76,41 +80,57 @@ namespace BitooBitImageEditor
                 }
                 else
                     taskCompletionEditImage.SetResult(null);
+
+                if (page != null)
+                {
+                    page.Dispose();
+                    page = null;
+                }
             }
         }
 
-        private async Task<byte[]> PushImageEditorPage(SKBitmap bitmap)
-        {          
-            taskCompletionEditImage = new TaskCompletionSource<byte[]>();
-
-            if (bitmap != null)
+        private async Task<byte[]> PushImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
+        {
+            try
             {
-                var page = new ImageEditorPage(bitmap);
-                if (Device.RuntimePlatform == Device.Android)
+                taskCompletionEditImage = new TaskCompletionSource<byte[]>();
+
+                if (bitmap != null)
                 {
-                   await Application.Current.MainPage.Navigation.PushModalAsync(page);
+                    page = new ImageEditorPage(bitmap, config);
+
+                    if (Device.RuntimePlatform == Device.Android)
+                    {
+                        await Application.Current.MainPage.Navigation.PushModalAsync(page);
+                    }
+                    else
+                    {
+                        mainPage = Application.Current.MainPage;
+                        Application.Current.MainPage = page;
+                        mainPageIsChanged = true;
+                    }
                 }
                 else
-                {
-                    mainPage = Application.Current.MainPage;
-                    Application.Current.MainPage = page;
-                    mainPageIsChanged = true;
-                }
+                    taskCompletionEditImage.SetResult(null);
+
+                byte[] data = await taskCompletionEditImage.Task;
+
+                if (mainPageIsChanged)
+                    Application.Current.MainPage = mainPage;
+                else
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
+
+                mainPage = null;
+                imageEditLock = false;
+                imageSetLock = false;
+                return data;
             }
-            else
-                taskCompletionEditImage.SetResult(null);
-
-            byte[] data = await taskCompletionEditImage.Task;
-
-            if (mainPageIsChanged)
-                Application.Current.MainPage = mainPage;
-            else
-                await Application.Current.MainPage.Navigation.PopModalAsync();
-
-            mainPage = null;
-            imageEditLock = false;
-            imageSetLock = false;
-            return data;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                SetImage(null);
+                return null;
+            }
         }
     }
 }

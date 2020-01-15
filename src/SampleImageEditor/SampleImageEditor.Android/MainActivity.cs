@@ -1,8 +1,8 @@
 ﻿using Android.App;
-using Android.Content.PM;
-using Android.Runtime;
-using Android.OS;
 using Android.Content;
+using Android.Content.PM;
+using Android.OS;
+using Android.Runtime;
 
 namespace SampleImageEditor.Droid
 {
@@ -34,6 +34,6 @@ namespace SampleImageEditor.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        
+
     }
 }

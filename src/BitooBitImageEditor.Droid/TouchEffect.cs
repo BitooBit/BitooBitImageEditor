@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Android.Views;
+using BitooBitImageEditor.TouchTracking;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using Android.Views;
-using BitooBitImageEditor.TouchTracking;
 
 [assembly: ResolutionGroupName(TouchEffect.resolutionGroupName)]
 [assembly: ExportEffect(typeof(BitooBitImageEditor.Droid.TouchTracking.TouchEffect), TouchEffect.uniqueName)]
@@ -13,17 +13,15 @@ namespace BitooBitImageEditor.Droid.TouchTracking
 {
     internal class TouchEffect : PlatformEffect
     {
-        Android.Views.View view;
-        Element formsElement;
-        BitooBitImageEditor.TouchTracking.TouchEffect libTouchEffect;
-        bool capture;
-        Func<double, double> fromPixels;
-        int[] twoIntArray = new int[2];
-
-        static Dictionary<Android.Views.View, TouchEffect> viewDictionary =
+        private Android.Views.View view;
+        private Element formsElement;
+        private BitooBitImageEditor.TouchTracking.TouchEffect libTouchEffect;
+        private bool capture;
+        private Func<double, double> fromPixels;
+        private readonly int[] twoIntArray = new int[2];
+        private static readonly Dictionary<Android.Views.View, TouchEffect> viewDictionary =
             new Dictionary<Android.Views.View, TouchEffect>();
-
-        static Dictionary<int, TouchEffect> idToEffectDictionary =
+        private static readonly Dictionary<int, TouchEffect> idToEffectDictionary =
             new Dictionary<int, TouchEffect>();
 
         protected override void OnAttached()
@@ -61,8 +59,9 @@ namespace BitooBitImageEditor.Droid.TouchTracking
             }
         }
 
-        void OnTouch(object sender, Android.Views.View.TouchEventArgs args)
+        private void OnTouch(object sender, Android.Views.View.TouchEventArgs args)
         {
+
             // Two object common to all the events
             Android.Views.View senderView = sender as Android.Views.View;
             MotionEvent motionEvent = args.Event;
@@ -86,7 +85,8 @@ namespace BitooBitImageEditor.Droid.TouchTracking
                 case MotionEventActions.PointerDown:
                     FireEvent(this, id, TouchActionType.Pressed, screenPointerCoords, true);
 
-                    idToEffectDictionary.Add(id, this);
+                    if(!idToEffectDictionary.ContainsKey(id))
+                        idToEffectDictionary.Add(id, this);
 
                     capture = libTouchEffect.Capture;
                     break;
@@ -151,10 +151,12 @@ namespace BitooBitImageEditor.Droid.TouchTracking
                     idToEffectDictionary.Remove(id);
                     break;
             }
+
         }
 
-        void CheckForBoundaryHop(int id, Point pointerLocation)
+        private void CheckForBoundaryHop(int id, Point pointerLocation)
         {
+
             TouchEffect touchEffectHit = null;
 
             foreach (Android.Views.View view in viewDictionary.Keys)
@@ -190,7 +192,7 @@ namespace BitooBitImageEditor.Droid.TouchTracking
             }
         }
 
-        void FireEvent(TouchEffect touchEffect, int id, TouchActionType actionType, Point pointerLocation, bool isInContact)
+        private void FireEvent(TouchEffect touchEffect, int id, TouchActionType actionType, Point pointerLocation, bool isInContact)
         {
             // Get the method to call for firing events
             Action<Element, TouchActionEventArgs> onTouchAction = touchEffect.libTouchEffect.OnTouchAction;

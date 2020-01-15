@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Media;
 using Android.OS;
 using BitooBitImageEditor.Droid;
 using Java.IO;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(ImageHelper))]

@@ -1,43 +1,47 @@
 ﻿using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
-
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace BitooBitImageEditor.EditorPage
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ImageEditorPage : ContentPage
+    public sealed partial class ImageEditorPage : ContentPage
     {
-
-        TouchEffect touchEffect = new TouchEffect();
-
-        public ImageEditorPage(SKBitmap bitmap, float? aspectRatio = null)
+        private readonly ImageEditorViewModel viewModel;
+        internal ImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
         {
             InitializeComponent();
-            var viewModel = new ImageEditorViewModel(bitmap, aspectRatio);
+            viewModel = new ImageEditorViewModel(bitmap, config);
             this.BindingContext = viewModel;
-            canvasCropViewHost.Children.Add(viewModel.imageCropperCanvas, 0, 0);
-            canvasMainViewHost.Children.Add(viewModel.mainCanvas, 0,0);
-            //canvasPaintViewHost.Children.Add(viewModel.paintCanvasView, 0, 0);
-            //canvasPaintViewHost.Children.Add(viewModel.paintCanvasView, 0, 0);
-            canvasTextViewHost.Children.Add(viewModel.textCanvasView, 0, 0);
-            touchEffect.TouchAction += viewModel.OnTouchEffectTouchAction;
-            canvasTop.Effects.Add(touchEffect);
+            canvasCropViewHost.Children.Add(viewModel.cropperCanvas, 0, 0);
+            canvasMainViewHost.Children.Add(viewModel.mainCanvas, 0, 0);
+            viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
-
-        protected override void OnAppearing()
+        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            base.OnAppearing();
-            
+            if (e.PropertyName == nameof(ImageEditorViewModel.TextVisible))
+            {
+                if (viewModel?.TextVisible ?? false)
+                    textEditor.Focus();
+            }
         }
 
         protected override void OnDisappearing()
         {
-            base.OnDisappearing();
             ImageEditor.Instance.SetImage();
+            base.OnDisappearing();
         }
 
+        private void TouchEffect_TouchAction(object sender, TouchActionEventArgs args) => viewModel.OnTouchEffectTouchAction(sender, args);
+
+        public void Dispose()
+        {
+            viewModel.Dispose();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
     }
 }

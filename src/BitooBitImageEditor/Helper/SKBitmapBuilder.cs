@@ -1,0 +1,154 @@
+﻿using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
+namespace BitooBitImageEditor.Helper
+{
+    internal static class SKBitmapBuilder
+    {
+        private static readonly string[] splitters = new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" };
+
+        internal static SKBitmap FromText(string text, SKColor color, bool isDrawRect = false)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    using (SKPaint paint = new SKPaint())
+                    {
+                        paint.Color = color;
+                        paint.SubpixelText = true;
+                        paint.IsEmbeddedBitmapText = true;
+                        paint.IsAntialias = true;
+                        paint.TextEncoding = SKTextEncoding.Utf32;
+                        paint.TextSize = 255;
+
+                        float height;
+                        string[] lines = text.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                        string[][] chars = new string[lines.Length][];
+                        float[][] charsWidth = new float[chars.Length][];
+                        SKTypeface[][] charsTypeface = new SKTypeface[chars.Length][];
+                        float[] linesWidth = new float[chars.Length];
+                        float maxLineHeight = 0;
+                        float maxLineWidth = 0;
+
+
+                        List<string> currentLineChars = new List<string>();
+                        for (int i = 0; i < chars.Length; i++)
+                        {
+                            TextElementEnumerator strEnumerator = StringInfo.GetTextElementEnumerator(lines[i]);
+                            while (strEnumerator.MoveNext())
+                                currentLineChars.Add(strEnumerator.GetTextElement());
+
+                            chars[i] = currentLineChars.ToArray();
+                            currentLineChars.Clear();
+
+                            charsTypeface[i] = new SKTypeface[chars[i].Length];
+                            charsWidth[i] = new float[chars[i].Length];
+
+                            linesWidth[i] = 0;
+                            for (int j = 0; j < chars[i].Length; j++)
+                            {
+                                using (SKPaint charPaint = paint.Clone())
+                                {
+                                    int numberChar = 120;
+                                    char[] currentChar = chars[i][j].ToCharArray();
+
+                                    if (currentChar?.Length > 1 && !(currentChar[1] >= 55296 && currentChar[1] <= 57000)) //checking highSurrogate
+                                        currentChar = new char[] { currentChar[0] };
+
+                                    switch (currentChar?.Length)
+                                    {
+                                        case 1:
+                                            numberChar = Char.ConvertToUtf32(chars[i][j], 0);
+                                            break;
+                                        case 2:
+                                            numberChar = Char.ConvertToUtf32(currentChar[0], currentChar[1]);
+                                            break;
+                                        case 0:
+                                            chars[i][j] = $"";
+                                            break;
+                                        default:
+                                            numberChar = Char.ConvertToUtf32(currentChar[0], currentChar[1]);
+                                            chars[i][j] = $"{currentChar[0]}{currentChar[1]}";
+                                            break;
+                                    }
+
+                                    charPaint.Typeface = charsTypeface[i][j] = SKFontManager.Default.MatchCharacter(numberChar);
+                                    SKRect currenttextBounds = new SKRect();
+                                    charsWidth[i][j] = charPaint.MeasureText(chars[i][j], ref currenttextBounds);
+                                    linesWidth[i] += charsWidth[i][j];
+
+                                    if (maxLineHeight < currenttextBounds.Height)
+                                        maxLineHeight = currenttextBounds.Height;
+                                }
+
+                                if (maxLineWidth < linesWidth[i])
+                                    maxLineWidth = linesWidth[i];
+                            }
+                        }
+
+                        currentLineChars = null;
+                        maxLineHeight = (float)Math.Ceiling(maxLineHeight * 1.15);
+                        maxLineWidth = (float)Math.Ceiling(maxLineWidth * 1.05);
+                        height = (float)Math.Ceiling((chars.Length + 0.32f) * maxLineHeight);
+
+                        SKBitmap textBitmap = new SKBitmap((int)maxLineWidth, (int)height);
+                        SKRect textDest = new SKRect(0, 0, maxLineWidth, height);
+                        using (SKCanvas canvasText = new SKCanvas(textBitmap))
+                        {
+                            canvasText.DrawBitmap(textBitmap, textDest);
+
+                            float yText = maxLineHeight;
+
+
+                            for (int i = 0; i < chars.Length; i++)
+                            {
+                                float xText = maxLineWidth / 2 - (linesWidth[i] / 2);
+
+                                for (int j = 0; j < chars[i].Length; j++)
+                                {
+                                    using (SKPaint charPaint = paint.Clone())
+                                    {
+                                        charPaint.Typeface = charsTypeface[i][j];
+                                        canvasText.DrawText(chars[i][j], xText, yText, charPaint);
+                                        xText += charsWidth[i][j];
+                                    }
+                                }
+
+                                yText += maxLineHeight;
+                            }
+
+                            if (isDrawRect)
+                                using (var paintRect = paint.Clone())
+                                {
+                                    paintRect.Style = SKPaintStyle.Stroke;
+                                    paintRect.Color = SKColors.White;
+                                    paintRect.StrokeWidth = 3;
+                                    canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), paintRect);
+                                }
+                        }
+
+                        foreach (var a in charsTypeface)
+                            foreach (var b in a)
+                                b.Dispose();
+
+                        GC.Collect(0);
+
+                        return textBitmap;
+                    }
+                }
+                else
+                    return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+    }
+}
+

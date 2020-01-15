@@ -1,217 +1,178 @@
 ﻿using BitooBitImageEditor.Croping;
-using BitooBitImageEditor.Text;
+using BitooBitImageEditor.Helper;
+using BitooBitImageEditor.ManipulationBitmap;
 using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace BitooBitImageEditor.EditorPage
 {
-    internal class ImageEditorViewModel : BaseNotifier
+    internal class ImageEditorViewModel : BaseNotifier, IDisposable
     {
-        private readonly ObservableCollection<MenuItem> typesCollect = new ObservableCollection<MenuItem>
+        private TouchManipulationBitmap currentTextBitmap = null;
+        private bool buttonsVisible = true;
+        internal ImageCropperCanvasView cropperCanvas;
+        internal TouchManipulationCanvasView mainCanvas;
+
+        internal ImageEditorViewModel(SKBitmap bitmap, ImageEditorConfig config)
         {
-             new MenuItem("crop_rotate", ImageEditType.CropRotate, ActionEditType.SetCurrentType)
-            ,new MenuItem("format_shapes", ImageEditType.Text, ActionEditType.SetCurrentType)
-            //,new MenuItem("gesture", ImageEditType.Paint, ActionEditType.SetCurrentType)
-        };
-
-        private readonly ObservableCollection<MenuItem> cropCollect = new ObservableCollection<MenuItem>
-        {
-             new MenuItem("rotate_right", ImageEditType.CropRotate, ActionEditType.CropRotate)
-            ,new MenuItem("crop_full", ImageEditType.CropRotate, ActionEditType.CropFull)
-            ,new MenuItem("crop_free", ImageEditType.CropRotate, ActionEditType.CropFree)
-            ,new MenuItem("crop_square", ImageEditType.CropRotate, ActionEditType.CropSquare)
-        };
-
-
-        public ImageCropperCanvasView imageCropperCanvas;
-        //public PaintCanvasView paintCanvasView;
-        public SKCanvasView mainCanvas;
-        public SKBitmap originalBitmap;
-        private SKBitmap editedBitmap;
-        public TextCanvasView textCanvasView;
-
-
-        public SKBitmap EditedBitmap
-        {
-            get => editedBitmap;
-            set
-            {
-                editedBitmap = value;
-                if (textCanvasView != null)
-                    textCanvasView.SetBitmap(value);
-            }
+            Config = config;
+            cropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
+            mainCanvas = new TouchManipulationCanvasView(config);
+            mainCanvas.AddBitmapToCanvas(bitmap, BitmapType.Main);
+            mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
         }
-
-
-        public ImageEditorViewModel(SKBitmap bitmap, float? aspectRatio = null)
-        {
-            originalBitmap = bitmap;
-            EditedBitmap = bitmap;
-            imageCropperCanvas = new ImageCropperCanvasView(bitmap, aspectRatio);
-            imageCropperCanvas.Margin = 8;
-            mainCanvas = new SKCanvasView();
-            mainCanvas.PaintSurface += MainCanvas_PaintSurface;
-            mainCanvas.Margin = 8;
-            //paintCanvasView = new PaintCanvasView(EditedBitmap);
-            textCanvasView = new TextCanvasView(EditedBitmap);
-            textCanvasView.Margin = 8;
-
-
-            
-
-        }
-
-
-
-        public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
-        public Color CurrentColor { private set; get; }
-        public bool ColorsCollectVisible => CurrentEditType == ImageEditType.Paint || CurrentEditType == ImageEditType.Text;
-        public bool MenuCollectVisible => !ColorsCollectVisible;
-        public bool FinishVisible => CurrentEditType == ImageEditType.SelectType;
-        public bool ApplyChangesVisible => !FinishVisible;
-        public bool TextVisible => CurrentEditType == ImageEditType.Text;
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
+        public bool MainVisible => !CropVisible;
+        public bool TextVisible => CurrentEditType == ImageEditType.Text;
+        public bool StickersVisible => CurrentEditType == ImageEditType.Stickers;
         public bool PaintVisible => CurrentEditType == ImageEditType.Paint;
-
-        public bool MainVisible => CurrentEditType == ImageEditType.Paint || CurrentEditType == ImageEditType.SelectType;
-
-        private string text = "";
-        public string Text
+        public bool ButtonsVisible
         {
-            get => text;
-            set
-            {
-                text = value;
-                textCanvasView.Text = value;
-            }
+            get => CurrentEditType == ImageEditType.SelectType && buttonsVisible;
+            private set => buttonsVisible = value;
         }
 
 
+        public ImageEditorConfig Config { get; private set; }
+        public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
+        public Color CurrentColor { get; set; } = Color.White;
+        public string CurrentText { set; get; } = "";
+        public ObservableCollection<Color> ColorCollect { get; private set; } = SkiaHelper.GetColors();
+        public ObservableCollection<CropItem> CropCollect { get; private set; } = CropItem.GetCropItems();
 
-        public ObservableCollection<MenuItem> ItemsCollect
-        {
-            get
-            {
-                switch (CurrentEditType)
-                {
-                    case ImageEditType.SelectType:
-                        return typesCollect;
-                    case ImageEditType.CropRotate:
-                        return cropCollect;
-                    default:
-                        return null;
-                }
-            }
-        }
-
-        public ObservableCollection<Color> ColorCollect { get; } = new ObservableCollection<Color>
-        {
-             Color.White
-            ,Color.Red
-            ,Color.Orange
-            ,Color.Yellow
-            ,Color.Green
-            ,Color.Cyan
-            ,Color.Blue
-            ,Color.Violet
-            ,Color.Black
-        };
-
-        public ICommand EditFinishCommand => new Command<string>((value) =>
-        {
-            SKBitmap bitmap = null;
-            if (value == "Save")
-                bitmap = EditedBitmap;
-
-            ImageEditor.Instance.SetImage(bitmap);
-        });
 
         public ICommand ApplyChangesCommand => new Command<string>((value) =>
         {
-            if (value == "Cancel")
+            if (!string.IsNullOrWhiteSpace(value) && value.ToLower() == "apply")
             {
-                if (CurrentEditType == ImageEditType.Paint)
+                switch (CurrentEditType)
                 {
-                    //paintCanvasView.completedPaths.Clear();
-                    //paintCanvasView.inProgressPaths.Clear();
-                    //paintCanvasView.InvalidateSurface();
-                }
-                if (CurrentEditType == ImageEditType.Text)
-                {
-                    textCanvasView.Text = "";
-                }
-            }
-            else
-            {
-                if (CurrentEditType == ImageEditType.CropRotate)
-                {
-                    EditedBitmap = imageCropperCanvas.CroppedBitmap;
-                }
-                if (CurrentEditType == ImageEditType.Text)
-                {
-                    EditedBitmap = textCanvasView.BitmapWidthText;
-                }
+                    case ImageEditType.Text:
+                        {
+                            if (currentTextBitmap == null)
+                                mainCanvas.AddBitmapToCanvas(CurrentText, CurrentColor.ToSKColor());
+                            else
+                            {
+                                currentTextBitmap.Bitmap = SKBitmapBuilder.FromText(CurrentText, CurrentColor.ToSKColor());
+                                currentTextBitmap.IsHide = false;
+                                mainCanvas?.InvalidateSurface();
+                            }
 
-                mainCanvas.InvalidateSurface();
+                            currentTextBitmap = null;
+                            CurrentText = "";
+                        }
+                        break;
+                    case ImageEditType.CropRotate:
+                        mainCanvas.AddBitmapToCanvas(cropperCanvas.CroppedBitmap, BitmapType.Main);
+                        break;
+                }
             }
 
             CurrentEditType = ImageEditType.SelectType;
         });
 
-        public ICommand SelectColorCommand => new Command<Color>((value) =>
+        public ICommand CancelCommand => new Command(() =>
         {
-            CurrentColor = value;
-            //paintCanvasView.CurrentColor = value.ToSKColor();
-            textCanvasView.CurrentColor = value.ToSKColor();
+            if (CurrentEditType == ImageEditType.Paint)
+                mainCanvas.DeleteEndPath();          
         });
 
-        public ICommand SelectItemCommand => new Command<MenuItem>((value) =>
+        public ICommand SelectItemCommand => new Command<object>((valueObj) =>
         {
-            if (CurrentEditType == value.Type || value.Action == ActionEditType.SetCurrentType)
+            switch (valueObj)
             {
-
-                switch (value.Action)
-                {
-                    case ActionEditType.SetCurrentType:
-                        CurrentEditType = value.Type;
-                        break;
-
-                    case ActionEditType.CropRotate:
-                        imageCropperCanvas.Rotate();
-                        break;
-                    case ActionEditType.CropFree:
-                        imageCropperCanvas.SetAspectRatio(null);
-                        break;
-                    case ActionEditType.CropFull:
-                        imageCropperCanvas.SetAspectRatio(null, true);
-                        break;
-                    case ActionEditType.CropSquare:
-                        imageCropperCanvas.SetAspectRatio(1f);
-                        break;
-                }
+                case ImageEditType value:
+                    CurrentEditType = value;
+                    break;
+                case Color value:
+                    CurrentColor = value;
+                    break;
+                case CropItem value:
+                    cropperCanvas.SetAspectRatio(value);
+                    break;
+                case SKBitmap value:
+                    mainCanvas.AddBitmapToCanvas(value, BitmapType.Stickers);
+                    CurrentEditType = ImageEditType.SelectType;
+                    break;
+                default:
+                    CurrentEditType = ImageEditType.SelectType;
+                    break;
             }
         });
 
-        private void MainCanvas_PaintSurface(object sender, SKPaintSurfaceEventArgs args)
-        {
-            args.Surface.Canvas.Clear();
-            var rect = SkiaHelper.CalculateRectangle(args.Info, EditedBitmap);
-            args.Surface.Canvas.DrawBitmap(EditedBitmap, rect.rect);
-        }
 
+        private bool lockFinish = false;
+        public ICommand EditFinishCommand => new Command<string>((value) =>
+        {
+            if (!lockFinish)
+            {
+                lockFinish = true;
+                SKBitmap bitmap = null;
+                if (!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save")
+                    bitmap = mainCanvas.EditedBitmap;
+
+                ImageEditor.Instance.SetImage(bitmap);
+            }
+        });
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
-            if(CurrentEditType == ImageEditType.Text)
-                textCanvasView?.OnTouchEffectTouchAction(sender, args);
-            
-            if (CurrentEditType == ImageEditType.CropRotate)
-                imageCropperCanvas?.OnTouchEffectTouchAction(sender, args);
+            ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Moved);
+
+            if (CurrentEditType != ImageEditType.CropRotate)
+                mainCanvas?.OnTouchEffectTouchAction(args, CurrentEditType, CurrentColor.ToSKColor());
+            else
+                cropperCanvas?.OnTouchEffectTouchAction(args);
         }
+
+        private void MainCanvas_TextBitmapClicked(TouchManipulationBitmap value)
+        {
+            CurrentColor = value?.Color.ToFormsColor() ?? Color.Black;
+            CurrentText = value?.Text ?? "";
+            CurrentEditType = ImageEditType.Text;
+            currentTextBitmap = value;
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Config = null;
+                    ColorCollect = null;
+                    CropCollect = null;
+                    CurrentText = null;
+                }
+
+                ((IDisposable)cropperCanvas).Dispose();
+                ((IDisposable)mainCanvas).Dispose();
+                currentTextBitmap?.Bitmap?.Dispose();
+                currentTextBitmap = null;
+                disposedValue = true;
+            }
+        }
+
+        ~ImageEditorViewModel()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+
     }
 }

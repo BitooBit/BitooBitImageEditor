@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xamarin.Forms;
+﻿using BitooBitImageEditor.TouchTracking;
 using CoreGraphics;
 using Foundation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UIKit;
-using BitooBitImageEditor.TouchTracking;
+using Xamarin.Forms;
 
 namespace BitooBitImageEditor.IOS.TouchTracking
 {
     internal class TouchRecognizer : UIGestureRecognizer
     {
-        Element element;        // Forms element for firing events
-        UIView view;            // iOS UIView 
-        BitooBitImageEditor.TouchTracking.TouchEffect touchEffect;
-        bool capture;
-
-        static Dictionary<UIView, TouchRecognizer> viewDictionary =
+        private readonly Element element;        // Forms element for firing events
+        private readonly UIView view;            // iOS UIView 
+        private readonly BitooBitImageEditor.TouchTracking.TouchEffect touchEffect;
+        private bool capture;
+        private static readonly Dictionary<UIView, TouchRecognizer> viewDictionary =
             new Dictionary<UIView, TouchRecognizer>();
-
-        static Dictionary<long, TouchRecognizer> idToTouchDictionary =
+        private static readonly Dictionary<long, TouchRecognizer> idToTouchDictionary =
             new Dictionary<long, TouchRecognizer>();
 
         public TouchRecognizer(Element element, UIView view, BitooBitImageEditor.TouchTracking.TouchEffect touchEffect)
@@ -125,7 +123,7 @@ namespace BitooBitImageEditor.IOS.TouchTracking
             }
         }
 
-        void CheckForBoundaryHop(UITouch touch)
+        private void CheckForBoundaryHop(UITouch touch)
         {
             long id = touch.Handle.ToInt64();
 
@@ -155,7 +153,7 @@ namespace BitooBitImageEditor.IOS.TouchTracking
             }
         }
 
-        void FireEvent(TouchRecognizer recognizer, long id, TouchActionType actionType, UITouch touch, bool isInContact)
+        private void FireEvent(TouchRecognizer recognizer, long id, TouchActionType actionType, UITouch touch, bool isInContact)
         {
             // Convert touch location to Xamarin.Forms Point value
             CGPoint cgPoint = touch.LocationInView(recognizer.View);
