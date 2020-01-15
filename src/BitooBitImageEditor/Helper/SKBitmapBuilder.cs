@@ -9,7 +9,7 @@ namespace BitooBitImageEditor.Helper
     {
         private static readonly string[] splitters = new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" };
 
-        internal static SKBitmap FromText(string text, SKColor color)
+        internal static SKBitmap FromText(string text, SKColor color, bool isDrawRect = false)
         {
             try
             {
@@ -90,9 +90,9 @@ namespace BitooBitImageEditor.Helper
                         }
 
                         currentLineChars = null;
-                        maxLineHeight = (float)Math.Ceiling((double)maxLineHeight * 1.15);
-                        maxLineWidth = (float)Math.Ceiling((double)maxLineWidth * 1.05);
-                        height = (float)Math.Ceiling((double)((chars.Length + 0.32f) * maxLineHeight));
+                        maxLineHeight = (float)Math.Ceiling(maxLineHeight * 1.15);
+                        maxLineWidth = (float)Math.Ceiling(maxLineWidth * 1.05);
+                        height = (float)Math.Ceiling((chars.Length + 0.32f) * maxLineHeight);
 
                         SKBitmap textBitmap = new SKBitmap((int)maxLineWidth, (int)height);
                         SKRect textDest = new SKRect(0, 0, maxLineWidth, height);
@@ -120,12 +120,21 @@ namespace BitooBitImageEditor.Helper
                                 yText += maxLineHeight;
                             }
 
-                            //canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), SkiaHelper.edgeStroke);
+                            if (isDrawRect)
+                                using (var paintRect = paint.Clone())
+                                {
+                                    paintRect.Style = SKPaintStyle.Stroke;
+                                    paintRect.Color = SKColors.White;
+                                    paintRect.StrokeWidth = 3;
+                                    canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), paintRect);
+                                }
                         }
 
                         foreach (var a in charsTypeface)
                             foreach (var b in a)
                                 b.Dispose();
+
+                        GC.Collect(0);
 
                         return textBitmap;
                     }
@@ -133,7 +142,7 @@ namespace BitooBitImageEditor.Helper
                 else
                     return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

@@ -9,20 +9,20 @@ namespace BitooBitImageEditor.EditorPage
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public sealed partial class ImageEditorPage : ContentPage
     {
-        readonly ImageEditorViewModel viewModel;
+        private readonly ImageEditorViewModel viewModel;
         internal ImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
         {
             InitializeComponent();
             viewModel = new ImageEditorViewModel(bitmap, config);
             this.BindingContext = viewModel;
             canvasCropViewHost.Children.Add(viewModel.cropperCanvas, 0, 0);
-            canvasMainViewHost.Children.Add(viewModel.mainCanvas, 0,0);
+            canvasMainViewHost.Children.Add(viewModel.mainCanvas, 0, 0);
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(ImageEditorViewModel.TextVisible))
+            if (e.PropertyName == nameof(ImageEditorViewModel.TextVisible))
             {
                 if (viewModel?.TextVisible ?? false)
                     textEditor.Focus();

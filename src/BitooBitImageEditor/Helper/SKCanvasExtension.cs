@@ -58,6 +58,34 @@ namespace BitooBitImageEditor.Helper
         }
 
 
+        internal static void DrawPath(this SKCanvas canvas, List<PaintedPath> completedPaths, Dictionary<long, PaintedPath> inProgressPaths)
+        {
+            using (SKPaint paint = new SKPaint())
+            {
+                paint.Style = SKPaintStyle.Stroke;
+                paint.StrokeWidth = 10;
+                paint.StrokeCap = SKStrokeCap.Round;
+                paint.StrokeJoin = SKStrokeJoin.Round;
+                paint.IsAntialias = true;
+
+
+                if(completedPaths != null)
+                    foreach (PaintedPath path in completedPaths)
+                    {
+                        paint.Color = path.Color;
+                        canvas.DrawPath(path.Path, paint);
+                    }
+
+                if (inProgressPaths != null)
+                    foreach (PaintedPath path in inProgressPaths?.Values)
+                    {
+                        paint.Color = path.Color;
+                        canvas.DrawPath(path.Path, paint);
+                    }
+            }
+        }
+
+
         internal static void DrawSurrounding(this SKCanvas canvas, SKRect outerRect, SKRect innerRect, SKColor color)
         {
             using (SKPaint paint = new SKPaint())

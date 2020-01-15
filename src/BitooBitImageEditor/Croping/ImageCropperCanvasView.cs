@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace BitooBitImageEditor.Croping
 {
-    struct TouchPoint
+    internal struct TouchPoint
     {
         public int CornerIndex { set; get; }
         public SKPoint Offset { set; get; }
@@ -67,7 +67,7 @@ namespace BitooBitImageEditor.Croping
             }
         }
 
-        internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
+        internal void OnTouchEffectTouchAction(TouchActionEventArgs args)
         {
             SKPoint pixelLocation = new SKPoint((float)(CanvasSize.Width * args.Location.X / Width), (float)(CanvasSize.Height * args.Location.Y / Height)); ;
             SKPoint bitmapLocation = inverseBitmapMatrix.MapPoint(pixelLocation);

@@ -1,7 +1,4 @@
-﻿using BitooBitImageEditor.IOS.Renders;
-using Xamarin.Forms;
-
-namespace BitooBitImageEditor.IOS
+﻿namespace BitooBitImageEditor.IOS
 {
     /// <summary>
     /// Необходим для исспользования <see cref="BitooBitImageEditor"/> на IOS
@@ -15,7 +12,7 @@ namespace BitooBitImageEditor.IOS
         /// </summary>
         public static void Init()
         {
-            IsInitialized = true;            
+            IsInitialized = true;
             LinkAssemblies();
         }
 

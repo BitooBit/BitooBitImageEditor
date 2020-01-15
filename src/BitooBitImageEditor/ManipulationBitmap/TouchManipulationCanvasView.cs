@@ -1,4 +1,5 @@
-﻿using BitooBitImageEditor.Helper;
+﻿using BitooBitImageEditor.EditorPage;
+using BitooBitImageEditor.Helper;
 using BitooBitImageEditor.Resources;
 using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
@@ -14,8 +15,8 @@ using Xamarin.Forms;
 namespace BitooBitImageEditor.ManipulationBitmap
 {
     internal class TouchManipulationCanvasView : SKCanvasView, IDisposable
-    {       
-        ImageEditorConfig config;
+    {
+        private ImageEditorConfig config;
         private float outImageWidht;
         private float outImageHeight;
         private float widthBitmap;
@@ -34,12 +35,14 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
         internal event Action<TouchManipulationBitmap> TextBitmapClicked;
 
-        internal List<TouchManipulationBitmap> bitmapCollection =
+        private List<TouchManipulationBitmap> bitmapCollection =
             new List<TouchManipulationBitmap>();
-
-        internal Dictionary<long, TouchManipulationBitmap> bitmapDictionary =
+        private Dictionary<long, TouchManipulationBitmap> bitmapDictionary =
             new Dictionary<long, TouchManipulationBitmap>();
-        
+        private Dictionary<long, PaintedPath> inProgressPaths = new Dictionary<long, PaintedPath>();
+        private List<PaintedPath> completedPaths = new List<PaintedPath>();
+
+
         public TouchManipulationCanvasView(ImageEditorConfig config)
         {
             this.config = config;
@@ -50,7 +53,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             }
             DisplayInfo displayInfo = DeviceDisplay.MainDisplayInfo;
             sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.06f;
-           
+
             using (Stream stream = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash.png"))
             {
                 trashBitmap = SKBitmap.Decode(stream);
@@ -72,13 +75,32 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 {
                     canvas.Clear();
                     canvas.DrawBitmap(mainBitmap, backgroundBitmap, outRect, rectMianBitmap, config);
+                    canvas.Save();
+                    SKMatrix bitmapMatrix = new SKMatrix(scale, 0, -rectTranslate.rect.Left * scale, 0, scale, -rectTranslate.rect.Top * scale, 0, 0, 1);    
+                    canvas.SetMatrix(bitmapMatrix);
+                    canvas.DrawPath(completedPaths, null);
+                    canvas.Restore();
                     canvas.DrawBitmap(bitmapCollection, -rectTranslate.rect.Left, -rectTranslate.rect.Top, scale);
                 }
                 return outBitmap;
             }
         }
 
-       
+        internal void OnTouchEffectTouchAction(TouchActionEventArgs args, ImageEditType editType, SKColor color)
+        {
+            Point pt = args.Location;
+            SKPoint point = new SKPoint((float)(CanvasSize.Width * pt.X / Width), (float)(CanvasSize.Height * pt.Y / Height));
+            switch (editType)
+            {
+                case ImageEditType.Paint:
+                    OnTouchPathEffectAction(args, point, color);
+                    break;
+                default:
+                    OnTouchBitmapEffectAction(args, point);
+                    break;
+            }
+        }
+
         internal void AddBitmapToCanvas(string text, SKColor color)
         {
             var bitmap = SKBitmapBuilder.FromText(text, color);
@@ -96,10 +118,21 @@ namespace BitooBitImageEditor.ManipulationBitmap
                     AddBitmapToCanvas(new TouchManipulationBitmap(bitmap, type, null));
                 else
                     SetMainBitmap(bitmap);
-                
+
                 InvalidateSurface();
             }
         }
+
+        internal void DeleteEndPath()
+        {
+            if (completedPaths?.Count > 0)
+            {
+                completedPaths.Remove(completedPaths.Last());
+                InvalidateSurface();
+            }
+        }
+
+
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
         {
             base.OnPaintSurface(args);
@@ -115,9 +148,14 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
             canvas.Clear();
             canvas.DrawBitmap(tempBitmap, rectImage);
+
+
+            canvas.DrawPath(completedPaths, inProgressPaths);
+
+
             canvas.DrawBitmap(bitmapCollection);
             canvas.DrawSurrounding(rectInfo, rectImage, SKColors.DarkGray.WithAlpha(190));
-            if(trashVisible)
+            if (trashVisible)
                 canvas.DrawBitmap(trashBitmap, rectTrash);
             if (trashBigVisible)
                 canvas.DrawBitmap(trashBitmap, rectTrashBig);
@@ -177,13 +215,53 @@ namespace BitooBitImageEditor.ManipulationBitmap
             rectTrash = new SKRect(midX - sizeTrash / 2, info.Height - sizeTrash - 20, midX + sizeTrash / 2, info.Height - 20);
             rectTrashBig = new SKRect(midX - sizeTrashBig / 2, info.Height - sizeTrashBig - 10, midX + sizeTrashBig / 2, info.Height - 10);
         }
-
-        internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
+    
+        private void OnTouchPathEffectAction(TouchActionEventArgs args, SKPoint point, SKColor color)
         {
-            Point pt = args.Location;
-            SKPoint point = new SKPoint((float)(CanvasSize.Width * pt.X / Width), (float)(CanvasSize.Height * pt.Y / Height));
+            switch (args.Type)
+            {
+                case TouchActionType.Pressed:
+                    if (!inProgressPaths.ContainsKey(args.Id))
+                    {
+                        PaintedPath path = new PaintedPath(new SKPath(), color);
+                        path.Path.MoveTo(point);
+                        inProgressPaths.Add(args.Id, path);
+                        InvalidateSurface();
+                    }
+                    break;
 
-            if(args.Type != TouchActionType.Moved)
+                case TouchActionType.Moved:
+                    if (inProgressPaths.ContainsKey(args.Id))
+                    {
+                        PaintedPath path = inProgressPaths[args.Id];
+                        path.Path.LineTo(point);
+                        InvalidateSurface();
+                    }
+                    break;
+
+                case TouchActionType.Released:
+                    if (inProgressPaths.ContainsKey(args.Id))
+                    {
+                        completedPaths.Add(inProgressPaths[args.Id]);
+                        inProgressPaths.Remove(args.Id);
+                        InvalidateSurface();
+                    }
+                    break;
+
+                case TouchActionType.Cancelled:
+                    if (inProgressPaths.ContainsKey(args.Id))
+                    {
+                        inProgressPaths.Remove(args.Id);
+                        InvalidateSurface();
+                    }
+                    break;
+            }
+        }
+
+
+        private void OnTouchBitmapEffectAction(TouchActionEventArgs args, SKPoint point)
+        {
+            if (args.Type != TouchActionType.Moved)
                 trashVisible = trashBigVisible = false;
 
             switch (args.Type)
@@ -216,7 +294,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
                 case TouchActionType.Moved:
                     if (bitmapDictionary.ContainsKey(args.Id))
-                    {                      
+                    {
                         TouchManipulationBitmap bitmap = bitmapDictionary[args.Id];
                         bitmap.TouchAction = TouchActionType.Moved;
 
@@ -246,8 +324,8 @@ namespace BitooBitImageEditor.ManipulationBitmap
                         TouchManipulationBitmap bitmap = bitmapDictionary[args.Id];
                         bitmap.ProcessTouchEvent(args.Id, args.Type, point);
                         bitmapDictionary.Remove(args.Id);
-                        
-                        if(bitmap.TouchAction == TouchActionType.Pressed && bitmap.Type == BitmapType.Text)
+
+                        if (bitmap.TouchAction == TouchActionType.Pressed && bitmap.Type == BitmapType.Text)
                             TextBitmapClicked?.Invoke(bitmap);
                         bitmap.TouchAction = null;
 
@@ -280,6 +358,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 {
                     config = null;
                     bitmapDictionary = null;
+                    inProgressPaths = null;
                 }
 
                 ((IDisposable)backgroundBitmap).Dispose();
@@ -287,10 +366,19 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 ((IDisposable)tempBitmap).Dispose();
                 ((IDisposable)tempBitmap).Dispose();
 
+                
                 trashBitmap?.Dispose();
 
+                foreach (var a in completedPaths)
+                    a.Dispose();
+                completedPaths = null;
+
                 foreach (var a in bitmapCollection)
+                {
+                    if (a.Type == BitmapType.Text)
+                        a.Bitmap.Dispose();
                     a.Bitmap = null;
+                }
                 bitmapCollection = null;
 
                 disposedValue = true;

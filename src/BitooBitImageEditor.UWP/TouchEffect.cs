@@ -14,9 +14,9 @@ namespace BitooBitImageEditor.UWP.TouchTracking
 {
     internal class TouchEffect : PlatformEffect
     {
-        FrameworkElement frameworkElement;
-        BitooBitImageEditor.TouchTracking.TouchEffect effect;
-        Action<Element, TouchActionEventArgs> onTouchAction;
+        private FrameworkElement frameworkElement;
+        private BitooBitImageEditor.TouchTracking.TouchEffect effect;
+        private Action<Element, TouchActionEventArgs> onTouchAction;
 
         protected override void OnAttached()
         {
@@ -56,12 +56,12 @@ namespace BitooBitImageEditor.UWP.TouchTracking
             }
         }
 
-        void OnPointerEntered(object sender, PointerRoutedEventArgs args)
+        private void OnPointerEntered(object sender, PointerRoutedEventArgs args)
         {
             CommonHandler(sender, TouchActionType.Entered, args);
         }
 
-        void OnPointerPressed(object sender, PointerRoutedEventArgs args)
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs args)
         {
             CommonHandler(sender, TouchActionType.Pressed, args);
 
@@ -72,27 +72,27 @@ namespace BitooBitImageEditor.UWP.TouchTracking
             }
         }
 
-        void OnPointerMoved(object sender, PointerRoutedEventArgs args)
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs args)
         {
             CommonHandler(sender, TouchActionType.Moved, args);
         }
 
-        void OnPointerReleased(object sender, PointerRoutedEventArgs args)
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs args)
         {
             CommonHandler(sender, TouchActionType.Released, args);
         }
 
-        void OnPointerExited(object sender, PointerRoutedEventArgs args)
+        private void OnPointerExited(object sender, PointerRoutedEventArgs args)
         {
             CommonHandler(sender, TouchActionType.Exited, args);
         }
 
-        void OnPointerCancelled(object sender, PointerRoutedEventArgs args)
+        private void OnPointerCancelled(object sender, PointerRoutedEventArgs args)
         {
             CommonHandler(sender, TouchActionType.Cancelled, args);
         }
 
-        void CommonHandler(object sender, TouchActionType touchActionType, PointerRoutedEventArgs args)
+        private void CommonHandler(object sender, TouchActionType touchActionType, PointerRoutedEventArgs args)
         {
             PointerPoint pointerPoint = args.GetCurrentPoint(sender as UIElement);
             Windows.Foundation.Point windowsPoint = pointerPoint.Position;

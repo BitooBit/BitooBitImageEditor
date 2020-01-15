@@ -13,7 +13,7 @@ namespace BitooBitImageEditor.EditorPage
 {
     internal class ImageEditorViewModel : BaseNotifier, IDisposable
     {
-        TouchManipulationBitmap currentTextBitmap = null;
+        private TouchManipulationBitmap currentTextBitmap = null;
         private bool buttonsVisible = true;
         internal ImageCropperCanvasView cropperCanvas;
         internal TouchManipulationCanvasView mainCanvas;
@@ -27,12 +27,13 @@ namespace BitooBitImageEditor.EditorPage
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
         }
 
-        
+
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool MainVisible => !CropVisible;
         public bool TextVisible => CurrentEditType == ImageEditType.Text;
         public bool StickersVisible => CurrentEditType == ImageEditType.Stickers;
+        public bool PaintVisible => CurrentEditType == ImageEditType.Paint;
         public bool ButtonsVisible
         {
             get => CurrentEditType == ImageEditType.SelectType && buttonsVisible;
@@ -76,6 +77,14 @@ namespace BitooBitImageEditor.EditorPage
             }
 
             CurrentEditType = ImageEditType.SelectType;
+        });
+
+        public ICommand CancelCommand => new Command(() =>
+        {
+            if (CurrentEditType == ImageEditType.Paint)
+                mainCanvas.DeleteEndPath();
+           
+            
         });
 
         public ICommand SelectItemCommand => new Command<object>((valueObj) =>
@@ -122,9 +131,9 @@ namespace BitooBitImageEditor.EditorPage
             ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Moved);
 
             if (CurrentEditType != ImageEditType.CropRotate)
-                mainCanvas?.OnTouchEffectTouchAction(sender, args);
+                mainCanvas?.OnTouchEffectTouchAction(args, CurrentEditType, CurrentColor.ToSKColor());
             else
-                cropperCanvas?.OnTouchEffectTouchAction(sender, args);
+                cropperCanvas?.OnTouchEffectTouchAction(args);
         }
 
         private void MainCanvas_TextBitmapClicked(TouchManipulationBitmap value)

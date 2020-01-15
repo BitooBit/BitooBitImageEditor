@@ -1,10 +1,9 @@
-﻿using System;
-
+﻿
 using SkiaSharp;
 
 namespace BitooBitImageEditor.ManipulationBitmap
 {
-    class TouchManipulationInfo
+    internal class TouchManipulationInfo
     {
         public SKPoint PreviousPoint { set; get; }
 

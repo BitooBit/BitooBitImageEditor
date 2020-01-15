@@ -1,5 +1,4 @@
 ﻿using BitooBitImageEditor.EditorPage;
-using BitooBitImageEditor.ManipulationBitmap;
 using SkiaSharp;
 using System;
 using System.IO;
@@ -82,7 +81,7 @@ namespace BitooBitImageEditor
                 else
                     taskCompletionEditImage.SetResult(null);
 
-                if(page != null)
+                if (page != null)
                 {
                     page.Dispose();
                     page = null;

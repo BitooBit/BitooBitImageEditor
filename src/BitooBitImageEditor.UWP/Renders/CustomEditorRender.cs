@@ -6,7 +6,7 @@ using Xamarin.Forms.Platform.UWP;
 [assembly: ExportRenderer(typeof(CustomEditor), typeof(CustomEditorRender))]
 namespace BitooBitImageEditor.UWP.Renders
 {
-    class CustomEditorRender : EditorRenderer
+    internal class CustomEditorRender : EditorRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
         {

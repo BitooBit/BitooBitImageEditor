@@ -1,9 +1,9 @@
 ﻿
+using BitooBitImageEditor.TouchTracking;
 using System.Linq;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using UIKit;
-using BitooBitImageEditor.TouchTracking;
 
 [assembly: ResolutionGroupName(TouchEffect.resolutionGroupName)]
 [assembly: ExportEffect(typeof(BitooBitImageEditor.IOS.TouchTracking.TouchEffect), TouchEffect.uniqueName)]
@@ -11,8 +11,8 @@ namespace BitooBitImageEditor.IOS.TouchTracking
 {
     internal class TouchEffect : PlatformEffect
     {
-        UIView view;
-        TouchRecognizer touchRecognizer;
+        private UIView view;
+        private TouchRecognizer touchRecognizer;
 
         protected override void OnAttached()
         {

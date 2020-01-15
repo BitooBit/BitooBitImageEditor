@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using BitooBitImageEditor.Helper;
-using BitooBitImageEditor.TouchTracking;
+﻿using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
+using System;
+using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace BitooBitImageEditor.ManipulationBitmap
 {
-    enum BitmapType
+    internal enum BitmapType
     {
         Main,
         Stickers,
         Text
     }
 
-    class TouchManipulationBitmap
-    {      
-        Dictionary<long, TouchManipulationInfo> touchDictionary =
+    internal class TouchManipulationBitmap
+    {
+        private readonly Dictionary<long, TouchManipulationInfo> touchDictionary =
             new Dictionary<long, TouchManipulationInfo>();
 
         public TouchManipulationBitmap(SKBitmap bitmap, SKMatrix matrix, BitmapType type, string text, SKColor color = default)
         {
-            Bitmap = bitmap;          
+            Bitmap = bitmap;
             Matrix = matrix;
             Type = type;
             Text = text;
@@ -118,7 +117,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             }
         }
 
-        void Manipulate()
+        private void Manipulate()
         {
             TouchManipulationInfo[] infos = new TouchManipulationInfo[touchDictionary.Count];
             touchDictionary.Values.CopyTo(infos, 0);

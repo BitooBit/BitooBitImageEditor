@@ -47,7 +47,7 @@ namespace SampleImageEditor
         {
             try
             {
-                ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), canFingerPaint: false, backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue,
+                ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue,
                     outImageHeight: 1000, outImageWidht: 700, aspect: Aspect.AspectFit);
 
                 byte[] data = await ImageEditor.Instance.GetEditedImage(config: config);
@@ -58,7 +58,7 @@ namespace SampleImageEditor
                     MyImage.Source = ImageSource.FromStream(() => new MemoryStream(data));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await DisplayAlert("", ex.Message, "fewf");
             }
@@ -77,7 +77,7 @@ namespace SampleImageEditor
             }
             else
                 message = "You should edit the image";
-              await DisplayAlert("", message, "Ok");
+            await DisplayAlert("", message, "Ok");
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using BitooBitImageEditor.Croping;
-using BitooBitImageEditor.EditorPage;
+﻿using BitooBitImageEditor.EditorPage;
 using System.Collections.ObjectModel;
 
 namespace BitooBitImageEditor.Croping
@@ -16,7 +15,7 @@ namespace BitooBitImageEditor.Croping
         public CropRotateType Action { get; set; }
 
 
-        static internal ObservableCollection<CropItem> GetCropItems()
+        internal static ObservableCollection<CropItem> GetCropItems()
         {
             return new ObservableCollection<CropItem>
             {

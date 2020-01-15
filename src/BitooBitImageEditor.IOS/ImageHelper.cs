@@ -1,8 +1,8 @@
-﻿using System;
+﻿using BitooBitImageEditor.IOS;
+using Foundation;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using BitooBitImageEditor.IOS;
-using Foundation;
 using UIKit;
 using Xamarin.Forms;
 
@@ -11,8 +11,8 @@ namespace BitooBitImageEditor.IOS
 {
     internal class ImageHelper : IImageHelper
     {
-        TaskCompletionSource<Stream> taskCompletionSource;
-        UIImagePickerController imagePicker;
+        private TaskCompletionSource<Stream> taskCompletionSource;
+        private UIImagePickerController imagePicker;
 
         public Task<Stream> GetImageAsync()
         {
@@ -37,7 +37,7 @@ namespace BitooBitImageEditor.IOS
             return taskCompletionSource.Task;
         }
 
-        void OnImagePickerFinishedPickingMedia(object sender, UIImagePickerMediaPickedEventArgs args)
+        private void OnImagePickerFinishedPickingMedia(object sender, UIImagePickerMediaPickedEventArgs args)
         {
             UIImage image = args.EditedImage ?? args.OriginalImage;
 
@@ -57,7 +57,7 @@ namespace BitooBitImageEditor.IOS
             imagePicker.DismissModalViewController(true);
         }
 
-        void OnImagePickerCancelled(object sender, EventArgs args)
+        private void OnImagePickerCancelled(object sender, EventArgs args)
         {
             taskCompletionSource.SetResult(null);
             imagePicker.DismissModalViewController(true);

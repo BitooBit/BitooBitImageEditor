@@ -1,6 +1,6 @@
 ﻿namespace BitooBitImageEditor.ManipulationBitmap
 {
-    enum TouchManipulationMode
+    internal enum TouchManipulationMode
     {
         None,
         PanOnly,

@@ -79,7 +79,7 @@ namespace BitooBitImageEditor.UWP
                 IBuffer buffer = WindowsRuntimeBuffer.Create(data, 0, data.Length, data.Length);
                 await FileIO.WriteBufferAsync(storageFile, buffer);
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 return false;
             }

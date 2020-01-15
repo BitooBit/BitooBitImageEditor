@@ -1,10 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 namespace BitooBitImageEditor.Droid
@@ -15,7 +11,7 @@ namespace BitooBitImageEditor.Droid
     public static class Platform
     {
         internal static bool IsInitialized { get; set; }
-            
+
         internal static FormsAppCompatActivity CurrentActivity { get; private set; }
         internal static Bundle CurrentBundle { get; private set; }
         internal const int PickImageId = 1000;

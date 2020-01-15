@@ -21,15 +21,15 @@ namespace BitooBitImageEditor
 
         public ImageEditorConfig() { }
 
-        public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, float? cropAspectRatio = null, 
-                                 List<SKBitmap> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit, 
+        public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, float? cropAspectRatio = null,
+                                 List<SKBitmap> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit,
                                  BackgroundType backgroundType = BackgroundType.Transparent, SKColor backgroundColor = default)
         {
             CanAddText = canAddText;
             CanFingerPaint = canFingerPaint;
             CropAspectRatio = cropAspectRatio;
             Stickers = stickers;
-            Aspect = aspect;            
+            Aspect = aspect;
             BackgroundType = backgroundType;
             BackgroundColor = backgroundColor;
             SetOutImageSize(outImageHeight, outImageWidht);
@@ -61,7 +61,7 @@ namespace BitooBitImageEditor
 
         public void SetOutImageSize(int? height = null, int? widht = null)
         {
-            if(height == null || widht == null)
+            if (height == null || widht == null)
             {
                 OutImageHeight = null;
                 OutImageWidht = null;

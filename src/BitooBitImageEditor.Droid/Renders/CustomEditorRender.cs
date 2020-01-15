@@ -8,7 +8,7 @@ using Xamarin.Forms.Platform.Android;
 
 namespace BitooBitImageEditor.Droid.Renders
 {
-    class CustomEditorRender : EditorRenderer
+    internal class CustomEditorRender : EditorRenderer
     {
         public CustomEditorRender(Context context) : base(context) { }
 

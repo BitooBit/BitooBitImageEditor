@@ -11,10 +11,10 @@ namespace BitooBitImageEditor.EditorPage
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string name)           
+            if (value is string name)
                 return string.IsNullOrWhiteSpace(name) ? null : ImageSource.FromResource($"{ImageResourceExtension.resource}{name}.png");
-            else if(value is SKBitmap bitmap)
-            {             
+            else if (value is SKBitmap bitmap)
+            {
                 SKData data = SKImage.FromBitmap(bitmap).Encode();
                 using (Stream stream = data.AsStream())
                 {

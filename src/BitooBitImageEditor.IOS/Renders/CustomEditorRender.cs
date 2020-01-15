@@ -1,13 +1,13 @@
-﻿using UIKit;
-using BitooBitImageEditor.Controls;
-using Xamarin.Forms;
+﻿using BitooBitImageEditor.Controls;
 using BitooBitImageEditor.IOS.Renders;
+using UIKit;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(CustomEditor), typeof(CustomEditorRender))]
 namespace BitooBitImageEditor.IOS.Renders
 {
-    class CustomEditorRender : EditorRenderer
+    internal class CustomEditorRender : EditorRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
         {

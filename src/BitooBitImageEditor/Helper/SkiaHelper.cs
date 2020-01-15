@@ -1,16 +1,12 @@
 ﻿using SkiaSharp;
-using SkiaSharp.Views.Forms;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using Xamarin.Forms;
 
 namespace BitooBitImageEditor
 {
     internal static class SkiaHelper
     {
-
         internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, SKBitmap bitmap, Aspect aspect = Aspect.AspectFit)
         {
             return CalculateRectangle(info, bitmap.Width, bitmap.Height, aspect);
@@ -18,8 +14,8 @@ namespace BitooBitImageEditor
 
         internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, float width, float height, Aspect aspect = Aspect.AspectFit)
         {
-            float scaleX = (float)info.Width / width;
-            float scaleY = (float)info.Height / height;
+            float scaleX = info.Width / width;
+            float scaleY = info.Height / height;
 
             if (aspect != Aspect.Fill)
             {
@@ -35,9 +31,7 @@ namespace BitooBitImageEditor
                 return (info, scaleX, scaleY);
         }
 
-        
-
-        static internal ObservableCollection<Color> GetColors()
+        internal static ObservableCollection<Color> GetColors()
         {
             ObservableCollection<Color> colors = new ObservableCollection<Color>
             {
@@ -56,7 +50,7 @@ namespace BitooBitImageEditor
             int count = 35;
             double offset = 16777215 / (double)count;
             for (int i = 1; i < count - 1; i++)
-                colors.Add(Color.FromHex(((int)((double)i * offset)).ToString("X")));
+                colors.Add(Color.FromHex(((int)(i * offset)).ToString("X")));
 
             return colors;
         }

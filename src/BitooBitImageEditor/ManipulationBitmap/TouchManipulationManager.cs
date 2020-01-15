@@ -1,9 +1,9 @@
-﻿using System;
-using SkiaSharp;
+﻿using SkiaSharp;
+using System;
 
 namespace BitooBitImageEditor.ManipulationBitmap
 {
-    class TouchManipulationManager
+    internal class TouchManipulationManager
     {
         public TouchManipulationMode Mode { set; get; }
 
@@ -23,7 +23,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 SKPoint newVector = newPoint - pivotPoint;
 
                 float scale = Magnitude(newVector) / Magnitude(oldVector);
-                
+
 
                 // Avoid rotation if fingers are too close to center
                 if (Magnitude(newVector) > 30 && Magnitude(oldVector) > 30)
@@ -89,7 +89,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 scaleY = newVector.Y / oldVector.Y;
 
             }
-            else if (Mode == TouchManipulationMode.IsotropicScale || 
+            else if (Mode == TouchManipulationMode.IsotropicScale ||
                      Mode == TouchManipulationMode.ScaleRotate ||
                      Mode == TouchManipulationMode.ScaleDualRotate)
             {
@@ -99,14 +99,14 @@ namespace BitooBitImageEditor.ManipulationBitmap
             if (!float.IsNaN(scaleX) && !float.IsInfinity(scaleX) &&
                 !float.IsNaN(scaleY) && !float.IsInfinity(scaleY))
             {
-                SKMatrix.PostConcat(ref touchMatrix, 
+                SKMatrix.PostConcat(ref touchMatrix,
                     SKMatrix.MakeScale(scaleX, scaleY, pivotPoint.X, pivotPoint.Y));
             }
 
             return touchMatrix;
         }
 
-        float Magnitude(SKPoint point)
+        private float Magnitude(SKPoint point)
         {
             return (float)Math.Sqrt(Math.Pow(point.X, 2) + Math.Pow(point.Y, 2));
         }
