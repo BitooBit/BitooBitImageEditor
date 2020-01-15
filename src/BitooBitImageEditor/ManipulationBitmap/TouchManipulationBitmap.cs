@@ -48,6 +48,8 @@ namespace BitooBitImageEditor.ManipulationBitmap
         public string Text { set; get; }
         public SKColor Color { set; get; }
         public BitmapType Type { set; get; }
+        public bool IsHide { set; get; } = false;
+
 
 
         public int HitTest(SKPoint location, SKRect info)

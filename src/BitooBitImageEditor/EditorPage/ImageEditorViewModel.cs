@@ -27,8 +27,6 @@ namespace BitooBitImageEditor.EditorPage
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
         }
 
-
-
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool MainVisible => !CropVisible;
         public bool TextVisible => CurrentEditType == ImageEditType.Text;
@@ -43,7 +41,7 @@ namespace BitooBitImageEditor.EditorPage
 
         public ImageEditorConfig Config { get; private set; }
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
-        public Color CurrentColor { get; set; } = Color.Black;
+        public Color CurrentColor { get; set; } = Color.White;
         public string CurrentText { set; get; } = "";
         public ObservableCollection<Color> ColorCollect { get; private set; } = SkiaHelper.GetColors();
         public ObservableCollection<CropItem> CropCollect { get; private set; } = CropItem.GetCropItems();
@@ -62,12 +60,12 @@ namespace BitooBitImageEditor.EditorPage
                             else
                             {
                                 currentTextBitmap.Bitmap = SKBitmapBuilder.FromText(CurrentText, CurrentColor.ToSKColor());
+                                currentTextBitmap.IsHide = false;
                                 mainCanvas?.InvalidateSurface();
                             }
 
                             currentTextBitmap = null;
                             CurrentText = "";
-
                         }
                         break;
                     case ImageEditType.CropRotate:
@@ -82,9 +80,7 @@ namespace BitooBitImageEditor.EditorPage
         public ICommand CancelCommand => new Command(() =>
         {
             if (CurrentEditType == ImageEditType.Paint)
-                mainCanvas.DeleteEndPath();
-           
-            
+                mainCanvas.DeleteEndPath();          
         });
 
         public ICommand SelectItemCommand => new Command<object>((valueObj) =>
@@ -127,7 +123,6 @@ namespace BitooBitImageEditor.EditorPage
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
-
             ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Moved);
 
             if (CurrentEditType != ImageEditType.CropRotate)

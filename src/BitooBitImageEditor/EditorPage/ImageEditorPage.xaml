@@ -162,7 +162,7 @@
                     </Grid.ColumnDefinitions>
                     <BoxView Grid.RowSpan="3" BackgroundColor="Black" Opacity="0.7" />
 
-                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="EndAndExpand"/>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" Margin="0,7,7,0" HorizontalOptions="End" VerticalOptions="Start"/>
 
                     <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}" HeightRequest="32">
                         <CollectionView.ItemsLayout>
@@ -189,13 +189,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
-
-                    <StackLayout Grid.Row="0" VerticalOptions="Start" >
-                        <ImageButton Source="{res:ImageResource undo}" Command="{Binding CancelCommand}" CommandParameter="Apply" HorizontalOptions="StartAndExpand" />
-                        <ImageButton Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="EndAndExpand" />
-                    </StackLayout>
-
+                 
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource undo}" Command="{Binding CancelCommand}" CommandParameter="Apply" Margin="7,7,0,0" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" Margin="0,7,7,0" HorizontalOptions="End" VerticalOptions="Start"/>
+                  
                     <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}"  HeightRequest="32">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
@@ -222,7 +219,7 @@
                     </Grid.ColumnDefinitions>
                     <BoxView Grid.RowSpan="2" BackgroundColor="Black" Opacity="0.7" />
 
-                    <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" HorizontalOptions="EndAndExpand"/>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" Margin="0,7,7,0" HorizontalOptions="EndAndExpand"/>
 
                     <CollectionView Grid.Row="1" Margin="0" ItemsSource="{Binding Config.Stickers}" VerticalOptions="FillAndExpand" BackgroundColor="Transparent">
                         <CollectionView.ItemsLayout>
@@ -249,10 +246,10 @@
 
                 </Grid>
 
-                <ImageButton Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" Margin="0,5,0,0" VerticalOptions="Start" HorizontalOptions="Start"/>
+                <ImageButton Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" Margin="7,7,0,0" VerticalOptions="Start" HorizontalOptions="Start"/>
 
 
-                <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" Margin="0,5,5,0">
+                <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" Margin="0,7,7,0">
                     <ImageButton Source="{res:ImageResource save}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>

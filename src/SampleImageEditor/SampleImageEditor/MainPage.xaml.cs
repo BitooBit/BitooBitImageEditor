@@ -48,7 +48,7 @@ namespace SampleImageEditor
             try
             {
                 ImageEditorConfig config = new ImageEditorConfig(stickers: GetBitmaps(), backgroundType: BackgroundType.StretchedImage, backgroundColor: SKColors.Blue,
-                    outImageHeight: 1000, outImageWidht: 700, aspect: Aspect.AspectFit);
+                    outImageHeight: 512, outImageWidht: 512, aspect: Aspect.AspectFit);
 
                 byte[] data = await ImageEditor.Instance.GetEditedImage(config: config);
                 this.data = data;

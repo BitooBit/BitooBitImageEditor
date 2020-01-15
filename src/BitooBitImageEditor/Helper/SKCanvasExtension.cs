@@ -15,7 +15,7 @@ namespace BitooBitImageEditor.Helper
 
                 foreach (var item in bitmapCollection)
                 {
-                    if (item.Type != BitmapType.Main)
+                    if (item.Type != BitmapType.Main && !item.IsHide)
                     {
                         canvas.Save();
                         SKMatrix matrix = item.Matrix;
