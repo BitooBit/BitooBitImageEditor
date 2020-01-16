@@ -38,6 +38,7 @@ namespace SampleImageEditor
             try
             {
                 Config.Stickers = CanAddStickers ? stickers : null;
+                //Config.Stickers = null;
                 Config.SetOutImageSize(OutImageHeight, OutImageWidht);
 
                 SKBitmap bitmap = null;

@@ -18,7 +18,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\source\repos\bitoobit\BitooBitImageEditor\src\BitooBitImageEditor\BitooBitImageEditor.xml</DocumentationFile>
+    <DocumentationFile>C:\Repos\BitooBitImageEditor\src\BitooBitImageEditor\BitooBitImageEditor.xml</DocumentationFile>
+    <OutputPath></OutputPath>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
