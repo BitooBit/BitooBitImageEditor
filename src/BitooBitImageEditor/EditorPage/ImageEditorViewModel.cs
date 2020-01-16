@@ -29,20 +29,22 @@ namespace BitooBitImageEditor.EditorPage
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);
-            
-            //if(config?.Stickers != null)
-            //    foreach(var a  in config?.Stickers)
+
+            //if (config?.Stickers != null)
+            //    foreach (var a in config?.Stickers)
             //    {
             //        SKData data = SKImage.FromBitmap(a).Encode();
             //        using (Stream stream = data.AsStream())
             //        {
             //            byte[] imageData = new byte[stream.Length];
             //            stream.Read(imageData, 0, System.Convert.ToInt32(stream.Length));
-            //            Sources.Add(ImageSource.FromStream(() => new MemoryStream(imageData)));
+            //            Sources.Add(new SKBitmapImageSource() {Bitmap = a });
+
+            //            //Sources.Add(ImageSource.FromStream(() => new MemoryStream(imageData)));
             //        }
             //    }
 
-            //GC.Collect();                 
+            GC.Collect();
         }
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
@@ -63,8 +65,6 @@ namespace BitooBitImageEditor.EditorPage
         public string CurrentText { set; get; } = "";
         public ObservableCollection<Color> ColorCollect { get; private set; } 
         public ObservableCollection<CropItem> CropCollect { get; private set; }
-        //public List<ImageSource> Sources { get; private set; } = new List<ImageSource>();
-
 
 
         public ICommand ApplyChangesCommand => new Command<string>((value) =>
@@ -117,21 +117,14 @@ namespace BitooBitImageEditor.EditorPage
                 case CropItem value:
                     cropperCanvas.SetAspectRatio(value);
                     break;
-                case SKBitmap value:
+                //case SKBitmap value:
+                //    mainCanvas.AddBitmapToCanvas(value, BitmapType.Stickers);
+                //    CurrentEditType = ImageEditType.SelectType;
+                //    break;
+                case SKBitmapImageSource value:
                     mainCanvas.AddBitmapToCanvas(value, BitmapType.Stickers);
                     CurrentEditType = ImageEditType.SelectType;
                     break;
-
-                //case ImageSource value:
-                //    SKBitmapImageSource source = new SKBitmapImageSource();
-                //    SKImageImageSource sKImage = new SKImageImageSource();
-                //    sKImage.
-                //    source.
-                //   SKBitmap.
-                //    //mainCanvas.AddBitmapToCanvas(value, BitmapType.Stickers);
-                //    //CurrentEditType = ImageEditType.SelectType;
-                //    break;
-
                 default:
                     CurrentEditType = ImageEditType.SelectType;
                     break;

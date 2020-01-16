@@ -21,11 +21,10 @@ namespace BitooBitImageEditor.EditorPage
                     byte[] imageData = new byte[stream.Length];
                     stream.Read(imageData, 0, System.Convert.ToInt32(stream.Length));
                     return ImageSource.FromStream(() => new MemoryStream(imageData));
-                }
-                //GC.Collect(0);
+                }                
             }
             else
-                return null;
+                return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

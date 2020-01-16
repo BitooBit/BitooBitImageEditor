@@ -237,8 +237,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                
-                                    <Image Grid.Row="0" Source="{Binding ., Converter={StaticResource SourceConverter}}" Aspect="AspectFit" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Margin="5" HeightRequest="100" WidthRequest="100"/>
+                                    <Image Grid.Row="0" Source="{Binding .}" Aspect="AspectFit" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Margin="5" HeightRequest="100" WidthRequest="100"/>
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Path=BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />
                                     </Grid.GestureRecognizers>

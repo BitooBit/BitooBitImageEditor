@@ -1,5 +1,6 @@
 ﻿using BitooBitImageEditor;
 using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,8 +13,8 @@ namespace SampleImageEditor
     public partial class MainPage : ContentPage
     {
         private byte[] data;
-        Assembly assembly;
-        List<SKBitmap> stickers;
+        readonly Assembly assembly;
+        List<SKBitmapImageSource> stickers;
         public MainPage()
         {
             InitializeComponent();
@@ -35,10 +36,12 @@ namespace SampleImageEditor
 
         private async void GetEditedImage_Clicked(object sender, EventArgs e)
         {
+            if(!(Config?.Stickers?.Count > 0))
+                GetBitmaps();
+
             try
             {
                 Config.Stickers = CanAddStickers ? stickers : null;
-                //Config.Stickers = null;
                 Config.SetOutImageSize(OutImageHeight, OutImageWidht);
 
                 SKBitmap bitmap = null;
@@ -83,24 +86,36 @@ namespace SampleImageEditor
 
         private void GetBitmaps()
         {
-            List<SKBitmap> _stickers = null;
+            List<SKBitmapImageSource> _stickers = null;
 
             string[] resourceIDs = assembly.GetManifestResourceNames();
-
+            int i = 0;
             foreach (string resourceID in resourceIDs)
             {
                 if (resourceID.Contains("sticker") && resourceID.EndsWith(".png"))
                 {
                     if (_stickers == null)
-                        _stickers = new List<SKBitmap>();
+                        _stickers = new List<SKBitmapImageSource>();
 
                     using (Stream stream = assembly.GetManifestResourceStream(resourceID))
                     {
                         _stickers.Add(SKBitmap.Decode(stream));
                     }
                 }
+                i++;
+                if (i > 15)
+                    break;
             }
             stickers = _stickers;
         }
+
+        private void Clean_Clicked(object sender, EventArgs e)
+        {
+            Config.DisposeStickers();
+            data = null;
+            MyImage.Source = null;
+            GC.Collect();
+        }
+   
     }
 }

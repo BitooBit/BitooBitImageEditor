@@ -126,8 +126,21 @@
     <None Remove="Resources\Stickers\sticker %2819%29.png" />
     <None Remove="Resources\Stickers\sticker %28190%29.png" />
     <None Remove="Resources\Stickers\sticker %28191%29.png" />
+    <None Remove="Resources\Stickers\sticker %28192%29.png" />
+    <None Remove="Resources\Stickers\sticker %28193%29.png" />
+    <None Remove="Resources\Stickers\sticker %28194%29.png" />
+    <None Remove="Resources\Stickers\sticker %28195%29.png" />
+    <None Remove="Resources\Stickers\sticker %28196%29.png" />
+    <None Remove="Resources\Stickers\sticker %28197%29.png" />
+    <None Remove="Resources\Stickers\sticker %28198%29.png" />
+    <None Remove="Resources\Stickers\sticker %28199%29.png" />
     <None Remove="Resources\Stickers\sticker %282%29.png" />
     <None Remove="Resources\Stickers\sticker %2820%29.png" />
+    <None Remove="Resources\Stickers\sticker %28200%29.png" />
+    <None Remove="Resources\Stickers\sticker %28201%29.png" />
+    <None Remove="Resources\Stickers\sticker %28202%29.png" />
+    <None Remove="Resources\Stickers\sticker %28203%29.png" />
+    <None Remove="Resources\Stickers\sticker %28204%29.png" />
     <None Remove="Resources\Stickers\sticker %2821%29.png" />
     <None Remove="Resources\Stickers\sticker %2822%29.png" />
     <None Remove="Resources\Stickers\sticker %2823%29.png" />
@@ -224,7 +237,6 @@
     <EmbeddedResource Include="Resources\stickers (4).png" />
     <EmbeddedResource Include="Resources\stickers (5).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (1).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (10).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (100).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (101).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (102).png" />
@@ -235,7 +247,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (107).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (108).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (109).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (11).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (110).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (111).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (112).png" />
@@ -246,7 +257,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (117).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (118).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (119).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (12).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (120).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (121).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (122).png" />
@@ -257,7 +267,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (127).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (128).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (129).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (13).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (130).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (131).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (132).png" />
@@ -268,7 +277,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (137).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (138).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (139).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (14).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (140).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (141).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (142).png" />
@@ -277,7 +285,8 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (145).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (146).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (147).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (15).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (148).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (149).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (150).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (151).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (152).png" />
@@ -288,7 +297,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (157).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (158).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (159).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (16).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (160).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (161).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (162).png" />
@@ -324,8 +332,20 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (19).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (190).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (191).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (2).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (192).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (193).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (194).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (195).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (196).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (197).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (198).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (199).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (20).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (200).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (201).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (202).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (203).png" />
+    <EmbeddedResource Include="Resources\Stickers\sticker (204).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (21).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (22).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (23).png" />
@@ -335,7 +355,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (27).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (28).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (29).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (3).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (30).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (31).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (32).png" />
@@ -346,7 +365,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (37).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (38).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (39).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (4).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (40).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (41).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (42).png" />
@@ -357,7 +375,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (47).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (48).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (49).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (5).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (50).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (51).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (52).png" />
@@ -368,7 +385,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (57).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (58).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (59).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (6).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (60).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (61).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (62).png" />
@@ -379,7 +395,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (67).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (68).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (69).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (7).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (70).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (71).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (72).png" />
@@ -390,7 +405,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (77).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (78).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (79).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (8).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (80).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (81).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (82).png" />
@@ -401,7 +415,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (87).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (88).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (89).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (9).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (90).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (91).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (92).png" />

@@ -29,7 +29,8 @@
 
             <Button Grid.Row="1" Grid.Column="0" Text="Get Edited Image" Clicked="GetEditedImage_Clicked" TextColor="White" BackgroundColor="Green" WidthRequest="200" HeightRequest="40" VerticalOptions="End" Margin="5, 0"/>
             <Button Grid.Row="1" Grid.Column="1" Text="Save Edited Image" Clicked="SaveImage_Clicked" TextColor="White" BackgroundColor="Green" WidthRequest="200" HeightRequest="40" VerticalOptions="End" Margin="5, 0"/>
-            <Button Grid.Row="2" Grid.ColumnSpan="2" Text="Edit Config" Clicked="SetConfig_Clicked" TextColor="White" BackgroundColor="Green" WidthRequest="200" HeightRequest="40" VerticalOptions="End" HorizontalOptions="Center" Margin="0, 10"/>
+            <Button Grid.Row="2" Grid.Column="0" Text="Edit Config" Clicked="SetConfig_Clicked" TextColor="White" BackgroundColor="Green" WidthRequest="200" HeightRequest="40" VerticalOptions="End" Margin="5, 10"/>
+            <Button Grid.Row="2" Grid.Column="1" Text="Clean" Clicked="Clean_Clicked"  TextColor="White" BackgroundColor="Green" WidthRequest="200" HeightRequest="40" VerticalOptions="End" Margin="5, 10"/>
 
         </Grid>
 

@@ -1,5 +1,6 @@
 ﻿using BitooBitImageEditor.EditorPage;
 using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
@@ -17,7 +18,7 @@ namespace BitooBitImageEditor
 #pragma warning restore CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
 
     /// <summary>сonfigurator image editor</summary>
-    public sealed class ImageEditorConfig : BaseNotifier, IDisposable
+    public sealed class ImageEditorConfig : BaseNotifier
     {
         private BackgroundType backgroundType = BackgroundType.Transparent;
         private Aspect aspect = Aspect.AspectFit;
@@ -27,7 +28,7 @@ namespace BitooBitImageEditor
 
         /// <summary></summary>
         public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, float? cropAspectRatio = null,
-                                 List<SKBitmap> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit,
+                                 List<SKBitmapImageSource> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit,
                                  BackgroundType backgroundType = BackgroundType.Transparent, SKColor backgroundColor = default)
         {
             CanAddText = canAddText;
@@ -49,8 +50,11 @@ namespace BitooBitImageEditor
         /// <summary>sets and returns the aspect ratio for cropping the image </summary>
         public float? CropAspectRatio { get; set; } = null;
 
-        /// <summary>sets a set of stickers.</summary>
-        public List<SKBitmap> Stickers { get; set; } = null;
+        /// <summary>sets a set of stickers.
+        /// <para>do not use a large number of stickers this will lead to a large consumption of RAM</para>
+        /// <para>use the <see cref="ImageEditorConfig.DisposeStickers"/> method when stickers are no longer needed</para>
+        /// </summary>
+        public List<SKBitmapImageSource> Stickers { get; set; } = null;
 
         /// <summary> get a height out image</summary>
         public int? OutImageHeight { get; private set; }
@@ -105,38 +109,18 @@ namespace BitooBitImageEditor
             return (ImageEditorConfig)this.MemberwiseClone();
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false;
-
-        private void Dispose(bool disposing)
+        /// <summary>use this method when <see cref="ImageEditorConfig.Stickers"/> are no longer needed</summary>
+        public void DisposeStickers()
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                { }
-                if (Stickers != null)
-                    foreach (var a in Stickers)
-                    {
-                        a.Dispose();
-                    }
-                Stickers = null;
-            }
+            if (Stickers != null)
+                foreach (var a in Stickers)
+                {
+                    a.Bitmap?.Dispose();
+                    a.Bitmap = null;
+                }
+            Stickers.Clear();
+            Stickers = null;
         }
-
-        #pragma warning disable CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
-        ~ImageEditorConfig()
-        #pragma warning restore CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
-        {
-            Dispose(false);
-        }
-
-        /// <summary>Releases the unmanaged resources</summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
 
     }
 }
