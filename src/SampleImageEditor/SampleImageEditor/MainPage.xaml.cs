@@ -84,7 +84,7 @@ namespace SampleImageEditor
             ConfigVisible = !ConfigVisible;
         }
 
-        private void GetBitmaps()
+        private void GetBitmaps(int maxCount = 15)
         {
             List<SKBitmapImageSource> _stickers = null;
 
@@ -103,7 +103,7 @@ namespace SampleImageEditor
                     }
                 }
                 i++;
-                if (i > 15)
+                if (i > maxCount)
                     break;
             }
             stickers = _stickers;
