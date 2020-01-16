@@ -277,8 +277,6 @@
     <EmbeddedResource Include="Resources\Stickers\sticker (145).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (146).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (147).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (148).png" />
-    <EmbeddedResource Include="Resources\Stickers\sticker (149).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (15).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (150).png" />
     <EmbeddedResource Include="Resources\Stickers\sticker (151).png" />

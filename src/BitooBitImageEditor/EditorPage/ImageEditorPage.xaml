@@ -251,6 +251,7 @@
 
                 <ImageButton Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" Margin="9,9,0,0" VerticalOptions="Start" HorizontalOptions="Start"/>
 
+          
 
                 <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" Margin="0,9,9,0">
                     <ImageButton Source="{res:ImageResource save}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="End"/>

@@ -37,6 +37,7 @@
     <None Remove="Resources\save.png" />
     <None Remove="Resources\stickers.png" />
     <None Remove="Resources\trash.png" />
+    <None Remove="Resources\trash_open.png" />
     <None Remove="Resources\undo.png" />
     <None Include="..\..\nuget\LICENSE.txt">
       <Pack>True</Pack>
@@ -62,6 +63,7 @@
     <EmbeddedResource Include="Resources\save.png" />
     <EmbeddedResource Include="Resources\stickers.png" />
     <EmbeddedResource Include="Resources\trash.png" />
+    <EmbeddedResource Include="Resources\trash_open.png" />
     <EmbeddedResource Include="Resources\undo.png" />
   </ItemGroup>
 

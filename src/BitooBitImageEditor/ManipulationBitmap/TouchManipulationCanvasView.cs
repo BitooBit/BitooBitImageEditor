@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace BitooBitImageEditor.ManipulationBitmap
 {
-    internal class TouchManipulationCanvasView : SKCanvasView, IDisposable
+    internal class TouchManipulationCanvasView : SKCanvasView/*SKGLView*/, IDisposable
     {
         private ImageEditorConfig config;
         private float outImageWidht;
@@ -24,7 +24,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
         private SKBitmap backgroundBitmap = new SKBitmap();
         private SKBitmap mainBitmap = new SKBitmap();
         private SKBitmap tempBitmap = new SKBitmap();
-        private SKImageInfo info;
+        //private SKImageInfo info;
         private SKRect rectInfo = new SKRect();
         private readonly float sizeTrash;
         private SKRect rectTrash = new SKRect();
@@ -32,6 +32,8 @@ namespace BitooBitImageEditor.ManipulationBitmap
         private bool trashVisible = false;
         private bool trashBigVisible = false;
         private readonly SKBitmap trashBitmap;
+        private readonly SKBitmap trashOpenBitmap;
+
 
         internal event Action<TouchManipulationBitmap> TextBitmapClicked;
 
@@ -52,11 +54,13 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 outImageHeight = config?.OutImageHeight ?? 0;
             }
             DisplayInfo displayInfo = DeviceDisplay.MainDisplayInfo;
-            sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.06f;
+            sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.02f * (float)displayInfo.Density;
 
-            using (Stream stream = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash.png"))
+            using (Stream streamOpenTrash = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash_open.png"))
+            using (Stream streamTrash = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash.png"))
             {
-                trashBitmap = SKBitmap.Decode(stream);
+                trashBitmap = SKBitmap.Decode(streamTrash);
+                trashOpenBitmap = SKBitmap.Decode(streamOpenTrash);
             }
         }
 
@@ -132,11 +136,38 @@ namespace BitooBitImageEditor.ManipulationBitmap
             }
         }
 
+        //protected override void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+        //{
+        //    base.OnPaintSurface(e);
+        //    SKSize info = CanvasSize;
+        //    SKCanvas canvas = e.Surface.Canvas;
+        //    if (rectInfo.Width != info.Width || rectInfo.Height != info.Height)
+        //    {
+        //        rectInfo = new SKRect(0, 0, info.Width, info.Height);
+        //        SetTempBitmap();
+        //        SetTrashRects(info);
+        //    }
+        //    var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
+
+        //    canvas.Clear();
+        //    canvas.DrawBitmap(tempBitmap, rectImage);
+
+        //    canvas.DrawPath(completedPaths, inProgressPaths);
+
+        //    canvas.DrawBitmap(bitmapCollection);
+        //    canvas.DrawSurrounding(rectInfo, rectImage, 0xBD020207);
+        //    if (trashVisible)
+        //        canvas.DrawBitmap(trashBitmap, rectTrash);
+        //    if (trashBigVisible)
+        //        canvas.DrawBitmap(trashOpenBitmap, rectTrashBig);
+        //}
+
+
 
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs args)
         {
             base.OnPaintSurface(args);
-            info = args.Info;
+            SKImageInfo info = args.Info;
             SKCanvas canvas = args.Surface.Canvas;
             if (rectInfo.Width != info.Width || rectInfo.Height != info.Height)
             {
@@ -149,16 +180,14 @@ namespace BitooBitImageEditor.ManipulationBitmap
             canvas.Clear();
             canvas.DrawBitmap(tempBitmap, rectImage);
 
-
             canvas.DrawPath(completedPaths, inProgressPaths);
-
 
             canvas.DrawBitmap(bitmapCollection);
             canvas.DrawSurrounding(rectInfo, rectImage, 0xBD020207);
             if (trashVisible)
                 canvas.DrawBitmap(trashBitmap, rectTrash);
             if (trashBigVisible)
-                canvas.DrawBitmap(trashBitmap, rectTrashBig);
+                canvas.DrawBitmap(trashOpenBitmap, rectTrashBig);
         }
 
 
@@ -374,8 +403,8 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 ((IDisposable)tempBitmap).Dispose();
                 ((IDisposable)tempBitmap).Dispose();
 
-                
                 trashBitmap?.Dispose();
+                trashOpenBitmap?.Dispose();
 
                 foreach (var a in completedPaths)
                     a.Dispose();
