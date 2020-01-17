@@ -13,14 +13,15 @@ namespace SampleImageEditor
     public partial class MainPage : ContentPage
     {
         private byte[] data;
-        readonly Assembly assembly;
-        List<SKBitmapImageSource> stickers;
+        private readonly Assembly assembly;
+        private List<SKBitmapImageSource> stickers;
+        private int stickersCount = 15;
         public MainPage()
         {
             InitializeComponent();
             assembly = GetType().GetTypeInfo().Assembly;
             this.BindingContext = this;
-            GetBitmaps();
+            GetBitmaps(stickersCount);
         }
 
         public bool ConfigVisible { get; set; }
@@ -37,7 +38,7 @@ namespace SampleImageEditor
         private async void GetEditedImage_Clicked(object sender, EventArgs e)
         {
             if(!(Config?.Stickers?.Count > 0))
-                GetBitmaps();
+                GetBitmaps(stickersCount);
 
             try
             {
@@ -84,7 +85,15 @@ namespace SampleImageEditor
             ConfigVisible = !ConfigVisible;
         }
 
-        private void GetBitmaps(int maxCount = 15)
+        private void Clean_Clicked(object sender, EventArgs e)
+        {
+            Config.DisposeStickers();
+            data = null;
+            MyImage.Source = null;
+            GC.Collect();
+        }
+
+        private void GetBitmaps(int maxCount)
         {
             List<SKBitmapImageSource> _stickers = null;
 
@@ -108,14 +117,7 @@ namespace SampleImageEditor
             }
             stickers = _stickers;
         }
-
-        private void Clean_Clicked(object sender, EventArgs e)
-        {
-            Config.DisposeStickers();
-            data = null;
-            MyImage.Source = null;
-            GC.Collect();
-        }
+ 
    
     }
 }

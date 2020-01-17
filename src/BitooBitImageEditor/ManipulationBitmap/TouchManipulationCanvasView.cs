@@ -37,10 +37,8 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
         internal event Action<TouchManipulationBitmap> TextBitmapClicked;
 
-        private List<TouchManipulationBitmap> bitmapCollection =
-            new List<TouchManipulationBitmap>();
-        private Dictionary<long, TouchManipulationBitmap> bitmapDictionary =
-            new Dictionary<long, TouchManipulationBitmap>();
+        private List<TouchManipulationBitmap> bitmapCollection = new List<TouchManipulationBitmap>();
+        private Dictionary<long, TouchManipulationBitmap> bitmapDictionary = new Dictionary<long, TouchManipulationBitmap>();
         private Dictionary<long, PaintedPath> inProgressPaths = new Dictionary<long, PaintedPath>();
         private List<PaintedPath> completedPaths = new List<PaintedPath>();
 
@@ -54,7 +52,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 outImageHeight = config?.OutImageHeight ?? 0;
             }
             DisplayInfo displayInfo = DeviceDisplay.MainDisplayInfo;
-            sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.02f * (float)displayInfo.Density;
+            sizeTrash = (float)Math.Min(displayInfo.Height, displayInfo.Width) * 0.04f;
 
             using (Stream streamOpenTrash = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash_open.png"))
             using (Stream streamTrash = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash.png"))

@@ -64,6 +64,24 @@ namespace BitooBitImageEditor.Croping
                 case CropRotateType.CropSquare:
                     SetAspectRatio(1f);
                     break;
+                case CropRotateType.Crop2_3:
+                    SetAspectRatio(2f/3f);
+                    break;
+                case CropRotateType.Crop3_2:
+                    SetAspectRatio(3f/2f);
+                    break;
+                case CropRotateType.Crop3_4:
+                    SetAspectRatio(3f/4f);
+                    break;
+                case CropRotateType.Crop4_3:
+                    SetAspectRatio(4f/3f);
+                    break;
+                case CropRotateType.Crop16_9:
+                    SetAspectRatio(16f/9f);
+                    break;
+                case CropRotateType.Crop9_16:
+                    SetAspectRatio(9f/16f);
+                    break;
             }
         }
 

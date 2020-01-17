@@ -23,7 +23,17 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Repos\BitooBitImageEditor\src\BitooBitImageEditor\BitooBitImageEditor.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
+    <None Remove="Resources\16_9.png" />
+    <None Remove="Resources\2_3.png" />
+    <None Remove="Resources\3_2.png" />
+    <None Remove="Resources\3_4.png" />
+    <None Remove="Resources\4_3.png" />
+    <None Remove="Resources\9_16.png" />
     <None Remove="Resources\arrow_back.png" />
     <None Remove="Resources\clear.png" />
     <None Remove="Resources\crop_free.png" />
@@ -50,6 +60,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\16_9.png" />
+    <EmbeddedResource Include="Resources\2_3.png" />
+    <EmbeddedResource Include="Resources\3_2.png" />
+    <EmbeddedResource Include="Resources\3_4.png" />
+    <EmbeddedResource Include="Resources\4_3.png" />
+    <EmbeddedResource Include="Resources\9_16.png" />
     <EmbeddedResource Include="Resources\arrow_back.png" />
     <EmbeddedResource Include="Resources\clear.png" />
     <EmbeddedResource Include="Resources\crop_free.png" />

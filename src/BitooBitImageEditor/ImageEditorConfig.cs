@@ -112,14 +112,16 @@ namespace BitooBitImageEditor
         /// <summary>use this method when <see cref="ImageEditorConfig.Stickers"/> are no longer needed</summary>
         public void DisposeStickers()
         {
-            if (Stickers != null)
+            if (Stickers?.Count > 0)
+            {
                 foreach (var a in Stickers)
                 {
                     a.Bitmap?.Dispose();
                     a.Bitmap = null;
                 }
-            Stickers.Clear();
-            Stickers = null;
+                Stickers.Clear();
+                Stickers = null;
+            }
         }
 
     }

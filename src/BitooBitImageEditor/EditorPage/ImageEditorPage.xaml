@@ -145,7 +145,7 @@
 
                     </CollectionView>
 
-                    <StackLayout Grid.Row="2" >
+                    <StackLayout Grid.Row="2" Margin="0,0,0,8">
                         <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="EndAndExpand"/>
                     </StackLayout>
 

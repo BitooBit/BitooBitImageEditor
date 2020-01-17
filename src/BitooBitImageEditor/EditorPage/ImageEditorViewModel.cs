@@ -117,10 +117,6 @@ namespace BitooBitImageEditor.EditorPage
                 case CropItem value:
                     cropperCanvas.SetAspectRatio(value);
                     break;
-                //case SKBitmap value:
-                //    mainCanvas.AddBitmapToCanvas(value, BitmapType.Stickers);
-                //    CurrentEditType = ImageEditType.SelectType;
-                //    break;
                 case SKBitmapImageSource value:
                     mainCanvas.AddBitmapToCanvas(value, BitmapType.Stickers);
                     CurrentEditType = ImageEditType.SelectType;

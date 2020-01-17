@@ -27,7 +27,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>ru.bitoobit.imageeditor</string>
 	<key>CFBundleVersion</key>
-	<string>14.0</string>
+	<string>16.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
