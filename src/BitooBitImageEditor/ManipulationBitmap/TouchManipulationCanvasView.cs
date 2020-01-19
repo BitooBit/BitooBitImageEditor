@@ -52,7 +52,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 outImageHeight = config?.OutImageHeight ?? 0;
             }
             DisplayInfo displayInfo = DeviceDisplay.MainDisplayInfo;
-            sizeTrash = (float)Math.Min(displayInfo.Height, displayInfo.Width) * 0.04f;
+            sizeTrash = (float)Math.Max(displayInfo.Height, displayInfo.Width) * 0.06f;
 
             using (Stream streamOpenTrash = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash_open.png"))
             using (Stream streamTrash = GetType().GetTypeInfo().Assembly.GetManifestResourceStream($"{ImageResourceExtension.resource}trash.png"))
@@ -231,8 +231,9 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 canvas.Clear();
                 canvas.DrawBitmap(mainBitmap, backgroundBitmap, outRect, rectMianBitmap, config);
             }
+            tempBitmap?.Dispose();
             tempBitmap = outBitmap;
-            GC.Collect(0);
+            GC.Collect();
         }
 
         private void SetTrashRects(SKImageInfo info)

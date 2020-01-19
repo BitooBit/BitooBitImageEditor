@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Reflection;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -30,22 +31,9 @@ namespace BitooBitImageEditor.EditorPage
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);
 
-            //if (config?.Stickers != null)
-            //    foreach (var a in config?.Stickers)
-            //    {
-            //        SKData data = SKImage.FromBitmap(a).Encode();
-            //        using (Stream stream = data.AsStream())
-            //        {
-            //            byte[] imageData = new byte[stream.Length];
-            //            stream.Read(imageData, 0, System.Convert.ToInt32(stream.Length));
-            //            Sources.Add(new SKBitmapImageSource() {Bitmap = a });
-
-            //            //Sources.Add(ImageSource.FromStream(() => new MemoryStream(imageData)));
-            //        }
-            //    }
-
             GC.Collect();
         }
+
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool MainVisible => !CropVisible;
