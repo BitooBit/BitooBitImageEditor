@@ -11,11 +11,12 @@
              xmlns:tt="clr-namespace:BitooBitImageEditor.TouchTracking"
              xmlns:controls="clr-namespace:BitooBitImageEditor.Controls"
              xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-             ios:Page.PrefersStatusBarHidden="True"
-             ios:Page.PreferredStatusBarUpdateAnimation="Fade"
-             ios:Page.PrefersHomeIndicatorAutoHidden="True"
+             ios:Page.UseSafeArea="True"
              x:Name="ThisEditorPage" x:ClassModifier="internal" >
 
+    <!--ios:Page.PrefersStatusBarHidden="True"
+             ios:Page.PreferredStatusBarUpdateAnimation="Fade"
+             ios:Page.PrefersHomeIndicatorAutoHidden="True"-->
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -167,13 +168,13 @@
 
                     <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}" HeightRequest="32">
                         <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
+                            <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="2" />
                         </CollectionView.ItemsLayout>
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <StackLayout HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="30">
-                                    <Button BackgroundColor="{Binding .}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" Margin="0" BorderColor="Transparent" BorderWidth="1" CommandParameter="{Binding .}" VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
+                                <StackLayout HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="30" WidthRequest="30" Margin="0" Padding="0" Spacing="0">
+                                    <Button BackgroundColor="{Binding .}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" Padding="0" FontSize="1" Margin="0" BorderColor="Transparent" BorderWidth="1" CommandParameter="{Binding .}" VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
                                 </StackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -181,6 +182,22 @@
 
                     <controls:CustomEditor x:Name="textEditor" Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" FontSize="23" Keyboard="Plain" BackgroundColor="Transparent" Margin="10,8,10,4" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                 </Grid>
+
+
+
+                <Grid VerticalOptions="FillAndExpand" BackgroundColor="Transparent" IsVisible="{Binding InfoVisible}" IsEnabled="{Binding InfoVisible}" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <BoxView BackgroundColor="Black" Opacity="0.7" />
+
+                    <Label Text="{Binding Message}" FontSize="23" TextColor="White" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+
+                </Grid>
+
 
                 <Grid VerticalOptions="StartAndExpand" BackgroundColor="Transparent" IsVisible="{Binding PaintVisible}" IsEnabled="{Binding PaintVisible}" >
                     <Grid.RowDefinitions>
@@ -194,15 +211,15 @@
                     <ImageButton Grid.Row="0" Source="{res:ImageResource undo}" Command="{Binding CancelCommand}" CommandParameter="Apply" Margin="9,9,0,0" HorizontalOptions="Start" VerticalOptions="Start"/>
                     <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" Margin="0,9,9,0" HorizontalOptions="End" VerticalOptions="Start"/>
                   
-                    <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}"  HeightRequest="32">
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}" HeightRequest="32">
                         <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
+                            <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="2" />
                         </CollectionView.ItemsLayout>
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <StackLayout HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="30">
-                                    <Button BackgroundColor="{Binding .}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" Margin="0" BorderColor="Transparent" BorderWidth="1" CommandParameter="{Binding .}" VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
+                                <StackLayout HorizontalOptions="Start" VerticalOptions="Start" HeightRequest="30" WidthRequest="30" Margin="0" Padding="0" Spacing="0">
+                                    <Button BackgroundColor="{Binding .}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" Padding="0" FontSize="1" Margin="0" BorderColor="Transparent" BorderWidth="1" CommandParameter="{Binding .}" VerticalOptions="Start" HorizontalOptions="Start" CornerRadius="15" HeightRequest="30" WidthRequest="30"/>
                                 </StackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -253,7 +270,8 @@
           
 
                 <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" Margin="0,9,9,0">
-                    <ImageButton Source="{res:ImageResource save}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="End"/>
+                    <ImageButton Source="{res:ImageResource published}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="End"/>
+                    <ImageButton Source="{res:ImageResource save}" Command="{Binding SaveCommand}" IsVisible="{Binding Config.CanSaveImage}" CommandParameter="Save" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource stickers}" IsVisible="{Binding Config.CanAddStickers}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Stickers}" HorizontalOptions="End"/>

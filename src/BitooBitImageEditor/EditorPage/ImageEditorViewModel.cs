@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -30,27 +31,28 @@ namespace BitooBitImageEditor.EditorPage
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);
-
+            Message = config?.LoadingText;
             GC.Collect();
         }
-
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool MainVisible => !CropVisible;
         public bool TextVisible => CurrentEditType == ImageEditType.Text;
         public bool StickersVisible => CurrentEditType == ImageEditType.Stickers;
         public bool PaintVisible => CurrentEditType == ImageEditType.Paint;
+        public bool InfoVisible => CurrentEditType == ImageEditType.Info;
+
         public bool ButtonsVisible
         {
             get => CurrentEditType == ImageEditType.SelectType && buttonsVisible;
             private set => buttonsVisible = value;
         }
 
-
         public ImageEditorConfig Config { get; private set; }
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
         public Color CurrentColor { get; set; } = Color.White;
         public string CurrentText { set; get; } = "";
+        public string Message { private set; get; } = "";
         public ObservableCollection<Color> ColorCollect { get; private set; } 
         public ObservableCollection<CropItem> CropCollect { get; private set; }
 
@@ -115,7 +117,6 @@ namespace BitooBitImageEditor.EditorPage
             }
         });
 
-
         private bool lockFinish = false;
         public ICommand EditFinishCommand => new Command<string>((value) =>
         {
@@ -129,6 +130,28 @@ namespace BitooBitImageEditor.EditorPage
                 ImageEditor.Instance.SetImage(bitmap);
             }
         });
+
+
+        public ICommand SaveCommand => new Command<string>(async (value) =>
+        {
+            CurrentEditType = ImageEditType.Info;
+
+            var bitmap = mainCanvas.EditedBitmap;
+            
+                if (await ImageEditor.Instance.SaveImage(SkiaHelper.SKBitmapToBytes(bitmap), $"img{DateTime.Now.ToString("dd.MM.yyyy HH-mm-ss")}.png"))
+                    Message = Config?.SuccessSaveText;
+                else
+                    Message = Config?.ErrorSaveText;
+            bitmap.Dispose();
+            bitmap = null;
+            GC.Collect();
+
+            int time = (int)(Message?.Length * 75);
+            await Task.Delay(time >= 1500 ? time : 1500);
+            Message = Config?.LoadingText;
+            CurrentEditType = ImageEditType.SelectType;
+        });
+
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {

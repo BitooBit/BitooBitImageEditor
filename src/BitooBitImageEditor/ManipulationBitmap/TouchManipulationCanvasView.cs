@@ -84,6 +84,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                     canvas.Restore();
                     canvas.DrawBitmap(bitmapCollection, -rectTranslate.rect.Left, -rectTranslate.rect.Top, scale);
                 }
+                //GC.Collect();
                 return outBitmap;
             }
         }

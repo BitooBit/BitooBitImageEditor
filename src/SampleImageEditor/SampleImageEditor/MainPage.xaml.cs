@@ -11,7 +11,6 @@ namespace SampleImageEditor
 {
     public partial class MainPage : ContentPage
     {
-        private byte[] data;
         private readonly Assembly assembly;
         private List<SKBitmapImageSource> stickers;
         private int stickersCount = 15;
@@ -20,12 +19,11 @@ namespace SampleImageEditor
             InitializeComponent();
             assembly = GetType().GetTypeInfo().Assembly;
             this.BindingContext = this;
-            GetBitmaps(stickersCount);
         }
 
         public bool ConfigVisible { get; set; }
         public ImageEditorConfig Config { get; set; } = new ImageEditorConfig();
-        public bool CanAddStickers { get; set; } = true;
+        public bool CanAddStickers { get; set; } = false;
         public int? OutImageHeight { get; set; } = null;
         public int? OutImageWidht { get; set; } = null;
         public bool UseSampleImage { get; set; } = true;
@@ -36,7 +34,7 @@ namespace SampleImageEditor
 
         private async void GetEditedImage_Clicked(object sender, EventArgs e)
         {
-            if(!(Config?.Stickers?.Count > 0))
+            if (!(Config?.Stickers?.Count > 0) && CanAddStickers)
                 GetBitmaps(stickersCount);
 
             try
@@ -49,8 +47,7 @@ namespace SampleImageEditor
                     using (Stream stream = assembly.GetManifestResourceStream("SampleImageEditor.Resources.sample.png"))
                         bitmap = SKBitmap.Decode(stream);
 
-                byte[] data = await ImageEditor.Instance.GetEditedImage(bitmap, Config);
-                this.data = data;
+                byte[] data = await ImageEditor.Instance.GetEditedImage(bitmap, Config);             
                 if (data != null)
                 {
                     MyImage.Source = null;
@@ -64,21 +61,6 @@ namespace SampleImageEditor
         }
 
 
-        private async void SaveImage_Clicked(object sender, EventArgs e)
-        {
-            string message;
-            if (data != null)
-            {
-                if (await ImageEditor.Instance.SaveImage(data, $"img{DateTime.Now.ToString("dd.MM.yyyy HH-mm-ss")}.png"))
-                    message = "Successfully!!!";
-                else
-                    message = "Unsuccessfully!!!";
-            }
-            else
-                message = "You should edit the image";
-            await DisplayAlert("", message, "Ok");
-        }
-
         private void SetConfig_Clicked(object sender, EventArgs e)
         {
             ConfigVisible = !ConfigVisible;
@@ -87,7 +69,6 @@ namespace SampleImageEditor
         private void Clean_Clicked(object sender, EventArgs e)
         {
             Config.DisposeStickers();
-            data = null;
             MyImage.Source = null;
             GC.Collect();
         }
@@ -116,7 +97,6 @@ namespace SampleImageEditor
             }
             stickers = _stickers;
         }
- 
    
     }
 }

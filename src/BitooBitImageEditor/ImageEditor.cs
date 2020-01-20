@@ -83,13 +83,7 @@ namespace BitooBitImageEditor
                 imageSetLock = true;
                 if (bitmap != null)
                 {
-                    SKData data = SKImage.FromBitmap(bitmap).Encode();
-                    using (Stream stream = data.AsStream())
-                    {
-                        byte[] imageData = new byte[stream.Length];
-                        stream.Read(imageData, 0, System.Convert.ToInt32(stream.Length));
-                        taskCompletionEditImage.SetResult(imageData);
-                    }
+                    taskCompletionEditImage.SetResult(SkiaHelper.SKBitmapToBytes(bitmap));
                 }
                 else
                     taskCompletionEditImage.SetResult(null);
@@ -101,6 +95,9 @@ namespace BitooBitImageEditor
                 }
             }
         }
+
+        
+
 
         private async Task<byte[]> PushImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
         {

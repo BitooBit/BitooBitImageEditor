@@ -6,7 +6,8 @@
         Paint,
         SelectType,
         Text,
-        Stickers
+        Stickers,
+        Info
     }
 
 }

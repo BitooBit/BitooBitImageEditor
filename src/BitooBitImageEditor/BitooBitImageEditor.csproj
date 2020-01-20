@@ -43,6 +43,7 @@
     <None Remove="Resources\done.png" />
     <None Remove="Resources\format_shapes.png" />
     <None Remove="Resources\gesture.png" />
+    <None Remove="Resources\published.png" />
     <None Remove="Resources\rotate_right.png" />
     <None Remove="Resources\save.png" />
     <None Remove="Resources\stickers.png" />
@@ -75,6 +76,7 @@
     <EmbeddedResource Include="Resources\done.png" />
     <EmbeddedResource Include="Resources\format_shapes.png" />
     <EmbeddedResource Include="Resources\gesture.png" />
+    <EmbeddedResource Include="Resources\published.png" />
     <EmbeddedResource Include="Resources\rotate_right.png" />
     <EmbeddedResource Include="Resources\save.png" />
     <EmbeddedResource Include="Resources\stickers.png" />

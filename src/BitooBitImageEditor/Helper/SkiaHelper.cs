@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using Xamarin.Forms;
 
 namespace BitooBitImageEditor
@@ -31,6 +32,23 @@ namespace BitooBitImageEditor
                 return (info, scaleX, scaleY);
         }
 
+
+        internal static byte[] SKBitmapToBytes(SKBitmap bitmap)
+        {
+            byte[] imageData;
+
+            using (SKData data = SKImage.FromBitmap(bitmap).Encode())
+            using (Stream stream = data.AsStream())
+            {
+                imageData = new byte[stream.Length];
+                stream.Read(imageData, 0, System.Convert.ToInt32(stream.Length));
+            }
+            GC.Collect();
+            
+            return imageData;
+        }
+
+
         internal static ObservableCollection<Color> GetColors()
         {
             ObservableCollection<Color> colors = new ObservableCollection<Color>
@@ -50,7 +68,11 @@ namespace BitooBitImageEditor
             int count = 35;
             double offset = 16777215 / (double)count;
             for (int i = 1; i < count - 1; i++)
-                colors.Add(Color.FromHex(((int)(i * offset)).ToString("X")));
+            {
+                var color = Color.FromHex(((int)(i * offset)).ToString("X"));
+                if(color.A != -1 && color.R != -1 && color.G != -1 && color.B != -1)
+                    colors.Add(color);
+            }
 
             return colors;
         }

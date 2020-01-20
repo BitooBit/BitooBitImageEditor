@@ -61,7 +61,7 @@
         <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor">
             <summary>constructor with default values</summary>
         </member>
-        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor(System.Boolean,System.Boolean,System.Nullable{System.Single},System.Collections.Generic.List{SkiaSharp.Views.Forms.SKBitmapImageSource},System.Nullable{System.Int32},System.Nullable{System.Int32},Xamarin.Forms.Aspect,BitooBitImageEditor.BackgroundType,SkiaSharp.SKColor)">
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor(System.Boolean,System.Boolean,System.Nullable{System.Single},System.Collections.Generic.List{SkiaSharp.Views.Forms.SKBitmapImageSource},System.Nullable{System.Int32},System.Nullable{System.Int32},Xamarin.Forms.Aspect,BitooBitImageEditor.BackgroundType,SkiaSharp.SKColor,System.Boolean,System.String,System.String,System.String)">
             <summary></summary>
         </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanAddText">
@@ -69,6 +69,18 @@
         </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanFingerPaint">
             <summary>determines whether the user can draw the image with their finger.</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanSaveImage">
+            <summary>determines whether the user can save imge.</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.LoadingText">
+            <summary> </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.SuccessSaveText">
+            <summary> </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.ErrorSaveText">
+            <summary> </summary>
         </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CropAspectRatio">
             <summary>sets and returns the aspect ratio for cropping the image </summary>

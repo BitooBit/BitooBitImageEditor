@@ -15,7 +15,7 @@ namespace BitooBitImageEditor
         Color,
         StretchedImage
     }
-#pragma warning restore CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
+ // Отсутствует комментарий XML для открытого видимого типа или члена
 
     /// <summary>сonfigurator image editor</summary>
     public sealed class ImageEditorConfig : BaseNotifier
@@ -23,13 +23,20 @@ namespace BitooBitImageEditor
         private BackgroundType backgroundType = BackgroundType.Transparent;
         private Aspect aspect = Aspect.AspectFit;
 
+        public const string _loadingText = "Wait";
+        public const string _successSaveText = "Success";
+        public const string _errorSaveText = "Error";
+
+#pragma warning restore CS1591
+
         /// <summary>constructor with default values</summary>
         public ImageEditorConfig() { }
 
         /// <summary></summary>
         public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, float? cropAspectRatio = null,
                                  List<SKBitmapImageSource> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit,
-                                 BackgroundType backgroundType = BackgroundType.Transparent, SKColor backgroundColor = default)
+                                 BackgroundType backgroundType = BackgroundType.Transparent, SKColor backgroundColor = default, 
+                                 bool canSaveImage = true, string loadingText = _loadingText, string successSaveText = _successSaveText, string errorSaveText = _errorSaveText)
         {
             CanAddText = canAddText;
             CanFingerPaint = canFingerPaint;
@@ -38,6 +45,10 @@ namespace BitooBitImageEditor
             Aspect = aspect;
             BackgroundType = backgroundType;
             BackgroundColor = backgroundColor;
+            CanSaveImage = canSaveImage;
+            LoadingText = loadingText;
+            SuccessSaveText = successSaveText;
+            ErrorSaveText = errorSaveText;
             SetOutImageSize(outImageHeight, outImageWidht);
         }
 
@@ -46,6 +57,16 @@ namespace BitooBitImageEditor
 
         /// <summary>determines whether the user can draw the image with their finger.</summary>
         public bool CanFingerPaint { get; set; } = true;
+
+        /// <summary>determines whether the user can save imge.</summary>
+        public bool CanSaveImage { get; set; } = true;
+
+        /// <summary> </summary>
+        public string LoadingText { get; set; } = _loadingText;
+        /// <summary> </summary>
+        public string SuccessSaveText { get; set; } = _successSaveText;
+        /// <summary> </summary>
+        public string ErrorSaveText { get; set; } = _errorSaveText;
 
         /// <summary>sets and returns the aspect ratio for cropping the image </summary>
         public float? CropAspectRatio { get; set; } = null;
