@@ -270,13 +270,15 @@
           
 
                 <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" Margin="0,9,9,0">
-                    <ImageButton Source="{res:ImageResource published}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource save}" Command="{Binding SaveCommand}" IsVisible="{Binding Config.CanSaveImage}" CommandParameter="Save" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource stickers}" IsVisible="{Binding Config.CanAddStickers}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Stickers}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource gesture}" IsVisible="{Binding Config.CanFingerPaint}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Paint}" HorizontalOptions="End"/>
                 </StackLayout>
+
+
+                <ImageButton Source="{res:ImageResource published}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="Center" VerticalOptions="End" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" Margin="0,0,0,10"/>
 
 
             </Grid>
