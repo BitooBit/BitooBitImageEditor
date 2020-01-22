@@ -33,13 +33,14 @@ namespace BitooBitImageEditor
         public ImageEditorConfig() { }
 
         /// <summary></summary>
-        public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, float? cropAspectRatio = null,
+        public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, bool canTransformMainBitmap = true, float? cropAspectRatio = null,
                                  List<SKBitmapImageSource> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit,
                                  BackgroundType backgroundType = BackgroundType.Transparent, SKColor backgroundColor = default, 
                                  bool canSaveImage = true, string loadingText = _loadingText, string successSaveText = _successSaveText, string errorSaveText = _errorSaveText)
         {
             CanAddText = canAddText;
             CanFingerPaint = canFingerPaint;
+            CanTransformMainBitmap = canTransformMainBitmap;
             Stickers = stickers;
             CropAspectRatio = cropAspectRatio;
             Aspect = aspect;

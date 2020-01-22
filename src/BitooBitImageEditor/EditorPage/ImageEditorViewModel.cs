@@ -18,7 +18,6 @@ namespace BitooBitImageEditor.EditorPage
     internal class ImageEditorViewModel : BaseNotifier, IDisposable
     {
         private TouchManipulationBitmap currentTextBitmap = null;
-        private bool buttonsVisible = true;
         internal ImageCropperCanvasView cropperCanvas;
         internal TouchManipulationCanvasView mainCanvas;
 
@@ -27,7 +26,7 @@ namespace BitooBitImageEditor.EditorPage
             Config = config;
             cropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
             mainCanvas = new TouchManipulationCanvasView(config);
-            mainCanvas.AddBitmapToCanvas(cropperCanvas.CroppedBitmap, BitmapType.Main);
+            mainCanvas.AddBitmapToCanvas(bitmap.Copy(), BitmapType.Main);
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);

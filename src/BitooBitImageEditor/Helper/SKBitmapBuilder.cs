@@ -25,6 +25,7 @@ namespace BitooBitImageEditor.Helper
                 canvas.Clear();
                 canvas.DrawBitmap(bitmap, rect, paint);
             }
+            GC.Collect(0);
             return outBitmap;
         }
 

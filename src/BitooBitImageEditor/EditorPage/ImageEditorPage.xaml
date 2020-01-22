@@ -57,10 +57,10 @@
             <Style TargetType="ImageButton">
                 <Setter Property="HorizontalOptions" Value="Start"/>
                 <Setter Property="VerticalOptions" Value="Center"/>
-                <Setter Property="Padding" Value="5"/>
-                <Setter Property="WidthRequest" Value="44"/>
-                <Setter Property="HeightRequest" Value="44"/>
-                <Setter Property="Margin" Value="5,0,5,0"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="WidthRequest" Value="40"/>
+                <Setter Property="HeightRequest" Value="40"/>
+                <Setter Property="Margin" Value="5"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
                 <Setter Property="BorderColor" Value="Transparent"/>
             </Style>
@@ -132,15 +132,19 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <CollectionView Grid.Row="0"  ItemsSource="{Binding CropCollect}" >
+                    <CollectionView Grid.Row="0" ItemSizingStrategy="MeasureFirstItem"  ItemsSource="{Binding CropCollect}" >
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="0" />
                         </CollectionView.ItemsLayout>
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <StackLayout HorizontalOptions="Center">
-                                    <ImageButton Grid.Column="0" Source="{Binding ImageName, Converter={StaticResource SourceConverter}}" Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />
+                                <StackLayout HorizontalOptions="Center" Margin="0" Padding="0" Spacing="2">
+                                    <Image Grid.Column="0" Margin="0" WidthRequest="42" HeightRequest="44" Aspect="AspectFit" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding ImageName, Converter={StaticResource SourceConverter}}"  >
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference ThisEditorPage}}" CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
                                 </StackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -150,7 +154,7 @@
 
                     <ImageButton Grid.Row="1" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="EndAndExpand">
                         <ImageButton.Margin>
-                            <OnPlatform x:TypeArguments="Thickness" iOS="0,0,10,25" Default="0,0,10,10"/>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,0,10,25" Android="0,0,10,20"/>
                         </ImageButton.Margin>
                     </ImageButton>
 
@@ -171,7 +175,7 @@
 
                     <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply"  HorizontalOptions="End" VerticalOptions="Start">
                         <ImageButton.Margin>
-                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Android="0,20,10,0"/>
                         </ImageButton.Margin>
                     </ImageButton>
 
@@ -219,12 +223,12 @@
 
                     <ImageButton Grid.Row="0" Source="{res:ImageResource undo}" Command="{Binding CancelCommand}" CommandParameter="Apply" HorizontalOptions="Start" VerticalOptions="Start">
                         <ImageButton.Margin>
-                            <OnPlatform x:TypeArguments="Thickness" iOS="10,32,0,0" Default="10,10,0,0"/>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="10,32,0,0" Android="10,20,0,0"/>
                         </ImageButton.Margin>
                     </ImageButton>
                     <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="End" VerticalOptions="Start">
                         <ImageButton.Margin>
-                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Android="0,20,10,0"/>
                         </ImageButton.Margin>
                     </ImageButton>
 
@@ -256,7 +260,7 @@
 
                     <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" HorizontalOptions="EndAndExpand">
                         <ImageButton.Margin>
-                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Android="0,20,10,0"/>
                         </ImageButton.Margin>
                     </ImageButton>
 
@@ -288,7 +292,7 @@
 
                 <ImageButton Source="{res:ImageResource clear}" Command="{Binding EditFinishCommand}" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" VerticalOptions="Start" HorizontalOptions="Start">
                     <ImageButton.Margin>
-                        <OnPlatform x:TypeArguments="Thickness" iOS="10,32,0,0" Default="10,10,0,0"/>
+                        <OnPlatform x:TypeArguments="Thickness" iOS="10,32,0,0" Android="10,20,0,0"/>
                     </ImageButton.Margin>
                 </ImageButton>
 
@@ -296,7 +300,7 @@
 
                 <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" >
                     <StackLayout.Margin>
-                        <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                        <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Android="0,20,10,0"/>
                     </StackLayout.Margin>
                     <ImageButton Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>
@@ -307,17 +311,17 @@
 
 
 
-                <StackLayout VerticalOptions="End"  Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="Start" >
-                    <ImageButton Source="{res:ImageResource save}" Command="{Binding SaveCommand}" IsVisible="{Binding Config.CanSaveImage}" CommandParameter="Save" VerticalOptions="End" HorizontalOptions="Start"  >
+                <StackLayout VerticalOptions="End" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="Start" Margin="0" Padding="0" Spacing="0">
+                    <ImageButton Source="{res:ImageResource save}" Command="{Binding SaveCommand}" IsVisible="{Binding Config.CanSaveImage}" CommandParameter="Save" VerticalOptions="End" HorizontalOptions="Start"  Margin="0" Padding="0">
                         <ImageButton.Margin>
-                            <OnPlatform x:TypeArguments="Thickness" iOS="10,0,0,30" Default="10,0,0,10"/>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="10,0,0,30" Android="10,0,0,20"/>
                         </ImageButton.Margin>
                     </ImageButton>
                 </StackLayout>
                 
                 <ImageButton Source="{res:ImageResource published}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="EndAndExpand" VerticalOptions="End" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" >
                     <ImageButton.Margin>
-                        <OnPlatform x:TypeArguments="Thickness" iOS="0,0,10,30" Default="0,0,10,10"/>
+                        <OnPlatform x:TypeArguments="Thickness" iOS="0,0,10,30" Android="0,0,10,20"/>
                     </ImageButton.Margin>
                 </ImageButton>
 
