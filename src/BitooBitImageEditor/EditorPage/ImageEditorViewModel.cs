@@ -27,26 +27,22 @@ namespace BitooBitImageEditor.EditorPage
             Config = config;
             cropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
             mainCanvas = new TouchManipulationCanvasView(config);
-            mainCanvas.AddBitmapToCanvas(bitmap, BitmapType.Main);
+            mainCanvas.AddBitmapToCanvas(cropperCanvas.CroppedBitmap, BitmapType.Main);
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);
             Message = config?.LoadingText;
-            GC.Collect();
         }
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool MainVisible => !CropVisible;
         public bool TextVisible => CurrentEditType == ImageEditType.Text;
         public bool StickersVisible => CurrentEditType == ImageEditType.Stickers;
-        public bool PaintVisible => CurrentEditType == ImageEditType.Paint;
+        public bool PaintVisible => CurrentEditType == ImageEditType.Paint && !IsMoved;
         public bool InfoVisible => CurrentEditType == ImageEditType.Info;
+        public bool ButtonsVisible => CurrentEditType == ImageEditType.SelectType && !IsMoved;
+        public bool IsMoved { get; set; }
 
-        public bool ButtonsVisible
-        {
-            get => CurrentEditType == ImageEditType.SelectType && buttonsVisible;
-            private set => buttonsVisible = value;
-        }
 
         public ImageEditorConfig Config { get; private set; }
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
@@ -155,7 +151,7 @@ namespace BitooBitImageEditor.EditorPage
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
-            ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Moved);
+            IsMoved = Device.RuntimePlatform != Device.UWP && (args.Type == TouchActionType.Moved);
 
             if (CurrentEditType != ImageEditType.CropRotate)
                 mainCanvas?.OnTouchEffectTouchAction(args, CurrentEditType, CurrentColor.ToSKColor());

@@ -70,6 +70,9 @@
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanFingerPaint">
             <summary>determines whether the user can draw the image with their finger.</summary>
         </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanTransformMainBitmap">
+            <summary></summary>
+        </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanSaveImage">
             <summary>determines whether the user can save imge.</summary>
         </member>

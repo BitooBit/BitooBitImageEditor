@@ -14,23 +14,34 @@ namespace BitooBitImageEditor.Helper
                 paint.IsAntialias = true;
 
                 foreach (var item in bitmapCollection)
-                {
-                    if (item.Type != BitmapType.Main && !item.IsHide)
-                    {
-                        canvas.Save();
-                        SKMatrix matrix = item.Matrix;
-                        SKMatrix bitmapMatrix = new SKMatrix(matrix.ScaleX * scale, matrix.SkewX * scale, (matrix.TransX + transX) * scale, matrix.SkewY * scale, matrix.ScaleY * scale, (matrix.TransY + transY) * scale, 0, 0, 1);
-                        //canvas.Concat(ref bitmapMatrix);
-                        canvas.SetMatrix(bitmapMatrix);
-                        canvas.DrawBitmap(item.Bitmap, 0, 0, paint);
-                        canvas.Restore();
-                    }
-                }
+                    canvas.DrawBitmap(item, transX, transY, scale);
             }
-
         }
 
-        internal static void DrawBitmap(this SKCanvas canvas, SKBitmap mainBitmap, SKBitmap backgroundBitmap, SKRect rectImage, SKRect rect, ImageEditorConfig config)
+
+        internal static void DrawBitmap(this SKCanvas canvas, TouchManipulationBitmap bitmap, float transX = 0, float transY = 0, float scale = 1)
+        {
+            using (SKPaint paint = new SKPaint())
+            {
+                paint.IsAntialias = true;
+                if (!bitmap.IsHide)
+                {
+                    canvas.Save();
+                    SKMatrix matrix = bitmap.Matrix;
+                    SKMatrix bitmapMatrix = new SKMatrix(matrix.ScaleX * scale, matrix.SkewX * scale, (matrix.TransX + transX) * scale, matrix.SkewY * scale, matrix.ScaleY * scale, (matrix.TransY + transY) * scale, 0, 0, 1);
+                    //canvas.Concat(ref bitmapMatrix);
+                    canvas.SetMatrix(bitmapMatrix);
+                    canvas.DrawBitmap(bitmap.Bitmap, 0, 0, paint);
+                    canvas.Restore();
+                }
+            }
+        }
+
+
+
+
+
+        internal static void DrawBackground(this SKCanvas canvas, SKBitmap bitmap, SKRect rect, ImageEditorConfig config)
         {
             using (SKPaint paint = new SKPaint())
             {
@@ -40,21 +51,13 @@ namespace BitooBitImageEditor.Helper
                 {
                     paint.Color = config?.BackgroundType == BackgroundType.Color ? config.BackgroundColor : 0xFF1f1f1f;
                     paint.Style = SKPaintStyle.Fill;
-                    canvas.DrawRect(rectImage, paint);
+                    canvas.DrawRect(rect, paint);
                 }
 
                 if (BackgroundType.StretchedImage == config?.BackgroundType)
                 {
-                    using (SKPaint paintStretch = paint.Clone())
-                    {
-                        float blur = 0.08f * Math.Max(rectImage.Width, rectImage.Height);
-                        blur = blur < 100 ? blur : 100;
-                        paintStretch.ImageFilter = SKImageFilter.CreateBlur(blur, blur);
-                        canvas.DrawBitmap(backgroundBitmap, rectImage, paintStretch);
-                    }
+                    canvas.DrawBitmap(bitmap, rect, paint);
                 }
-
-                canvas.DrawBitmap(mainBitmap, rect, paint);
             }
         }
 

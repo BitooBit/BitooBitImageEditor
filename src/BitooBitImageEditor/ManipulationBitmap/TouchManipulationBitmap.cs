@@ -54,7 +54,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
         public int HitTest(SKPoint location, SKRect info)
         {
-            if (Type != BitmapType.Main && Matrix.TryInvert(out SKMatrix inverseMatrix))
+            if (Matrix.TryInvert(out SKMatrix inverseMatrix))
             {
                 SKRect rect = new SKRect(0, 0, Bitmap.Width, Bitmap.Height);
                 SKPoint transformedPoint = inverseMatrix.MapPoint(location);

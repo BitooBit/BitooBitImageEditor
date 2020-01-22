@@ -58,6 +58,9 @@ namespace BitooBitImageEditor
         /// <summary>determines whether the user can draw the image with their finger.</summary>
         public bool CanFingerPaint { get; set; } = true;
 
+        /// <summary></summary>
+        public bool CanTransformMainBitmap { get; set; } = true;
+
         /// <summary>determines whether the user can save imge.</summary>
         public bool CanSaveImage { get; set; } = true;
 

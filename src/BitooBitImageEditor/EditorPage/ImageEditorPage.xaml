@@ -6,12 +6,15 @@
              mc:Ignorable="d"
              xmlns:res="clr-namespace:BitooBitImageEditor.Resources"
              x:Class="BitooBitImageEditor.EditorPage.ImageEditorPage"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              xmlns:editorpage="clr-namespace:BitooBitImageEditor.EditorPage"
              xmlns:tt="clr-namespace:BitooBitImageEditor.TouchTracking"
              xmlns:controls="clr-namespace:BitooBitImageEditor.Controls"
              xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-             ios:Page.UseSafeArea="True"
+
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"            
+             ios:Page.PrefersHomeIndicatorAutoHidden="True"
+             ios:Page.PrefersStatusBarHidden="True"
+             ios:Page.PreferredStatusBarUpdateAnimation="Fade"             
              x:Name="ThisEditorPage" x:ClassModifier="internal" >
 
     <!--ios:Page.PrefersStatusBarHidden="True"
@@ -115,14 +118,12 @@
 
 
                     <Grid.Effects>
-                        <tt:TouchEffect Capture="True"
-                            TouchAction="TouchEffect_TouchAction" />
+                        <tt:TouchEffect Capture="True" TouchAction="TouchEffect_TouchAction" />
                     </Grid.Effects>
                 </Grid>
 
                 <Grid Grid.Row="1" VerticalOptions="End" IsVisible="{Binding CropVisible}" IsEnabled="{Binding CropVisible}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
@@ -146,9 +147,13 @@
 
                     </CollectionView>
 
-                    <StackLayout Grid.Row="2" Margin="0,0,0,8">
-                        <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="EndAndExpand"/>
-                    </StackLayout>
+
+                    <ImageButton Grid.Row="1" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="EndAndExpand">
+                        <ImageButton.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,0,10,25" Default="0,0,10,10"/>
+                        </ImageButton.Margin>
+                    </ImageButton>
+
 
 
                 </Grid>
@@ -164,7 +169,11 @@
                     </Grid.ColumnDefinitions>
                     <BoxView Grid.RowSpan="3" BackgroundColor="Black" Opacity="0.7" />
 
-                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" Margin="0,9,9,0" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply"  HorizontalOptions="End" VerticalOptions="Start">
+                        <ImageButton.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                        </ImageButton.Margin>
+                    </ImageButton>
 
                     <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}" HeightRequest="32">
                         <CollectionView.ItemsLayout>
@@ -207,10 +216,18 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                 
-                    <ImageButton Grid.Row="0" Source="{res:ImageResource undo}" Command="{Binding CancelCommand}" CommandParameter="Apply" Margin="9,9,0,0" HorizontalOptions="Start" VerticalOptions="Start"/>
-                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" Margin="0,9,9,0" HorizontalOptions="End" VerticalOptions="Start"/>
-                  
+
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource undo}" Command="{Binding CancelCommand}" CommandParameter="Apply" HorizontalOptions="Start" VerticalOptions="Start">
+                        <ImageButton.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="10,32,0,0" Default="10,10,0,0"/>
+                        </ImageButton.Margin>
+                    </ImageButton>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource done}" Command="{Binding ApplyChangesCommand}" CommandParameter="Apply" HorizontalOptions="End" VerticalOptions="Start">
+                        <ImageButton.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                        </ImageButton.Margin>
+                    </ImageButton>
+
                     <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}" HeightRequest="32">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="2" />
@@ -237,7 +254,11 @@
                     </Grid.ColumnDefinitions>
                     <BoxView Grid.RowSpan="2" BackgroundColor="Black" Opacity="0.7" />
 
-                    <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" Margin="0,9,9,0" HorizontalOptions="EndAndExpand"/>
+                    <ImageButton Grid.Row="0" Source="{res:ImageResource clear}" Command="{Binding ApplyChangesCommand}" HorizontalOptions="EndAndExpand">
+                        <ImageButton.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                        </ImageButton.Margin>
+                    </ImageButton>
 
                     <CollectionView Grid.Row="1" Margin="0" ItemSizingStrategy="MeasureFirstItem" ItemsSource="{Binding Config.Stickers}" VerticalOptions="FillAndExpand" BackgroundColor="Transparent">
                         <CollectionView.ItemsLayout>
@@ -265,12 +286,18 @@
 
                 </Grid>
 
-                <ImageButton Source="{res:ImageResource arrow_back}" Command="{Binding EditFinishCommand}" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" Margin="9,9,0,0" VerticalOptions="Start" HorizontalOptions="Start"/>
+                <ImageButton Source="{res:ImageResource clear}" Command="{Binding EditFinishCommand}" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" VerticalOptions="Start" HorizontalOptions="Start">
+                    <ImageButton.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" iOS="10,32,0,0" Default="10,10,0,0"/>
+                    </ImageButton.Margin>
+                </ImageButton>
 
-          
 
-                <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" Margin="0,9,9,0">
-                    <ImageButton Source="{res:ImageResource save}" Command="{Binding SaveCommand}" IsVisible="{Binding Config.CanSaveImage}" CommandParameter="Save" HorizontalOptions="End"/>
+
+                <StackLayout VerticalOptions="Start" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="End" >
+                    <StackLayout.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Default="0,10,10,0"/>
+                    </StackLayout.Margin>
                     <ImageButton Source="{res:ImageResource crop_rotate}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.CropRotate}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource format_shapes}" IsVisible="{Binding Config.CanAddText}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Text}" HorizontalOptions="End"/>
                     <ImageButton Source="{res:ImageResource stickers}" IsVisible="{Binding Config.CanAddStickers}" Command="{Binding SelectItemCommand}" CommandParameter="{x:Static editorpage:ImageEditType.Stickers}" HorizontalOptions="End"/>
@@ -278,7 +305,23 @@
                 </StackLayout>
 
 
-                <ImageButton Source="{res:ImageResource published}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="Center" VerticalOptions="End" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" Margin="0,0,0,10"/>
+
+
+                <StackLayout VerticalOptions="End"  Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="Start" >
+                    <ImageButton Source="{res:ImageResource save}" Command="{Binding SaveCommand}" IsVisible="{Binding Config.CanSaveImage}" CommandParameter="Save" VerticalOptions="End" HorizontalOptions="Start"  >
+                        <ImageButton.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="10,0,0,30" Default="10,0,0,10"/>
+                        </ImageButton.Margin>
+                    </ImageButton>
+                </StackLayout>
+                
+                <ImageButton Source="{res:ImageResource published}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="EndAndExpand" VerticalOptions="End" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" >
+                    <ImageButton.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" iOS="0,0,10,30" Default="0,0,10,10"/>
+                    </ImageButton.Margin>
+                </ImageButton>
+
+
 
 
             </Grid>
