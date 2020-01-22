@@ -146,7 +146,6 @@ namespace BitooBitImageEditor.ManipulationBitmap
             if (rectInfo.Width != info.Width || rectInfo.Height != info.Height)
             {
                 rectInfo = new SKRect(0, 0, info.Width, info.Height);
-                //SetTempBitmap();
                 SetTrashRects();
             }
             var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
