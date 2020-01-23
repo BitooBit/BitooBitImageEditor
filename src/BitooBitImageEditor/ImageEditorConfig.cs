@@ -22,6 +22,7 @@ namespace BitooBitImageEditor
     {
         private BackgroundType backgroundType = BackgroundType.Transparent;
         private Aspect aspect = Aspect.AspectFit;
+        private float? сropAspectRatio;
 
         public const string _loadingText = "Wait";
         public const string _successSaveText = "Success";
@@ -73,7 +74,11 @@ namespace BitooBitImageEditor
         public string ErrorSaveText { get; set; } = _errorSaveText;
 
         /// <summary>sets and returns the aspect ratio for cropping the image </summary>
-        public float? CropAspectRatio { get; set; } = null;
+        public float? CropAspectRatio
+        {
+            get => сropAspectRatio;
+            set => сropAspectRatio = value <= 0 ? null : value;
+        }
 
         /// <summary>sets a set of stickers.
         /// <para>do not use a large number of stickers this will lead to a large consumption of RAM</para>
