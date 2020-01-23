@@ -4,10 +4,18 @@ using System.Collections.ObjectModel;
 using System.IO;
 using Xamarin.Forms;
 
-namespace BitooBitImageEditor
+namespace BitooBitImageEditor.Helper
 {
     internal static class SkiaHelper
     {
+        internal const uint backgroundColor = 0xC9020204;
+        internal const double trashSize = 50;
+        internal const double trashBigSize = 75;
+        internal static Thickness trashMargin = new Thickness(0,0,0,30);
+        internal static Color backgroundColorHex = Color.FromUint(backgroundColor);
+
+
+
         internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, SKBitmap bitmap, Aspect aspect = Aspect.AspectFit)
         {
             return CalculateRectangle(info, bitmap.Width, bitmap.Height, aspect);

@@ -11,19 +11,18 @@ namespace BitooBitImageEditor.Helper
 
         internal static SKBitmap GetBlurBitmap(SKBitmap bitmap, SKRect rect)
         {
-            SKBitmap tempBitmap = new SKBitmap(CalcBackgraundBitmapsize(bitmap.Width), CalcBackgraundBitmapsize(bitmap.Height));
-            bitmap.ScalePixels(tempBitmap, SKFilterQuality.Low);
-
             SKBitmap outBitmap = new SKBitmap((int)rect.Width, (int)rect.Height);
+            using (SKBitmap tempBitmap = new SKBitmap(CalcBackgraundBitmapsize(bitmap.Width), CalcBackgraundBitmapsize(bitmap.Height)))
             using (SKCanvas canvas = new SKCanvas(outBitmap))
             using (SKPaint paint = new SKPaint())
             {
+                bitmap.ScalePixels(tempBitmap, SKFilterQuality.Low);
                 paint.IsAntialias = true;
                 float blur = 0.08f * Math.Max(rect.Width, rect.Height);
                 blur = blur < 100 ? blur : 100;
                 paint.ImageFilter = SKImageFilter.CreateBlur(blur, blur);
                 canvas.Clear();
-                canvas.DrawBitmap(bitmap, rect, paint);
+                canvas.DrawBitmap(tempBitmap, rect, paint);
             }
             GC.Collect(0);
             return outBitmap;

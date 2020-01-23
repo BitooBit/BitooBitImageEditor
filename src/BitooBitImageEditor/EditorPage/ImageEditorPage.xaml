@@ -7,6 +7,7 @@
              xmlns:res="clr-namespace:BitooBitImageEditor.Resources"
              x:Class="BitooBitImageEditor.EditorPage.ImageEditorPage"
              xmlns:editorpage="clr-namespace:BitooBitImageEditor.EditorPage"
+             xmlns:helper="clr-namespace:BitooBitImageEditor.Helper"           
              xmlns:tt="clr-namespace:BitooBitImageEditor.TouchTracking"
              xmlns:controls="clr-namespace:BitooBitImageEditor.Controls"
              xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
@@ -122,7 +123,7 @@
                     </Grid.Effects>
                 </Grid>
 
-                <Grid Grid.Row="1" VerticalOptions="End" IsVisible="{Binding CropVisible}" IsEnabled="{Binding CropVisible}">
+                <Grid Grid.Row="1" VerticalOptions="End" IsVisible="{Binding CropVisible}" IsEnabled="{Binding CropVisible}" BackgroundColor="{x:Static helper:SkiaHelper.backgroundColorHex}"> 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
@@ -313,10 +314,11 @@
 
                 <StackLayout VerticalOptions="End" Orientation="Vertical" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" HorizontalOptions="Start" Margin="0" Padding="0" Spacing="0">
                     <ImageButton Source="{res:ImageResource save}" Command="{Binding SaveCommand}" IsVisible="{Binding Config.CanSaveImage}" CommandParameter="Save" VerticalOptions="End" HorizontalOptions="Start"  Margin="0" Padding="0">
-                        <ImageButton.Margin>
-                            <OnPlatform x:TypeArguments="Thickness" iOS="10,0,0,30" Android="10,0,0,20"/>
-                        </ImageButton.Margin>
+                        
                     </ImageButton>
+                    <StackLayout.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" iOS="10,0,0,30" Android="10,0,0,20"/>
+                    </StackLayout.Margin>
                 </StackLayout>
                 
                 <ImageButton Source="{res:ImageResource published}" Command="{Binding EditFinishCommand}" CommandParameter="Save" HorizontalOptions="EndAndExpand" VerticalOptions="End" IsVisible="{Binding ButtonsVisible}" IsEnabled="{Binding ButtonsVisible}" >
@@ -325,6 +327,9 @@
                     </ImageButton.Margin>
                 </ImageButton>
 
+
+                <Image Source="{res:ImageResource trash}" IsVisible="{Binding TrashVisible}" HorizontalOptions="Center" VerticalOptions="End" WidthRequest="{x:Static helper:SkiaHelper.trashSize}" HeightRequest="{x:Static helper:SkiaHelper.trashSize}" Margin="{x:Static helper:SkiaHelper.trashMargin}"/>
+                <Image Source="{res:ImageResource trash_open}" IsVisible="{Binding TrashBigVisible}" HorizontalOptions="Center" VerticalOptions="End" WidthRequest="{x:Static helper:SkiaHelper.trashBigSize}" HeightRequest="{x:Static helper:SkiaHelper.trashBigSize}" Margin="{x:Static helper:SkiaHelper.trashMargin}"/>
 
 
 

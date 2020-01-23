@@ -1,4 +1,5 @@
 ﻿using BitooBitImageEditor.EditorPage;
+using BitooBitImageEditor.Helper;
 using SkiaSharp;
 using System;
 using System.IO;
@@ -92,6 +93,8 @@ namespace BitooBitImageEditor
                 {
                     page.Dispose();
                     page = null;
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
             }
         }
@@ -137,7 +140,6 @@ namespace BitooBitImageEditor
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 SetImage(null);
                 return null;
             }

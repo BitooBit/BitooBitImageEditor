@@ -53,6 +53,7 @@ namespace SampleImageEditor
                     MyImage.Source = null;
                     MyImage.Source = ImageSource.FromStream(() => new MemoryStream(data));
                 }
+                data = null;
             }
             catch (Exception ex)
             {

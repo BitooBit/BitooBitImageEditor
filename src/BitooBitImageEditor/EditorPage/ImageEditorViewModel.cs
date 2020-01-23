@@ -5,10 +5,7 @@ using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -28,10 +25,13 @@ namespace BitooBitImageEditor.EditorPage
             mainCanvas = new TouchManipulationCanvasView(config);
             mainCanvas.AddBitmapToCanvas(bitmap.Copy(), BitmapType.Main);
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
+            mainCanvas.TrashEnabled += MainCanvas_TrashVisebled;
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);
             Message = config?.LoadingText;
         }
+
+        
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool MainVisible => !CropVisible;
@@ -40,7 +40,9 @@ namespace BitooBitImageEditor.EditorPage
         public bool PaintVisible => CurrentEditType == ImageEditType.Paint && !IsMoved;
         public bool InfoVisible => CurrentEditType == ImageEditType.Info;
         public bool ButtonsVisible => CurrentEditType == ImageEditType.SelectType && !IsMoved;
-        public bool IsMoved { get; set; }
+        public bool TrashVisible { get; private set; }
+        public bool TrashBigVisible { get; private set; }
+        public bool IsMoved { get; private set; }
 
 
         public ImageEditorConfig Config { get; private set; }
@@ -64,6 +66,7 @@ namespace BitooBitImageEditor.EditorPage
                                 mainCanvas.AddBitmapToCanvas(CurrentText, CurrentColor.ToSKColor());
                             else
                             {
+                                currentTextBitmap.Bitmap?.Dispose();
                                 currentTextBitmap.Bitmap = SKBitmapBuilder.FromText(CurrentText, CurrentColor.ToSKColor());
                                 currentTextBitmap.Text = CurrentText;
                                 currentTextBitmap.IsHide = false;
@@ -116,16 +119,8 @@ namespace BitooBitImageEditor.EditorPage
         public ICommand EditFinishCommand => new Command<string>((value) =>
         {
             if (!lockFinish)
-            {
-                lockFinish = true;
-                SKBitmap bitmap = null;
-                if (!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save")
-                    bitmap = mainCanvas.EditedBitmap;
-
-                ImageEditor.Instance.SetImage(bitmap);
-            }
+                ImageEditor.Instance.SetImage(!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save" ? mainCanvas.EditedBitmap : null);
         });
-
 
         public ICommand SaveCommand => new Command<string>(async (value) =>
         {
@@ -166,6 +161,17 @@ namespace BitooBitImageEditor.EditorPage
             currentTextBitmap = value;
         }
 
+        private void MainCanvas_TrashVisebled(bool arg1, bool arg2, bool arg3)
+        {
+            if (CurrentEditType == ImageEditType.SelectType)
+            {
+                TrashVisible = arg1;
+                TrashBigVisible = arg2;
+                if (arg3)
+                    HapticFeedback.Excute();
+            }
+        }
+
         #region IDisposable Support
         private bool disposedValue = false;
 
@@ -176,14 +182,25 @@ namespace BitooBitImageEditor.EditorPage
                 if (disposing)
                 {
                     Config = null;
+                    ColorCollect?.Clear();
                     ColorCollect = null;
-                    CropCollect = null;
                     CurrentText = null;
                 }
 
-                ((IDisposable)cropperCanvas).Dispose();
-                ((IDisposable)mainCanvas).Dispose();
+                if (CropCollect?.Count > 0)
+                    for (int i = 0; i < CropCollect.Count; i++)
+                        CropCollect[i] = null;
+
+                CropCollect?.Clear();
+                CropCollect = null;
+
+                cropperCanvas?.Dispose();
+                mainCanvas?.Dispose();
                 currentTextBitmap?.Bitmap?.Dispose();
+                if (currentTextBitmap != null)
+                    currentTextBitmap.Bitmap = null;
+                mainCanvas = null;
+                cropperCanvas = null;
                 currentTextBitmap = null;
                 disposedValue = true;
             }

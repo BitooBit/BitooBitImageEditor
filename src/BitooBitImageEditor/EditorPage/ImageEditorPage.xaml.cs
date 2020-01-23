@@ -41,9 +41,8 @@ namespace BitooBitImageEditor.EditorPage
 
         internal void Dispose()
         {
-            viewModel.Dispose();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            viewModel.Dispose();           
         }
+
     }
 }

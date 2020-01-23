@@ -14,17 +14,13 @@ namespace BitooBitImageEditor.Croping
         public string ImageName { get; set; }
         public CropRotateType Action { get; set; }
 
-
         internal static ObservableCollection<CropItem> GetCropItems(bool IsAddAllElements)
         {
-            var collect = new ObservableCollection<CropItem>
-            {
-                 new CropItem("rotate_right", CropRotateType.CropRotate)
-                ,new CropItem("crop_full", CropRotateType.CropFull)
-            };
+            var collect = new ObservableCollection<CropItem> { new CropItem("rotate_right", CropRotateType.CropRotate) };
 
             if (IsAddAllElements)
             {
+                collect.Add(new CropItem("crop_full", CropRotateType.CropFull));
                 collect.Add(new CropItem("crop_free", CropRotateType.CropFree));
                 collect.Add(new CropItem("crop_square", CropRotateType.CropSquare));
                 collect.Add(new CropItem("2_3", CropRotateType.Crop2_3));
