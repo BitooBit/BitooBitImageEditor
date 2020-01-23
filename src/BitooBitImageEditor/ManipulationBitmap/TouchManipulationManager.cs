@@ -89,15 +89,12 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 scaleY = newVector.Y / oldVector.Y;
 
             }
-            else if (Mode == TouchManipulationMode.IsotropicScale ||
-                     Mode == TouchManipulationMode.ScaleRotate ||
-                     Mode == TouchManipulationMode.ScaleDualRotate)
+            else if (Mode == TouchManipulationMode.IsotropicScale ||  Mode == TouchManipulationMode.ScaleRotate || Mode == TouchManipulationMode.ScaleDualRotate)
             {
                 scaleX = scaleY = Magnitude(newVector) / Magnitude(oldVector);
             }
 
-            if (!float.IsNaN(scaleX) && !float.IsInfinity(scaleX) &&
-                !float.IsNaN(scaleY) && !float.IsInfinity(scaleY))
+            if (!float.IsNaN(scaleX) && !float.IsInfinity(scaleX) && !float.IsNaN(scaleY) && !float.IsInfinity(scaleY))
             {
                 SKMatrix.PostConcat(ref touchMatrix,
                     SKMatrix.MakeScale(scaleX, scaleY, pivotPoint.X, pivotPoint.Y));

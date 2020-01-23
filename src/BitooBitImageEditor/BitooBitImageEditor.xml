@@ -4,9 +4,6 @@
         <name>BitooBitImageEditor</name>
     </assembly>
     <members>
-        <member name="T:BitooBitImageEditor.Controls.CustomEditor">
-            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
-        </member>
         <member name="T:BitooBitImageEditor.EditorPage.BaseNotifier">
             <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
         </member>
@@ -18,6 +15,15 @@
         </member>
         <member name="M:BitooBitImageEditor.EditorPage.ImageEditorPage.OnDisappearing">
             <summary> </summary>
+        </member>
+        <member name="T:BitooBitImageEditor.Controls.CustomEditor">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="T:BitooBitImageEditor.Helper.IHapticFeedback">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="M:BitooBitImageEditor.Helper.IHapticFeedback.Excute">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
         </member>
         <member name="T:BitooBitImageEditor.IImageHelper">
             <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
@@ -61,7 +67,7 @@
         <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor">
             <summary>constructor with default values</summary>
         </member>
-        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor(System.Boolean,System.Boolean,System.Nullable{System.Single},System.Collections.Generic.List{SkiaSharp.Views.Forms.SKBitmapImageSource},System.Nullable{System.Int32},System.Nullable{System.Int32},Xamarin.Forms.Aspect,BitooBitImageEditor.BackgroundType,SkiaSharp.SKColor,System.Boolean,System.String,System.String,System.String)">
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Nullable{System.Single},System.Collections.Generic.List{SkiaSharp.Views.Forms.SKBitmapImageSource},System.Nullable{System.Int32},System.Nullable{System.Int32},Xamarin.Forms.Aspect,BitooBitImageEditor.BackgroundType,SkiaSharp.SKColor,System.Boolean,System.String,System.String,System.String)">
             <summary></summary>
         </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanAddText">
@@ -69,6 +75,9 @@
         </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanFingerPaint">
             <summary>determines whether the user can draw the image with their finger.</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanTransformMainBitmap">
+            <summary></summary>
         </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanSaveImage">
             <summary>determines whether the user can save imge.</summary>

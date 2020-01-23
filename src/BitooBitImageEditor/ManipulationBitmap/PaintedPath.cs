@@ -24,7 +24,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
                 if (disposing)
                 { }
 
-                ((IDisposable)Path).Dispose();
+                Path.Dispose();
 
                 disposedValue = true;
             }

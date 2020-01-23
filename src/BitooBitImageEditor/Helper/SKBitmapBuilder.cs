@@ -9,6 +9,26 @@ namespace BitooBitImageEditor.Helper
     {
         private static readonly string[] splitters = new string[] { Environment.NewLine, "\r\n", "\n\r", "\r", "\n", "&#10;" };
 
+        internal static SKBitmap GetBlurBitmap(SKBitmap bitmap, SKRect rect)
+        {
+            SKBitmap outBitmap = new SKBitmap((int)rect.Width, (int)rect.Height);
+            using (SKBitmap tempBitmap = new SKBitmap(CalcBackgraundBitmapsize(bitmap.Width), CalcBackgraundBitmapsize(bitmap.Height)))
+            using (SKCanvas canvas = new SKCanvas(outBitmap))
+            using (SKPaint paint = new SKPaint())
+            {
+                bitmap.ScalePixels(tempBitmap, SKFilterQuality.Low);
+                paint.IsAntialias = true;
+                float blur = 0.08f * Math.Max(rect.Width, rect.Height);
+                blur = blur < 100 ? blur : 100;
+                paint.ImageFilter = SKImageFilter.CreateBlur(blur, blur);
+                canvas.Clear();
+                canvas.DrawBitmap(tempBitmap, rect, paint);
+            }
+            GC.Collect(0);
+            return outBitmap;
+        }
+
+
         internal static SKBitmap FromText(string text, SKColor color, bool isDrawRect = false)
         {
             try
@@ -148,6 +168,11 @@ namespace BitooBitImageEditor.Helper
             }
         }
 
+        private static int CalcBackgraundBitmapsize(float value)
+        {
+            int _value = (int)(value * 0.006f);
+            return _value > 2 ? _value : 2;
+        }
 
     }
 }

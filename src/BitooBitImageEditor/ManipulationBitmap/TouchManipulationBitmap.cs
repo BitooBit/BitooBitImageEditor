@@ -18,7 +18,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
         private readonly Dictionary<long, TouchManipulationInfo> touchDictionary =
             new Dictionary<long, TouchManipulationInfo>();
 
-        public TouchManipulationBitmap(SKBitmap bitmap, SKMatrix matrix, BitmapType type, string text, SKColor color = default)
+        internal TouchManipulationBitmap(SKBitmap bitmap, SKMatrix matrix, BitmapType type, string text, SKColor color = default)
         {
             Bitmap = bitmap;
             Matrix = matrix;
@@ -27,7 +27,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             Color = color;
         }
 
-        public TouchManipulationBitmap(SKBitmap bitmap, BitmapType type, string text, SKColor color = default)
+        internal TouchManipulationBitmap(SKBitmap bitmap, BitmapType type, string text, SKColor color = default)
         {
             Matrix = SKMatrix.MakeIdentity();
             Bitmap = bitmap;
@@ -36,25 +36,25 @@ namespace BitooBitImageEditor.ManipulationBitmap
             Text = text;
         }
 
-        public TouchManipulationManager TouchManager { set; get; } = new TouchManipulationManager
+        internal TouchManipulationManager TouchManager { set; get; } = new TouchManipulationManager
         {
             Mode = TouchManipulationMode.ScaleRotate
         };
 
 
-        public TouchActionType? TouchAction { set; get; } = null;
-        public SKBitmap Bitmap { set; get; }
-        public SKMatrix Matrix { set; get; }
-        public string Text { set; get; }
-        public SKColor Color { set; get; }
-        public BitmapType Type { set; get; }
-        public bool IsHide { set; get; } = false;
+        internal TouchActionType? TouchAction { set; get; } = null;
+        internal SKBitmap Bitmap { set; get; }
+        internal SKMatrix Matrix { set; get; }
+        internal string Text { set; get; }
+        internal SKColor Color { set; get; }
+        internal BitmapType Type { set; get; }
+        internal bool IsHide { set; get; } = false;
 
 
 
-        public int HitTest(SKPoint location, SKRect info)
+        internal int HitTest(SKPoint location, SKRect info)
         {
-            if (Type != BitmapType.Main && Matrix.TryInvert(out SKMatrix inverseMatrix))
+            if (Matrix.TryInvert(out SKMatrix inverseMatrix))
             {
                 SKRect rect = new SKRect(0, 0, Bitmap.Width, Bitmap.Height);
                 SKPoint transformedPoint = inverseMatrix.MapPoint(location);
@@ -88,7 +88,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
         }
 
 
-        public void ProcessTouchEvent(long id, TouchActionType type, SKPoint location)
+        internal void ProcessTouchEvent(long id, TouchActionType type, SKPoint location)
         {
             switch (type)
             {
@@ -142,7 +142,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
                 touchMatrix = TouchManager.TwoFingerManipulate(prevPoint, newPoint, pivotPoint);
             }
-
+            
             SKMatrix matrix = Matrix;
             SKMatrix.PostConcat(ref matrix, touchMatrix);
             Matrix = matrix;

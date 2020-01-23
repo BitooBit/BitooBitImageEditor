@@ -5,10 +5,7 @@ using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -18,7 +15,6 @@ namespace BitooBitImageEditor.EditorPage
     internal class ImageEditorViewModel : BaseNotifier, IDisposable
     {
         private TouchManipulationBitmap currentTextBitmap = null;
-        private bool buttonsVisible = true;
         internal ImageCropperCanvasView cropperCanvas;
         internal TouchManipulationCanvasView mainCanvas;
 
@@ -27,26 +23,27 @@ namespace BitooBitImageEditor.EditorPage
             Config = config;
             cropperCanvas = new ImageCropperCanvasView(bitmap, config.CropAspectRatio);
             mainCanvas = new TouchManipulationCanvasView(config);
-            mainCanvas.AddBitmapToCanvas(bitmap, BitmapType.Main);
+            mainCanvas.AddBitmapToCanvas(bitmap.Copy(), BitmapType.Main);
             mainCanvas.TextBitmapClicked += MainCanvas_TextBitmapClicked;
+            mainCanvas.TrashEnabled += MainCanvas_TrashVisebled;
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);
             Message = config?.LoadingText;
-            GC.Collect();
         }
+
+        
 
         public bool CropVisible => CurrentEditType == ImageEditType.CropRotate;
         public bool MainVisible => !CropVisible;
         public bool TextVisible => CurrentEditType == ImageEditType.Text;
         public bool StickersVisible => CurrentEditType == ImageEditType.Stickers;
-        public bool PaintVisible => CurrentEditType == ImageEditType.Paint;
+        public bool PaintVisible => CurrentEditType == ImageEditType.Paint && !IsMoved;
         public bool InfoVisible => CurrentEditType == ImageEditType.Info;
+        public bool ButtonsVisible => CurrentEditType == ImageEditType.SelectType && !IsMoved;
+        public bool TrashVisible { get; private set; }
+        public bool TrashBigVisible { get; private set; }
+        public bool IsMoved { get; private set; }
 
-        public bool ButtonsVisible
-        {
-            get => CurrentEditType == ImageEditType.SelectType && buttonsVisible;
-            private set => buttonsVisible = value;
-        }
 
         public ImageEditorConfig Config { get; private set; }
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
@@ -69,6 +66,7 @@ namespace BitooBitImageEditor.EditorPage
                                 mainCanvas.AddBitmapToCanvas(CurrentText, CurrentColor.ToSKColor());
                             else
                             {
+                                currentTextBitmap.Bitmap?.Dispose();
                                 currentTextBitmap.Bitmap = SKBitmapBuilder.FromText(CurrentText, CurrentColor.ToSKColor());
                                 currentTextBitmap.Text = CurrentText;
                                 currentTextBitmap.IsHide = false;
@@ -121,16 +119,8 @@ namespace BitooBitImageEditor.EditorPage
         public ICommand EditFinishCommand => new Command<string>((value) =>
         {
             if (!lockFinish)
-            {
-                lockFinish = true;
-                SKBitmap bitmap = null;
-                if (!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save")
-                    bitmap = mainCanvas.EditedBitmap;
-
-                ImageEditor.Instance.SetImage(bitmap);
-            }
+                ImageEditor.Instance.SetImage(!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save" ? mainCanvas.EditedBitmap : null);
         });
-
 
         public ICommand SaveCommand => new Command<string>(async (value) =>
         {
@@ -155,7 +145,7 @@ namespace BitooBitImageEditor.EditorPage
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
-            ButtonsVisible = Device.RuntimePlatform == Device.UWP || (args.Type != TouchActionType.Moved);
+            IsMoved = Device.RuntimePlatform != Device.UWP && (args.Type == TouchActionType.Moved);
 
             if (CurrentEditType != ImageEditType.CropRotate)
                 mainCanvas?.OnTouchEffectTouchAction(args, CurrentEditType, CurrentColor.ToSKColor());
@@ -171,6 +161,17 @@ namespace BitooBitImageEditor.EditorPage
             currentTextBitmap = value;
         }
 
+        private void MainCanvas_TrashVisebled(bool arg1, bool arg2, bool arg3)
+        {
+            if (CurrentEditType == ImageEditType.SelectType)
+            {
+                TrashVisible = arg1;
+                TrashBigVisible = arg2;
+                if (arg3)
+                    HapticFeedback.Excute();
+            }
+        }
+
         #region IDisposable Support
         private bool disposedValue = false;
 
@@ -181,14 +182,25 @@ namespace BitooBitImageEditor.EditorPage
                 if (disposing)
                 {
                     Config = null;
+                    ColorCollect?.Clear();
                     ColorCollect = null;
-                    CropCollect = null;
                     CurrentText = null;
                 }
 
-                ((IDisposable)cropperCanvas).Dispose();
-                ((IDisposable)mainCanvas).Dispose();
+                if (CropCollect?.Count > 0)
+                    for (int i = 0; i < CropCollect.Count; i++)
+                        CropCollect[i] = null;
+
+                CropCollect?.Clear();
+                CropCollect = null;
+
+                cropperCanvas?.Dispose();
+                mainCanvas?.Dispose();
                 currentTextBitmap?.Bitmap?.Dispose();
+                if (currentTextBitmap != null)
+                    currentTextBitmap.Bitmap = null;
+                mainCanvas = null;
+                cropperCanvas = null;
                 currentTextBitmap = null;
                 disposedValue = true;
             }

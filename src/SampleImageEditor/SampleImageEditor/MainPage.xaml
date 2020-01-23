@@ -4,7 +4,9 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="SampleImageEditor.MainPage">
+             x:Class="SampleImageEditor.MainPage"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"            
+             ios:Page.UseSafeArea="True">
 
     <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="0" Margin="0" RowSpacing="0">
         <Grid.RowDefinitions>
@@ -48,6 +50,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
 
                 </Grid.RowDefinitions>
@@ -75,32 +78,37 @@
                     <Label Text="Can Save Image" FontSize="Medium"/>
                     <Switch IsToggled="{Binding Config.CanSaveImage}" />
                 </StackLayout>
-                
+
                 <StackLayout Grid.Row="5" Orientation="Horizontal" Margin="0,5">
+                    <Label Text="Can Transform Main Bitmap" FontSize="Medium"/>
+                    <Switch IsToggled="{Binding Config.CanTransformMainBitmap}" />
+                </StackLayout>
+
+                <StackLayout Grid.Row="6" Orientation="Horizontal" Margin="0,5">
                     <Label Text="Use sample image to edit" FontSize="Medium"/>
                     <Switch IsToggled="{Binding UseSampleImage}" />
                 </StackLayout>
                     
-                <Picker Grid.Row="6" ItemsSource="{Binding Aspects}" Title="Aspect" SelectedItem="{Binding Config.Aspect}"/>
-                <Picker Grid.Row="7" ItemsSource="{Binding BackgroundTypes}" Title="Background Type" SelectedItem="{Binding Config.BackgroundType}"/>
-                <Picker Grid.Row="8" ItemsSource="{Binding Colors}" Title="Background Color" SelectedItem="{Binding Config.BackgroundColor}"/>
+                <Picker Grid.Row="7" ItemsSource="{Binding Aspects}" Title="Aspect" SelectedItem="{Binding Config.Aspect}"/>
+                <Picker Grid.Row="8" ItemsSource="{Binding BackgroundTypes}" Title="Background Type" SelectedItem="{Binding Config.BackgroundType}"/>
+                <Picker Grid.Row="9" ItemsSource="{Binding Colors}" Title="Background Color" SelectedItem="{Binding Config.BackgroundColor}"/>
 
-                <StackLayout Grid.Row="9" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <StackLayout Grid.Row="10" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="Crop Aspect Ratio" FontSize="Medium" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                     <Entry Text="{Binding Config.CropAspectRatio}" Keyboard="Numeric" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                 </StackLayout>
 
-                <StackLayout Grid.Row="10" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <StackLayout Grid.Row="11" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="Out Image Height" FontSize="Medium" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                     <Entry Text="{Binding OutImageHeight}" Keyboard="Numeric" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                 </StackLayout>
 
-                <StackLayout Grid.Row="11" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <StackLayout Grid.Row="12" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="Out Image Widht" FontSize="Medium" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                     <Entry Text="{Binding OutImageWidht}" Keyboard="Numeric" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                 </StackLayout>
 
-                <Button Grid.Row="12" Text="Save Config" Clicked="SetConfig_Clicked" TextColor="White" BackgroundColor="Green" WidthRequest="200" HeightRequest="40" VerticalOptions="End" HorizontalOptions="Center" Margin="0, 10"/>
+                <Button Grid.Row="13" Text="Save Config" Clicked="SetConfig_Clicked" TextColor="White" BackgroundColor="Green" WidthRequest="200" HeightRequest="40" VerticalOptions="End" HorizontalOptions="Center" Margin="0, 10"/>
             </Grid>
         </ScrollView>
 

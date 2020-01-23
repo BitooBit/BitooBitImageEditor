@@ -55,10 +55,7 @@ namespace BitooBitImageEditor.Croping
             SKPoint[] corners = Corners;
             float X = pixelLocation.X, Y = pixelLocation.Y;
             if (Corners[0].X < X && corners[2].X > X && corners[0].Y < Y && Corners[2].Y > Y)
-            {
                 rezult = true;
-            }
-
             return rezult;
         }
 

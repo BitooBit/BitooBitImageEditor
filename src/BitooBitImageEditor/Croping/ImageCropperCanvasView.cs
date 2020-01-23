@@ -158,7 +158,7 @@ namespace BitooBitImageEditor.Croping
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
 
-            canvas.Clear();
+            canvas.Clear(SkiaHelper.backgroundColor);
 
             // Calculate rectangle for displaying bitmap 
             var rect = SkiaHelper.CalculateRectangle(new SKRect(0, 0, info.Width, info.Height), bitmap);
@@ -218,13 +218,14 @@ namespace BitooBitImageEditor.Croping
         {
             var rotatedBitmap = new SKBitmap(bitmap.Height, bitmap.Width);
 
-            using (var surface = new SKCanvas(rotatedBitmap))
+            using (var canvas = new SKCanvas(rotatedBitmap))
             {
-                surface.Translate(rotatedBitmap.Width, 0);
-                surface.RotateDegrees(90);
-                surface.DrawBitmap(bitmap, 0, 0);
+                canvas.Translate(rotatedBitmap.Width, 0);
+                canvas.RotateDegrees(90);
+                canvas.DrawBitmap(bitmap, 0, 0);
             }
 
+            bitmap.Dispose();
             bitmap = rotatedBitmap;
 
             SetAspectRatio(aspectRatio);
@@ -247,12 +248,14 @@ namespace BitooBitImageEditor.Croping
                 if (disposing)
                 {
                     aspectRatio = null;
+                    touchPoints?.Clear();
                     touchPoints = null;
+                    touchPointsInside?.Clear();
                     touchPointsInside = null;
                 }
 
-                ((IDisposable)bitmap).Dispose();
-
+                bitmap?.Dispose();
+                bitmap = null;
                 disposedValue = true;
             }
         }
