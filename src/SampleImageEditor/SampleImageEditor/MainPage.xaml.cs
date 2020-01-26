@@ -28,7 +28,7 @@ namespace SampleImageEditor
         public int? OutImageWidht { get; set; } = null;
         public bool UseSampleImage { get; set; } = true;
 
-        public List<Aspect> Aspects { get; } = new List<Aspect> { Aspect.AspectFill, Aspect.AspectFit, Aspect.Fill };
+        public List<BBAspect> Aspects { get; } = new List<BBAspect> { BBAspect.Auto, BBAspect.AspectFill, BBAspect.AspectFit, BBAspect.Fill };
         public List<BackgroundType> BackgroundTypes { get; } = new List<BackgroundType> { BackgroundType.Transparent, BackgroundType.StretchedImage, BackgroundType.Color };
         public List<SKColor> Colors { get; } = new List<SKColor> { SKColors.Red, SKColors.Green, SKColors.Blue };
 
