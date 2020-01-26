@@ -61,13 +61,18 @@
         <member name="T:BitooBitImageEditor.BackgroundType">
             <summary>Defines the background type</summary>
         </member>
+        <member name="T:BitooBitImageEditor.BBAspect">
+            <summary>
+            Determines how the image is displayed.
+            </summary>
+        </member>
         <member name="T:BitooBitImageEditor.ImageEditorConfig">
             <summary>сonfigurator image editor</summary>
         </member>
         <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor">
             <summary>constructor with default values</summary>
         </member>
-        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Nullable{System.Single},System.Collections.Generic.List{SkiaSharp.Views.Forms.SKBitmapImageSource},System.Nullable{System.Int32},System.Nullable{System.Int32},Xamarin.Forms.Aspect,BitooBitImageEditor.BackgroundType,SkiaSharp.SKColor,System.Boolean,System.String,System.String,System.String)">
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Nullable{System.Single},System.Collections.Generic.List{SkiaSharp.Views.Forms.SKBitmapImageSource},System.Nullable{System.Int32},System.Nullable{System.Int32},BitooBitImageEditor.BBAspect,BitooBitImageEditor.BackgroundType,SkiaSharp.SKColor,System.Boolean,System.String,System.String,System.String)">
             <summary></summary>
         </member>
         <member name="P:BitooBitImageEditor.ImageEditorConfig.CanAddText">
