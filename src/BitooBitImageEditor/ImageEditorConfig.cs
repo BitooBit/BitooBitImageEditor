@@ -15,17 +15,31 @@ namespace BitooBitImageEditor
         Color,
         StretchedImage
     }
- // Отсутствует комментарий XML для открытого видимого типа или члена
+
+    /// <summary>
+    /// Determines how the image is displayed.
+    /// </summary>
+    public enum BBAspect
+    {
+        AspectFit = 0,
+        AspectFill = 1,
+        Fill = 2,
+        Auto = 3
+    }
+
+
 
     /// <summary>сonfigurator image editor</summary>
     public sealed class ImageEditorConfig : BaseNotifier
     {
-        private BackgroundType backgroundType = BackgroundType.Transparent;
-        private Aspect aspect = Aspect.AspectFit;
+        private float? сropAspectRatio;
+        public const int maxPixels = 3000;
+
 
         public const string _loadingText = "Wait";
         public const string _successSaveText = "Success";
         public const string _errorSaveText = "Error";
+
 
 #pragma warning restore CS1591
 
@@ -34,7 +48,7 @@ namespace BitooBitImageEditor
 
         /// <summary></summary>
         public ImageEditorConfig(bool canAddText = true, bool canFingerPaint = true, bool canTransformMainBitmap = true, float? cropAspectRatio = null,
-                                 List<SKBitmapImageSource> stickers = null, int? outImageHeight = null, int? outImageWidht = null, Aspect aspect = Aspect.AspectFit,
+                                 List<SKBitmapImageSource> stickers = null, int? outImageHeight = null, int? outImageWidht = null, BBAspect aspect = BBAspect.Auto,
                                  BackgroundType backgroundType = BackgroundType.Transparent, SKColor backgroundColor = default, 
                                  bool canSaveImage = true, string loadingText = _loadingText, string successSaveText = _successSaveText, string errorSaveText = _errorSaveText)
         {
@@ -73,7 +87,11 @@ namespace BitooBitImageEditor
         public string ErrorSaveText { get; set; } = _errorSaveText;
 
         /// <summary>sets and returns the aspect ratio for cropping the image </summary>
-        public float? CropAspectRatio { get; set; } = null;
+        public float? CropAspectRatio
+        {
+            get => сropAspectRatio;
+            set => сropAspectRatio = value <= 0 ? null : value;
+        }
 
         /// <summary>sets a set of stickers.
         /// <para>do not use a large number of stickers this will lead to a large consumption of RAM</para>
@@ -91,18 +109,10 @@ namespace BitooBitImageEditor
         public SKColor BackgroundColor { get; set; } = default;
 
         /// <summary>Defines the background type</summary>
-        public BackgroundType BackgroundType
-        {
-            get => IsOutImageAutoSize ? BackgroundType.Transparent : backgroundType;
-            set => backgroundType = value;
-        }
+        public BackgroundType BackgroundType { get; set; } = BackgroundType.StretchedImage;
 
         /// <summary>Determines how the image is displayed</summary>
-        public Aspect Aspect
-        {
-            get => IsOutImageAutoSize ? Aspect.AspectFit : aspect;
-            set => aspect = value;
-        }
+        public BBAspect Aspect { get; set; } = BBAspect.Auto;
 
         /// <summary>determines whether the user can change the aspect ratio when cropping an image </summary>
         public bool CanChangeCropAspectRatio => CropAspectRatio == null;
@@ -121,10 +131,16 @@ namespace BitooBitImageEditor
                 OutImageHeight = null;
                 OutImageWidht = null;
             }
+            else if (height > maxPixels || widht > maxPixels)
+            {
+                double outAspect = (double)widht / (double)height;
+                OutImageHeight = widht > height ? (int)(maxPixels / outAspect) : maxPixels;
+                OutImageWidht = widht > height ? maxPixels : (int)(maxPixels * outAspect);
+            }
             else
             {
-                OutImageHeight = height < 3000 ? height : 3000;
-                OutImageWidht = widht < 3000 ? widht : 3000;
+                OutImageHeight = height;
+                OutImageWidht = widht;
             }
         }
 

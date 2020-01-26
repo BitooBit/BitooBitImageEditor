@@ -164,7 +164,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
         private void SetMainBitmapMatrix()
         {
-            var rect = SkiaHelper.CalculateRectangle(SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect, mainBitmap.Bitmap.Width, mainBitmap.Bitmap.Height);
+            var rect = SkiaHelper.CalculateRectangle(SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect, mainBitmap.Bitmap.Width, mainBitmap.Bitmap.Height, config.Aspect);
             mainBitmap.Matrix = new SKMatrix(rect.scaleX, 0, rectInfo.MidX - rect.rect.Width / 2, 0, rect.scaleY, rectInfo.MidY - rect.rect.Height / 2, 0, 0, 1);
         }
 
