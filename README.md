@@ -7,7 +7,7 @@ Simple image editor for Xamarin Forms based on the [SkiaSharp](https://github.co
 
 <hr/>
 
- ## Available Platforms
+ ## Available Platforms:
 
 | Platform | Version |
 | --- | --- |
@@ -17,7 +17,16 @@ Simple image editor for Xamarin Forms based on the [SkiaSharp](https://github.co
 | .NET Standard | 2.0 |
 
 <hr/>
-This project is in development and now supports cropping images and adding text. In the future, the functionality will be expanded. The current entry points will be left unchanged
 
+ ## Available features:
+1) Multiline text with emojis
+2) Sticker images
+3) Finger drawing
+4) Cutting, scaling, rotating and moving the image
+5) Setting a stretched, blurred image, transparent or selected color as the background
+6) Saving the edited image on device.
+
+And the flexible editor's before-start configuration for developers
+ 
 
 ![Landing](https://raw.githubusercontent.com/BitooBit/BitooBitImageEditor/master/ImageEditor.jpg)
