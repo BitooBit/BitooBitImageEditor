@@ -54,7 +54,6 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
                 using (SKCanvas canvas = new SKCanvas(outBitmap))
                 {
-                    canvas.Clear();
                     OnPaintSurface(canvas, new SKRect(0, 0, outImageWidht, outImageHeight), false, -rectTranslate.rect.Left, -rectTranslate.rect.Top, 1 / rectTranslate.scaleX);
                 }
 
@@ -117,7 +116,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             }
             var rectImage = SkiaHelper.CalculateRectangle(rectInfo, outImageWidht, outImageHeight).rect;
 
-            canvas.Clear();
+           
             OnPaintSurface(canvas, rectImage, false);
             canvas.DrawSurrounding(rectInfo, rectImage, SkiaHelper.backgroundColor);
             DrawTrasRect(canvas);
@@ -125,8 +124,17 @@ namespace BitooBitImageEditor.ManipulationBitmap
 
         private void OnPaintSurface(SKCanvas canvas, SKRect rect, bool isDrawResult, float transX = 0, float transY = 0, float scale = 1)
         {
-            if(backgroundBitmap != null)
+            if (config.BackgroundType == BackgroundType.Color)
+                canvas.Clear(config.BackgroundColor);
+            else if (config.BackgroundType == BackgroundType.StretchedImage && backgroundBitmap != null)
+            { 
+                canvas.Clear();
                 canvas.DrawBackground(backgroundBitmap, rect, config);
+            }
+            else
+                canvas.Clear();
+
+            if(backgroundBitmap != null)
             canvas.Save();
             canvas.SetMatrix(new SKMatrix(scale, 0, transX * scale, 0, scale, transY * scale, 0, 0, 1));
             canvas.DrawBitmap(mainBitmap, transX, transY, scale);

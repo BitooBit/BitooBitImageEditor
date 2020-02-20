@@ -16,9 +16,7 @@ namespace BitooBitImageEditor
         StretchedImage
     }
 
-    /// <summary>
-    /// Determines how the image is displayed.
-    /// </summary>
+    /// <summary>Determines how the image is displayed. </summary>
     public enum BBAspect
     {
         AspectFit = 0,
@@ -26,8 +24,6 @@ namespace BitooBitImageEditor
         Fill = 2,
         Auto = 3
     }
-
-
 
     /// <summary>сonfigurator image editor</summary>
     public sealed class ImageEditorConfig : BaseNotifier

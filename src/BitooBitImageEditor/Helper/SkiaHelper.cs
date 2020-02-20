@@ -16,10 +16,7 @@ namespace BitooBitImageEditor.Helper
 
 
 
-        internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, SKBitmap bitmap, BBAspect aspect = BBAspect.AspectFit)
-        {
-            return CalculateRectangle(info, bitmap.Width, bitmap.Height, aspect);
-        }
+        internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, SKBitmap bitmap, BBAspect aspect = BBAspect.AspectFit) => CalculateRectangle(info, bitmap.Width, bitmap.Height, aspect);
 
         internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, float width, float height, BBAspect aspect = BBAspect.AspectFit)
         {
@@ -28,7 +25,8 @@ namespace BitooBitImageEditor.Helper
             {
                 float aspectInfo = info.Width / info.Height;
                 float aspectBitmap = width / height;
-                if ((aspectInfo < 1 && aspectBitmap < 1) || (aspectInfo > 1 && aspectBitmap > 1))
+                if (Math.Abs(Math.Abs(aspectInfo) - Math.Abs(aspectBitmap)) < 0.25)
+                //if (aspectInfo * aspectBitmap > 1)
                     _aspect = BBAspect.AspectFill;
                 else
                     _aspect = BBAspect.AspectFit;
