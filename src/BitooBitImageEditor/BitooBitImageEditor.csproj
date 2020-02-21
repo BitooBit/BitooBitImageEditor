@@ -13,8 +13,8 @@
     <Copyright>BitooBit</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.0.1.6</Version>
-    <AssemblyVersion>1.0.1.6</AssemblyVersion>
+    <Version>1.0.1.7</Version>
+    <AssemblyVersion>1.0.1.7</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -62,9 +62,7 @@
             <summary>Defines the background type</summary>
         </member>
         <member name="T:BitooBitImageEditor.BBAspect">
-            <summary>
-            Determines how the image is displayed.
-            </summary>
+            <summary>Determines how the image is displayed. </summary>
         </member>
         <member name="T:BitooBitImageEditor.ImageEditorConfig">
             <summary>сonfigurator image editor</summary>
