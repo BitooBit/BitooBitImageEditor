@@ -14,8 +14,6 @@ namespace BitooBitImageEditor.Helper
         internal static Thickness trashMargin = new Thickness(0,0,0,30);
         internal static Color backgroundColorHex = Color.FromUint(backgroundColor);
 
-
-
         internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, SKBitmap bitmap, BBAspect aspect = BBAspect.AspectFit) => CalculateRectangle(info, bitmap.Width, bitmap.Height, aspect);
 
         internal static (SKRect rect, float scaleX, float scaleY) CalculateRectangle(SKRect info, float width, float height, BBAspect aspect = BBAspect.AspectFit)
@@ -23,18 +21,16 @@ namespace BitooBitImageEditor.Helper
             BBAspect _aspect;
             if(aspect == BBAspect.Auto)
             {
-                float aspectInfo = info.Width / info.Height;
-                float aspectBitmap = width / height;
-                if (Math.Abs(Math.Abs(aspectInfo) - Math.Abs(aspectBitmap)) < 0.25)
-                //if (aspectInfo * aspectBitmap > 1)
+                float aspectInfo = Math.Abs(info.Width / info.Height);
+                float aspectBitmap = Math.Abs(width / height);
+                var res = Math.Abs(aspectInfo - aspectBitmap);
+                if (res < 0.27)
                     _aspect = BBAspect.AspectFill;
                 else
                     _aspect = BBAspect.AspectFit;
             }
             else
                 _aspect = aspect;
-
-
 
             float scaleX = info.Width / width;
             float scaleY = info.Height / height;

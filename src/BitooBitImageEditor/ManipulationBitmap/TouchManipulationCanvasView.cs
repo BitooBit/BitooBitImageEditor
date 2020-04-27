@@ -73,9 +73,9 @@ namespace BitooBitImageEditor.ManipulationBitmap
             previousTouchPoint = point;
         }
 
-        internal void AddBitmapToCanvas(string text, SKColor color)
+        internal void AddBitmapToCanvas(string text, SKColor color, bool isDrawRect)
         {
-            var bitmap = SKBitmapBuilder.FromText(text, color);
+            var bitmap = SKBitmapBuilder.FromText(text, color, isDrawRect);
             if (bitmap != null)
                 AddBitmapToCanvas(new TouchManipulationBitmap(bitmap, BitmapType.Text, text, color));
             InvalidateSurface();
@@ -325,12 +325,12 @@ namespace BitooBitImageEditor.ManipulationBitmap
                     }
                     break;
             }
-
         }
 
         private void DrawTrasRect(SKCanvas canvas)
         {
 #if DEBUG
+            if(false)
             using (SKPaint paint = new SKPaint())
             {
                 paint.Style = SKPaintStyle.Stroke;

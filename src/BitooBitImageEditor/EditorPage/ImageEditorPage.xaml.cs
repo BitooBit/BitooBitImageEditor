@@ -1,4 +1,5 @@
-﻿using BitooBitImageEditor.TouchTracking;
+﻿using BitooBitImageEditor.Resources;
+using BitooBitImageEditor.TouchTracking;
 using SkiaSharp;
 using System;
 using Xamarin.Forms;
@@ -27,6 +28,11 @@ namespace BitooBitImageEditor.EditorPage
             {
                 if (viewModel?.TextVisible ?? false)
                     textEditor.Focus();
+            }
+            if (e.PropertyName == nameof(ImageEditorViewModel.CurrentTextIsFill))
+            {          
+                var imageName = (viewModel?.CurrentTextIsFill ?? false) ? "text_fill" : "text_not_fill";
+                typeTextButton.Source = ImageSource.FromResource($"{ImageResourceExtension.resource}{imageName}.png");
             }
         }
 

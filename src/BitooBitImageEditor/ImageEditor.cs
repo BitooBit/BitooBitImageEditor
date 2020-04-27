@@ -98,10 +98,7 @@ namespace BitooBitImageEditor
                 }
             }
         }
-
-        
-
-
+      
         private async Task<byte[]> PushImageEditorPage(SKBitmap bitmap, ImageEditorConfig config)
         {
             try

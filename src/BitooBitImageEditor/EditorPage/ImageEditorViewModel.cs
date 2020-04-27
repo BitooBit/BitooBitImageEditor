@@ -49,6 +49,7 @@ namespace BitooBitImageEditor.EditorPage
         public ImageEditType CurrentEditType { private set; get; } = ImageEditType.SelectType;
         public Color CurrentColor { get; set; } = Color.White;
         public string CurrentText { set; get; } = "";
+        public bool CurrentTextIsFill { set; get; } = false;
         public string Message { private set; get; } = "";
         public ObservableCollection<Color> ColorCollect { get; private set; } 
         public ObservableCollection<CropItem> CropCollect { get; private set; }
@@ -63,13 +64,15 @@ namespace BitooBitImageEditor.EditorPage
                     case ImageEditType.Text:
                         {
                             if (currentTextBitmap == null)
-                                mainCanvas.AddBitmapToCanvas(CurrentText, CurrentColor.ToSKColor());
+                                mainCanvas.AddBitmapToCanvas(CurrentText, CurrentColor.ToSKColor(), CurrentTextIsFill);
                             else
                             {
                                 currentTextBitmap.Bitmap?.Dispose();
-                                currentTextBitmap.Bitmap = SKBitmapBuilder.FromText(CurrentText, CurrentColor.ToSKColor());
+                                currentTextBitmap.Bitmap = null;
+                                currentTextBitmap.Bitmap = SKBitmapBuilder.FromText(CurrentText, CurrentColor.ToSKColor(), CurrentTextIsFill);
                                 currentTextBitmap.Text = CurrentText;
                                 currentTextBitmap.IsHide = false;
+                                currentTextBitmap.Color = CurrentColor.ToSKColor();
                                 mainCanvas?.InvalidateSurface();
                             }
 
@@ -122,13 +125,15 @@ namespace BitooBitImageEditor.EditorPage
                 ImageEditor.Instance.SetImage(!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save" ? mainCanvas.EditedBitmap : null);
         });
 
+        public ICommand ChangeTextTypeCommand => new Command<string>((value) => { CurrentTextIsFill = !CurrentTextIsFill; });
+
         public ICommand SaveCommand => new Command<string>(async (value) =>
         {
             CurrentEditType = ImageEditType.Info;
 
             var bitmap = mainCanvas.EditedBitmap;
             
-                if (await ImageEditor.Instance.SaveImage(SkiaHelper.SKBitmapToBytes(bitmap), $"img{DateTime.Now.ToString("dd.MM.yyyy HH-mm-ss")}.png"))
+                if (await ImageEditor.Instance.SaveImage(SkiaHelper.SKBitmapToBytes(bitmap), $"img{DateTime.Now:dd.MM.yyyy HH-mm-ss}.png"))
                     Message = Config?.SuccessSaveText;
                 else
                     Message = Config?.ErrorSaveText;

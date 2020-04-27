@@ -180,6 +180,12 @@
                         </ImageButton.Margin>
                     </ImageButton>
 
+                    <ImageButton Grid.Row="0" x:Name="typeTextButton" Source="{res:ImageResource text_not_fill}" Command="{Binding ChangeTextTypeCommand}" HorizontalOptions="Start" VerticalOptions="Start">
+                        <ImageButton.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" iOS="0,32,10,0" Android="0,20,10,0"/>
+                        </ImageButton.Margin>
+                    </ImageButton>
+
                     <CollectionView Grid.Row="1" ItemsSource="{Binding ColorCollect}" HeightRequest="32">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Horizontal" SnapPointsType="Mandatory" SnapPointsAlignment="Start" ItemSpacing="2" />
@@ -194,7 +200,7 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <controls:CustomEditor x:Name="textEditor" Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" FontSize="23" Keyboard="Plain" BackgroundColor="Transparent" Margin="10,8,10,4" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                    <controls:CustomEditor x:Name="textEditor" Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" FontSize="23" Keyboard="Plain" BackgroundColor="Red" Margin="10,8,10,4" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                 </Grid>
 
 

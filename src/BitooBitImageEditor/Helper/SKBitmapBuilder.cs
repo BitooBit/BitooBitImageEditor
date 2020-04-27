@@ -29,7 +29,7 @@ namespace BitooBitImageEditor.Helper
         }
 
 
-        internal static SKBitmap FromText(string text, SKColor color, bool isDrawRect = false)
+        internal static SKBitmap FromText(string text, SKColor color, bool isDrawRect)
         {
             try
             {
@@ -118,7 +118,17 @@ namespace BitooBitImageEditor.Helper
                         SKRect textDest = new SKRect(0, 0, maxLineWidth, height);
                         using (SKCanvas canvasText = new SKCanvas(textBitmap))
                         {
+                            canvasText?.Clear();
                             canvasText.DrawBitmap(textBitmap, textDest);
+
+                            if (isDrawRect)
+                                using (var paintRect = paint.Clone())
+                                using (var roundRect = new SKRoundRect(new SKRect(0, 0, maxLineWidth, height), 50, 50))
+                                {
+                                    paintRect.Style = SKPaintStyle.Fill;
+                                    paintRect.Color = color;
+                                    canvasText.DrawRoundRect(roundRect, paintRect);
+                                }
 
                             float yText = maxLineHeight;
 
@@ -131,6 +141,9 @@ namespace BitooBitImageEditor.Helper
                                 {
                                     using (SKPaint charPaint = paint.Clone())
                                     {
+                                        if (isDrawRect)
+                                            charPaint.Color = color == SKColors.White ? SKColors.Black : SKColors.White;
+
                                         charPaint.Typeface = charsTypeface[i][j];
                                         canvasText.DrawText(chars[i][j], xText, yText, charPaint);
                                         xText += charsWidth[i][j];
@@ -140,14 +153,7 @@ namespace BitooBitImageEditor.Helper
                                 yText += maxLineHeight;
                             }
 
-                            if (isDrawRect)
-                                using (var paintRect = paint.Clone())
-                                {
-                                    paintRect.Style = SKPaintStyle.Stroke;
-                                    paintRect.Color = SKColors.White;
-                                    paintRect.StrokeWidth = 3;
-                                    canvasText.DrawRect(new SKRect(0, 0, maxLineWidth, height), paintRect);
-                                }
+                            
                         }
 
                         foreach (var a in charsTypeface)
