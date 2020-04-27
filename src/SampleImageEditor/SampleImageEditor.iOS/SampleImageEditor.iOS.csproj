@@ -26,9 +26,8 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <CodesignProvision>
-    </CodesignProvision>
+    <CodesignKey>Apple Development: Dmitrii Dimov (5VJ9NR5UDS)</CodesignKey>
+    <CodesignProvision>ImageEditorDev</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -38,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
+    <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,7 +67,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Distribution: AITI-GRUPP, OOO (26JKV2Z3FR)</CodesignKey>
+    <CodesignKey>Apple Distribution: AITI-GRUPP, OOO (26JKV2Z3FR)</CodesignKey>
     <CodesignEntitlements>
     </CodesignEntitlements>
     <CodesignProvision>ImageEditorDestribution</CodesignProvision>
@@ -157,7 +157,7 @@
       <Name>BitooBitImageEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\SampleImageEditor\SampleImageEditor.csproj">
-      <Project>{344A4742-8059-4476-9222-8585F72A6B6B}</Project>
+      <Project>{F5D79298-CBF3-43CD-9D6C-9E4B35607262}</Project>
       <Name>SampleImageEditor</Name>
     </ProjectReference>
   </ItemGroup>
