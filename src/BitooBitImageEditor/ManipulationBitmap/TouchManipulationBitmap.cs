@@ -125,7 +125,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             touchDictionary.Values.CopyTo(infos, 0);
             SKMatrix touchMatrix = SKMatrix.MakeIdentity();
 
-            if (infos.Length == 1)
+            if (infos.Length == 1 && Type != BitmapType.Main)
             {
                 SKPoint prevPoint = infos[0].PreviousPoint;
                 SKPoint newPoint = infos[0].NewPoint;

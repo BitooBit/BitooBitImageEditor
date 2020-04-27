@@ -200,7 +200,7 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <controls:CustomEditor x:Name="textEditor" Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" FontSize="23" Keyboard="Plain" BackgroundColor="Red" Margin="10,8,10,4" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                    <controls:CustomEditor x:Name="textEditor" Grid.Row="2" IsVisible="{Binding TextVisible}" Text="{Binding CurrentText}" TextColor="{Binding CurrentColor}" FontSize="23" Keyboard="Plain" BackgroundColor="Transparent" Margin="10,8,10,4" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
                 </Grid>
 
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace SampleImageEditor
@@ -19,6 +20,8 @@ namespace SampleImageEditor
             InitializeComponent();
             assembly = GetType().GetTypeInfo().Assembly;
             this.BindingContext = this;
+            var display = DeviceDisplay.MainDisplayInfo;
+            Config = new ImageEditorConfig(backgroundType: BackgroundType.StretchedImage, outImageHeight: (int)display.Height, outImageWidht: (int)display.Width, aspect: BBAspect.Auto);
         }
 
         public bool ConfigVisible { get; set; }
