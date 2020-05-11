@@ -22,7 +22,8 @@ namespace BitooBitImageEditor
         /// <summary>returns an instance of <see cref="ImageEditor"/></summary>
         public static ImageEditor Instance { get => lazy.Value; }
         internal IImageHelper ImageHelper => DependencyService.Get<IImageHelper>();
-
+        /// <summary>"True" - if the editor is currently running</summary>
+        public static bool IsOpened { get; private set; } = false;
 
         private const string defaultFolderName = "BitooBitImages";
         private string folderName;
@@ -39,6 +40,13 @@ namespace BitooBitImageEditor
             get => string.IsNullOrWhiteSpace(folderName) ? defaultFolderName : defaultFolderName;
             set => folderName = value;
         }
+        private bool ImageEditLock
+        {
+            get => imageEditLock;
+            set => imageEditLock = IsOpened = value;
+        }
+
+
 
         /// <summary>method for saving images</summary>
         /// <param name="data">image</param>
@@ -55,9 +63,9 @@ namespace BitooBitImageEditor
         /// <returns>edited image</returns>
         public async Task<byte[]> GetEditedImage(SKBitmap bitmap = null, ImageEditorConfig config = null)
         {
-            if (!imageEditLock)
+            if (!ImageEditLock)
             {
-                imageEditLock = true;
+                ImageEditLock = true;
                 if (bitmap == null)
                 {
                     using (Stream stream = await ImageHelper.GetImageAsync())
@@ -70,7 +78,7 @@ namespace BitooBitImageEditor
 
                 //await Task.Delay(100);
                 var data = bitmap != null ? await PushImageEditorPage(bitmap, config) : null;
-                imageEditLock = false;
+                ImageEditLock = false;
                 return data;
             }
             else
@@ -131,7 +139,7 @@ namespace BitooBitImageEditor
                     await Application.Current.MainPage.Navigation.PopModalAsync();
 
                 mainPage = null;
-                imageEditLock = false;
+                ImageEditLock = false;
                 imageSetLock = false;
                 return data;
             }
