@@ -34,6 +34,12 @@ namespace SampleImageEditor.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-
+        public override void OnBackPressed()
+        {
+            if (!BitooBitImageEditor.ImageEditor.IsOpened)
+                base.OnBackPressed();
+            else
+                BitooBitImageEditor.Droid.Platform.OnBackPressed();
+        }
     }
 }

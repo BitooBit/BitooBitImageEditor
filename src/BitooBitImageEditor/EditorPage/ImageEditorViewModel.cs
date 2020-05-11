@@ -29,6 +29,7 @@ namespace BitooBitImageEditor.EditorPage
             ColorCollect = SkiaHelper.GetColors();
             CropCollect = CropItem.GetCropItems(config.CanChangeCropAspectRatio);
             Message = config?.LoadingText;
+            MessagingCenter.Subscribe<Xamarin.Forms.Application>(this, "BBDroidBackButton",(sender) => OnBackPressed());
         }
 
         
@@ -119,11 +120,7 @@ namespace BitooBitImageEditor.EditorPage
         });
 
         private bool lockFinish = false;
-        public ICommand EditFinishCommand => new Command<string>((value) =>
-        {
-            if (!lockFinish)
-                ImageEditor.Instance.SetImage(!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save" ? mainCanvas.EditedBitmap : null);
-        });
+        public ICommand EditFinishCommand => new Command<string>((value) => EditFinish(!string.IsNullOrWhiteSpace(value) && value.ToLower() == "save"));
 
         public ICommand ChangeTextTypeCommand => new Command<string>((value) => { CurrentTextIsFill = !CurrentTextIsFill; });
 
@@ -147,6 +144,19 @@ namespace BitooBitImageEditor.EditorPage
             CurrentEditType = ImageEditType.SelectType;
         });
 
+        private void EditFinish(bool isSave)
+        {
+            if (!lockFinish)
+                ImageEditor.Instance.SetImage(isSave ? mainCanvas.EditedBitmap : null);
+        }
+
+        private void OnBackPressed()
+        {
+            if (CurrentEditType != ImageEditType.SelectType)
+                CurrentEditType = ImageEditType.SelectType;
+            else
+                EditFinish(false);
+        }
 
         internal void OnTouchEffectTouchAction(object sender, TouchActionEventArgs args)
         {
@@ -186,6 +196,7 @@ namespace BitooBitImageEditor.EditorPage
             {
                 if (disposing)
                 {
+                    MessagingCenter.Unsubscribe<Xamarin.Forms.Application>(this, "BBDroidBackButton");
                     Config = null;
                     ColorCollect?.Clear();
                     ColorCollect = null;

@@ -90,6 +90,10 @@
       <Project>{F5D79298-CBF3-43CD-9D6C-9E4B35607262}</Project>
       <Name>SampleImageEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\BitooBitImageEditor\BitooBitImageEditor.csproj">
+      <Project>{ED478E09-15E7-43AA-A99B-ECEA618971E6}</Project>
+      <Name>BitooBitImageEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-hdpi\iconapp.png" />

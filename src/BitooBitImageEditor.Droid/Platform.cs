@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 namespace BitooBitImageEditor.Droid
@@ -31,6 +32,12 @@ namespace BitooBitImageEditor.Droid
         {
             if (requestCode == PickImageId)
                 ImageHelper.OnActivityResult(resultCode, intent);
+        }
+
+        public static void OnBackPressed()
+        {
+            if(ImageEditor.IsOpened)
+                MessagingCenter.Send(Xamarin.Forms.Application.Current, "BBDroidBackButton");
         }
 
         private static void LinkAssemblies()
