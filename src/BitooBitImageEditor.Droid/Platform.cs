@@ -30,8 +30,7 @@ namespace BitooBitImageEditor.Droid
         /// <summary>required to get an image from the gallery</summary>
         public static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
-            if (requestCode == PickImageId)
-                ImageHelper.OnActivityResult(resultCode, intent);
+            
         }
 
         public static void OnBackPressed()

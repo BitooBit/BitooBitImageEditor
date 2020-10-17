@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ImageHelper.cs" />
-    <Compile Include="IOSHapticFeedback.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="PlatformHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,16 +51,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BitooBitImageEditor\BitooBitImageEditor.csproj">
-      <Project>{eac837de-6f29-41c9-b950-7df874494884}</Project>
+      <Project>{ED478E09-15E7-43AA-A99B-ECEA618971E6}</Project>
       <Name>BitooBitImageEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SkiaSharp">
-      <Version>1.68.1.1</Version>
+      <Version>2.80.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.4.0.991477</Version>
+      <Version>4.8.0.1560</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

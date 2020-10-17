@@ -7,8 +7,6 @@ namespace BitooBitImageEditor
     public interface IImageHelper
     {
         /// <summary>for internal use by <see cref="BitooBitImageEditor"/></summary>
-        Task<Stream> GetImageAsync();
-        /// <summary>for internal use by <see cref="BitooBitImageEditor"/></summary>
         Task<bool> SaveImageAsync(byte[] data, string filename, string folder = null);
     }
 }
