@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace BitooBitImageEditor
 {
@@ -37,7 +38,7 @@ namespace BitooBitImageEditor
         /// <summary>name of the folder for saving images </summary>
         public string FolderName
         {
-            get => string.IsNullOrWhiteSpace(folderName) ? defaultFolderName : defaultFolderName;
+            get => string.IsNullOrWhiteSpace(folderName) ? defaultFolderName : folderName;
             set => folderName = value;
         }
         private bool ImageEditLock
@@ -47,17 +48,14 @@ namespace BitooBitImageEditor
         }
 
 
-
         /// <summary>method for saving images</summary>
         /// <param name="data">image</param>
         /// <param name="imageName">file name of the image</param>
         /// <returns>returns "true" if the image was saved</returns>
-        public async Task<bool> SaveImage(byte[] data, string imageName) => await ImageHelper.SaveImageAsync(data, imageName);
+        public async Task<bool> SaveImage(byte[] data, string imageName) => await ImageHelper.SaveImageAsync(data, imageName, FolderName);
 
         /// <summary>Returns the edited image
-        /// <para>
-        /// if <paramref name="bitmap"/> is null, the user can select an image from the gallery
-        /// </para></summary>
+        /// <para> if <paramref name="bitmap"/> is null, the user can select an image from the gallery</para></summary>
         /// <param name="bitmap">original image</param>
         /// <param name="config">сonfigurator image editor</param>
         /// <returns>edited image</returns>
@@ -68,15 +66,14 @@ namespace BitooBitImageEditor
                 ImageEditLock = true;
                 if (bitmap == null)
                 {
-                    using (Stream stream = await ImageHelper.GetImageAsync())
-                    {
+                    var result = await MediaPicker.PickPhotoAsync();
+                    using (Stream stream = await result.OpenReadAsync())
                         bitmap = stream != null ? SKBitmap.Decode(stream) : null;
-                    }
                 }
+
                 if (config == null)
                     config = new ImageEditorConfig();
 
-                //await Task.Delay(100);
                 var data = bitmap != null ? await PushImageEditorPage(bitmap, config) : null;
                 ImageEditLock = false;
                 return data;

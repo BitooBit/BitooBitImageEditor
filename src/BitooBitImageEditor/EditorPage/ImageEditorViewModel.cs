@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace BitooBitImageEditor.EditorPage
 {
@@ -183,7 +184,7 @@ namespace BitooBitImageEditor.EditorPage
                 TrashVisible = arg1;
                 TrashBigVisible = arg2;
                 if (arg3)
-                    HapticFeedback.Excute();
+                    HapticFeedback.Perform();
             }
         }
 
