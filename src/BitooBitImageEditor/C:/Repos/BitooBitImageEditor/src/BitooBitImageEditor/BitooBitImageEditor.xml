@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BitooBitImageEditor</name>
+    </assembly>
+    <members>
+        <member name="T:BitooBitImageEditor.EditorPage.BaseNotifier">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="E:BitooBitImageEditor.EditorPage.BaseNotifier.PropertyChanged">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="T:BitooBitImageEditor.EditorPage.ImageEditorPage">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="M:BitooBitImageEditor.EditorPage.ImageEditorPage.OnDisappearing">
+            <summary> </summary>
+        </member>
+        <member name="T:BitooBitImageEditor.Controls.CustomEditor">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="T:BitooBitImageEditor.IImageHelper">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="M:BitooBitImageEditor.IImageHelper.SaveImageAsync(System.Byte[],System.String,System.String)">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="T:BitooBitImageEditor.ImageEditor">
+            <summary>main class <see cref="N:BitooBitImageEditor"/> </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditor.Instance">
+            <summary>returns an instance of <see cref="T:BitooBitImageEditor.ImageEditor"/></summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditor.IsOpened">
+            <summary>"True" - if the editor is currently running</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditor.FolderName">
+            <summary>name of the folder for saving images </summary>
+        </member>
+        <member name="M:BitooBitImageEditor.ImageEditor.SaveImage(System.Byte[],System.String)">
+            <summary>method for saving images</summary>
+            <param name="data">image</param>
+            <param name="imageName">file name of the image</param>
+            <returns>returns "true" if the image was saved</returns>
+        </member>
+        <member name="M:BitooBitImageEditor.ImageEditor.GetEditedImage(SkiaSharp.SKBitmap,BitooBitImageEditor.ImageEditorConfig)">
+            <summary>Returns the edited image
+            <para> if <paramref name="bitmap"/> is null, the user can select an image from the gallery</para></summary>
+            <param name="bitmap">original image</param>
+            <param name="config">сonfigurator image editor</param>
+            <returns>edited image</returns>
+        </member>
+        <member name="T:BitooBitImageEditor.BackgroundType">
+            <summary>Defines the background type</summary>
+        </member>
+        <member name="T:BitooBitImageEditor.BBAspect">
+            <summary>Determines how the image is displayed. </summary>
+        </member>
+        <member name="T:BitooBitImageEditor.ImageEditorConfig">
+            <summary>сonfigurator image editor</summary>
+        </member>
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor">
+            <summary>constructor with default values</summary>
+        </member>
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Nullable{System.Single},System.Collections.Generic.List{SkiaSharp.Views.Forms.SKBitmapImageSource},System.Nullable{System.Int32},System.Nullable{System.Int32},BitooBitImageEditor.BBAspect,BitooBitImageEditor.BackgroundType,SkiaSharp.SKColor,System.Boolean,System.String,System.String,System.String)">
+            <summary></summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanAddText">
+            <summary>determines whether the user can add text to image</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanFingerPaint">
+            <summary>determines whether the user can draw the image with their finger.</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanTransformMainBitmap">
+            <summary></summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanSaveImage">
+            <summary>determines whether the user can save imge.</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.LoadingText">
+            <summary> </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.SuccessSaveText">
+            <summary> </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.ErrorSaveText">
+            <summary> </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CropAspectRatio">
+            <summary>sets and returns the aspect ratio for cropping the image </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.Stickers">
+            <summary>sets a set of stickers.
+            <para>do not use a large number of stickers this will lead to a large consumption of RAM</para>
+            <para>use the <see cref="M:BitooBitImageEditor.ImageEditorConfig.DisposeStickers"/> method when stickers are no longer needed</para>
+            </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.OutImageHeight">
+            <summary> get a height out image</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.OutImageWidht">
+            <summary> get a widht out image</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.BackgroundColor">
+            <summary>sets and returns the background color </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.BackgroundType">
+            <summary>Defines the background type</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.Aspect">
+            <summary>Determines how the image is displayed</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanChangeCropAspectRatio">
+            <summary>determines whether the user can change the aspect ratio when cropping an image </summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.CanAddStickers">
+            <summary>determines whether the user can add stickers to the image.</summary>
+        </member>
+        <member name="P:BitooBitImageEditor.ImageEditorConfig.IsOutImageAutoSize">
+            <summary>determines whether the size of the output image will match the size of the original cropped image </summary>
+        </member>
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.SetOutImageSize(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>sets the size of the out image</summary> <param name="height"> out height </param> <param name="widht"> out widht </param>
+        </member>
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.Clone">
+            <summary>returns a copy of the ImageEditorConfig instance</summary><returns></returns>
+        </member>
+        <member name="M:BitooBitImageEditor.ImageEditorConfig.DisposeStickers">
+            <summary>use this method when <see cref="P:BitooBitImageEditor.ImageEditorConfig.Stickers"/> are no longer needed</summary>
+        </member>
+        <member name="T:BitooBitImageEditor.IPlatformHelper">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="P:BitooBitImageEditor.IPlatformHelper.IsInitialized">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="T:BitooBitImageEditor.TouchTracking.TouchActionEventArgs">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="T:BitooBitImageEditor.TouchTracking.TouchActionEventHandler">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+        <member name="T:BitooBitImageEditor.TouchTracking.TouchEffect">
+            <summary>for internal use by <see cref="N:BitooBitImageEditor"/></summary>
+        </member>
+    </members>
+</doc>
