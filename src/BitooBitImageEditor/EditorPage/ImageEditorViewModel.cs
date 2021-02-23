@@ -148,7 +148,10 @@ namespace BitooBitImageEditor.EditorPage
         private void EditFinish(bool isSave)
         {
             if (!lockFinish)
+            {
+                lockFinish = true;
                 ImageEditor.Instance.SetImage(isSave ? mainCanvas.EditedBitmap : null);
+            }
         }
 
         private void OnBackPressed()
