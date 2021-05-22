@@ -67,8 +67,9 @@ namespace BitooBitImageEditor
                 if (bitmap == null)
                 {
                     var result = await MediaPicker.PickPhotoAsync();
-                    using (Stream stream = await result.OpenReadAsync())
-                        bitmap = stream != null ? SKBitmap.Decode(stream) : null;
+                    if (result != null)
+                        using (Stream stream = await result.OpenReadAsync())
+                            bitmap = stream != null ? SKBitmap.Decode(stream) : null;
                 }
 
                 if (config == null)
