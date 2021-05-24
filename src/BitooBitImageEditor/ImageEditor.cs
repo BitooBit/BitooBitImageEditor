@@ -6,6 +6,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using NativeMedia;
+using System.Linq;
 
 namespace BitooBitImageEditor
 {
@@ -66,7 +68,7 @@ namespace BitooBitImageEditor
                 ImageEditLock = true;
                 if (bitmap == null)
                 {
-                    var result = await MediaPicker.PickPhotoAsync();
+                    var result = (await MediaGallery.PickAsync(1, MediaFileType.Image))?.Files?.FirstOrDefault();
                     if (result != null)
                         using (Stream stream = await result.OpenReadAsync())
                             bitmap = stream != null ? SKBitmap.Decode(stream) : null;

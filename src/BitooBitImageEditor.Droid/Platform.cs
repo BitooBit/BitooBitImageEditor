@@ -23,6 +23,7 @@ namespace BitooBitImageEditor.Droid
         {
             CurrentActivity = activity;
             CurrentBundle = bundle;
+            NativeMedia.Platform.Init(activity, bundle);
             IsInitialized = true;
             LinkAssemblies();
         }
@@ -30,7 +31,8 @@ namespace BitooBitImageEditor.Droid
         /// <summary>required to get an image from the gallery</summary>
         public static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
-            
+            if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+                NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
         }
 
         public static void OnBackPressed()
