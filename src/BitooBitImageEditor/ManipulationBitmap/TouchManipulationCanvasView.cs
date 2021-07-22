@@ -138,7 +138,7 @@ namespace BitooBitImageEditor.ManipulationBitmap
             canvas.Save();
             canvas.SetMatrix(new SKMatrix(scale, 0, transX * scale, 0, scale, transY * scale, 0, 0, 1));
             canvas.DrawBitmap(mainBitmap, transX, transY, scale);
-            canvas.DrawPath(completedPaths, isDrawResult ? null : inProgressPaths);
+            canvas.DrawPath(completedPaths.ToList(), isDrawResult ? null : inProgressPaths?.Values.ToList());
             canvas.Restore();
             canvas.DrawBitmap(bitmapCollection, transX, transY, scale);
         }
