@@ -154,6 +154,8 @@ namespace BitooBitImageEditor.Croping
         {
             base.OnPaintSurface(args);
 
+            if (bitmap == null) return;
+
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;

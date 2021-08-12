@@ -65,9 +65,6 @@
     <PackageReference Include="Xamarin.Forms">
       <Version>4.8.0.1560</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.MediaGallery">
-      <Version>1.0.0</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -76,6 +73,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Xamarin.MediaGallery\MediaGallery\MediaGallery.csproj">
+      <Project>{adcee700-ebbf-4eb1-bcb7-efd9ed395fa1}</Project>
+      <Name>MediaGallery</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BitooBitImageEditor\BitooBitImageEditor.csproj">
       <Project>{ED478E09-15E7-43AA-A99B-ECEA618971E6}</Project>
       <Name>BitooBitImageEditor</Name>
