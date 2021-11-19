@@ -2,6 +2,7 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BitooBitImageEditor.Helper
 {
@@ -12,8 +13,9 @@ namespace BitooBitImageEditor.Helper
             using (SKPaint paint = new SKPaint())
             {
                 paint.IsAntialias = true;
+                List<TouchManipulationBitmap> cloneList = new List<TouchManipulationBitmap>(bitmapCollection.Where(e => e != null).ToList());
 
-                foreach (var item in bitmapCollection)
+                foreach (var item in cloneList)
                     canvas.DrawBitmap(item, transX, transY, scale);
             }
         }
@@ -38,9 +40,6 @@ namespace BitooBitImageEditor.Helper
         }
 
 
-
-
-
         internal static void DrawBackground(this SKCanvas canvas, SKBitmap bitmap, SKRect rect, ImageEditorConfig config)
         {
             using (SKPaint paint = new SKPaint())
@@ -62,7 +61,7 @@ namespace BitooBitImageEditor.Helper
         }
 
 
-        internal static void DrawPath(this SKCanvas canvas, List<PaintedPath> completedPaths, Dictionary<long, PaintedPath> inProgressPaths)
+        internal static void DrawPath(this SKCanvas canvas, List<PaintedPath> completedPaths, List<PaintedPath> inProgressPaths)
         {
             using (SKPaint paint = new SKPaint())
             {
@@ -72,20 +71,31 @@ namespace BitooBitImageEditor.Helper
                 paint.StrokeJoin = SKStrokeJoin.Round;
                 paint.IsAntialias = true;
 
-
-                if(completedPaths != null)
-                    foreach (PaintedPath path in completedPaths)
+                if (completedPaths != null)
+                {
+                    List<PaintedPath> cloneList = new List<PaintedPath>(completedPaths.Where(e => e != null).ToList());
+                    if (cloneList.Count > 0)
                     {
-                        paint.Color = path.Color;
-                        canvas.DrawPath(path.Path, paint);
+                        foreach (PaintedPath path in cloneList)
+                        {
+                            paint.Color = path.Color;
+                            canvas.DrawPath(path.Path, paint);
+                        }
                     }
+                   
+                }
 
-                if (inProgressPaths != null)
-                    foreach (PaintedPath path in inProgressPaths?.Values)
+                if (inProgressPaths != null) {
+                    List<PaintedPath> cloneList = new List<PaintedPath>(inProgressPaths.Where(e => e != null).ToList());
+                    if(cloneList.Count > 0)
                     {
-                        paint.Color = path.Color;
-                        canvas.DrawPath(path.Path, paint);
+                        foreach (PaintedPath path in cloneList)
+                        {
+                            paint.Color = path.Color;
+                            canvas.DrawPath(path.Path, paint);
+                        }
                     }
+                }
             }
         }
 
